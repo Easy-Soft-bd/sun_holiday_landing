@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+
 @plugin "daisyui/theme" {
     name: "sunlight";
     default: true;
@@ -57,4 +58,16 @@
     /* Effects */
     --depth: 1;
     --noise: 0;
+}
+
+@font-face {
+    font-family: 'MagmaWave';
+    src: url('/font/MagmaWave.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.font-magmawave {
+    font-family: 'MagmaWave', sans-serif;
 }

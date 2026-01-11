@@ -64,7 +64,7 @@ const Nav = () => {
     return (
         <>
             {/* Main Navbar */}
-            <nav className="sticky top-0 z-50 w-full border-b border-base-200 bg-base-100/80 backdrop-blur-md">
+            <nav className="fixed top-0 z-50 w-full border-b border-gray-200/20 bg-base-100/20 backdrop-blur-md shadow">
                 <div className="container mx-auto px-4 lg:px-8">
                     <div className="flex items-center justify-between h-20">
 
