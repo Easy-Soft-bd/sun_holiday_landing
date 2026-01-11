@@ -70,7 +70,7 @@ const Nav = () => {
 
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            <Logo width={45} height={45} />
+                            <Logo width={55} height={55} showText={false} />
                         </Link>
 
                         {/* Desktop Navigation */}
