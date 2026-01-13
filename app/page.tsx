@@ -1,5 +1,7 @@
 
 import { AirLineMarquee } from "@/src/components/common/AirLineMarquee";
+import BookingProcess from "@/src/components/common/BookingProcess";
+import WhyChooseUs from "@/src/components/common/WhyUs";
 import HolidayCategories from "@/src/Demo";
 import HajjCta from "@/src/view/Home/hajj_cta/HajjCta";
 import Hero from "@/src/view/Home/Hero/Hero";
@@ -13,6 +15,8 @@ export default function Home() {
       <ResortCta />
       <HajjCta />
       <HolidayCategories />
+      <BookingProcess />
+      <WhyChooseUs />
     </>
 
   );
