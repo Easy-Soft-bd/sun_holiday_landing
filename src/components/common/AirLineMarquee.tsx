@@ -95,12 +95,7 @@ export function AirLineMarquee() {
                 <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-base-100 to-transparent z-10" />
             </div>
 
-            {/* Bottom Decoration */}
-            <div className="mt-10 flex justify-center opacity-10">
-                <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent" />
-                <div className="mx-4 size-1 rounded-full bg-primary" />
-                <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent" />
-            </div>
+
         </section>
     );
 }
