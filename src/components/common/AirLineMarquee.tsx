@@ -63,7 +63,7 @@ export function AirLineMarquee() {
                         ACCESS <span className="text-primary italic">PARTNER</span> OF
                     </h2>
                     {/* Decorative background number or text for depth */}
-                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-7xl md:text-9xl font-black text-base-content/[0.03] select-none -z-10 tracking-widest">
+                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-7xl md:text-9xl font-black text-base-content/3 select-none -z-10 tracking-widest">
                         GLOBAL
                     </span>
                 </div>
@@ -91,8 +91,8 @@ export function AirLineMarquee() {
                 </Marquee>
 
                 {/* Subtle Gradient Fades on edges for better UI */}
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-base-100 to-transparent z-10" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-base-100 to-transparent z-10" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-linear-to-r from-base-100 to-transparent z-10" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-linear-to-l from-base-100 to-transparent z-10" />
             </div>
 
 

@@ -34,7 +34,7 @@ const ResortCta = () => {
 
                     {/* 1. Image Section with "Floating Card" effect */}
                     <div className="w-full lg:w-1/2 relative group">
-                        <div className="relative h-[400px] md:h-[600px] w-full rounded-[2rem] overflow-hidden shadow-2xl">
+                        <div className="relative h-[400px] md:h-[600px] w-full rounded-4xl overflow-hidden shadow-2xl">
                             <Image
                                 src="/Sun-Holidays-Leaflet-Editable.jpg"
                                 alt="Grandeur Bliss Luxury Hotel Cox's Bazar"
