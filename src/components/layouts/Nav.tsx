@@ -59,7 +59,7 @@ const Nav = () => {
     return (
         <>
             {/* Main Navbar */}
-            <nav className="fixed top-0 z-50 w-full border-b border-gray-200/20 bg-base-100/20 backdrop-blur-md shadow">
+            <nav className="fixed top-[var(--banner-height,0px)] z-50 w-full border-b border-gray-200/20 bg-base-100/20 backdrop-blur-md shadow transition-[top] duration-300">
                 <div className="container mx-auto px-4 lg:px-8">
                     <div className="flex items-center justify-between h-20">
 
