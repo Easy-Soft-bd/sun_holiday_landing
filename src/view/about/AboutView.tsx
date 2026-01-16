@@ -7,14 +7,14 @@ export default function AboutView() {
             <section className="relative h-[60vh] flex items-center justify-center overflow-hidden bg-primary/5">
                 <div className="absolute inset-0 z-0">
                     <div 
-                        className="w-full h-full bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop')] bg-cover bg-center opacity-10"
+                        className="w-full h-full bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop')] bg-cover bg-center "
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-base-100" />
                 </div>
 
                 <div className="container mx-auto px-4 z-10 text-center">
-                    <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter">
-                        About <span className="text-primary">Sun Holidays</span>
+                    <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter font-magmawave">
+                        About <span className="text-primary ">Sun Holidays</span>
                     </h1>
                     <p className="text-xl md:text-2xl text-base-content/70 max-w-2xl mx-auto font-medium">
                         Crafting unforgettable journeys since 2021.
