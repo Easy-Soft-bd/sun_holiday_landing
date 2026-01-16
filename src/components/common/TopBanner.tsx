@@ -4,30 +4,17 @@
 import { useState, useEffect, useRef } from "react";
 import { X, PhoneCall, Info, User, LogOut, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useGetMeQuery, useLogoutMutation } from "@/src/lib/redux/api/userApi";
 
 export default function TopBanner() {
     const [isVisible, setIsVisible] = useState(true);
-    const [adminUser, setAdminUser] = useState<{ email: string; role: string } | null>(null);
     const bannerRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
-    useEffect(() => {
-        // Check if admin is logged in
-        const checkAuth = async () => {
-            try {
-                const res = await fetch('/api/auth/me');
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.authenticated) {
-                        setAdminUser(data.user);
-                    }
-                }
-            } catch (error) {
-                console.error('Failed to check auth:', error);
-            }
-        };
-        checkAuth();
-    }, []);
+    const { data: authData } = useGetMeQuery(undefined);
+    const [logout] = useLogoutMutation();
+
+    const adminUser = authData?.authenticated ? authData.user : null;
 
     useEffect(() => {
         if (isVisible && bannerRef.current) {
@@ -43,8 +30,7 @@ export default function TopBanner() {
 
     const handleLogout = async () => {
         try {
-            await fetch('/api/auth/logout', { method: 'POST' });
-            setAdminUser(null);
+            await logout(undefined).unwrap();
             router.push('/portal/admin/login');
         } catch (error) {
             console.error('Logout failed:', error);
