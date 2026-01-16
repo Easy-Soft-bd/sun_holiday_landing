@@ -4,35 +4,44 @@ export default function AboutView() {
     return (
         <main className="min-h-screen bg-base-100">
             {/* Hero Section */}
-            <section className="relative h-[60vh] flex items-center justify-center overflow-hidden bg-primary/5">
+            {/* Hero Section */}
+            <section className="relative bg-base-100  overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <div 
                         className="w-full h-full bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop')] bg-cover bg-center "
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-base-100" />
+                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-50" />
+                    {/* <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-secondary/20 rounded-full blur-3xl opacity-50" /> */}
                 </div>
 
-                <div className="container mx-auto px-4 z-10 text-center">
-                    <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter font-magmawave">
-                        About <span className="text-primary ">Sun Holidays</span>
+                <div className="container mx-auto px-4 pt-32 pb-20 lg:pt-40 lg:pb-28 text-center relative z-10">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-base-100/50 backdrop-blur-sm border border-base-200 text-primary text-sm font-bold uppercase tracking-widest mb-8 shadow-sm">
+                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        Est. Nov 8, 2021
+                    </div>
+
+                    <h1 className="font-magmawave text-5xl md:text-7xl mb-6 tracking-tighter leading-tight">
+                        About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Sun Holidays</span> <br />
+                        <span className="font-gilliequest text-4xl md:text-6xl text-base-content/80 italic uppercase">Crafting Unforgettable Journeys</span>
                     </h1>
-                    <p className="text-xl md:text-2xl text-base-content/70 max-w-2xl mx-auto font-medium">
-                        Crafting unforgettable journeys since 2021.
+                    <p className="text-xl md:text-2xl text-base-content/60 max-w-2xl mx-auto font-light leading-relaxed">
+                        Your trusted partner in exploring the world, committed to excellence and care in every trip.
                     </p>
                 </div>
             </section>
 
             {/* Our Story Section */}
-            <section className="py-20 container mx-auto px-4">
+            <section className="py-12 md:py-20 container mx-auto px-4">
                 <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
-                    <div className="flex-1 relative">
-                        <div className="absolute -inset-4 bg-secondary/10 rounded-3xl -z-10 rotate-3" />
+                    <div className="flex-1 relative w-full max-w-lg md:max-w-none">
+                        <div className="absolute inset-0 md:-inset-4 bg-secondary/10 rounded-3xl -z-10 rotate-1 md:rotate-3" />
                          <img 
                             src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=2070&auto=format&fit=crop" 
                             alt="Group of friends traveling" 
                             className="rounded-2xl shadow-2xl w-full object-cover aspect-video"
                         />
-                         <div className="absolute -bottom-6 -right-6 bg-base-100 p-4 rounded-xl shadow-lg border border-base-200">
+                         <div className="absolute -bottom-6 right-4 md:-right-6 bg-base-100 p-4 rounded-xl shadow-lg border border-base-200">
                              <div className="flex items-center gap-2 text-primary font-bold">
                                  <Calendar size={20} />
                                  <span>Est. Nov 8, 2021</span>
@@ -40,12 +49,12 @@ export default function AboutView() {
                          </div>
                     </div>
 
-                    <div className="flex-1 space-y-6">
+                    <div className="flex-1 space-y-6 text-center md:text-left">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-bold uppercase tracking-wider">
                             <Users size={16} />
                             Our Origin
                         </div>
-                        <h2 className="text-4xl font-bold">Born from Passion</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold">Born from Passion</h2>
                         <div className="space-y-4 text-lg text-base-content/80 leading-relaxed">
                             <p>
                                 Sun Holidays Ltd. started when a group of friends decided to make something out of their common passion for travel. 

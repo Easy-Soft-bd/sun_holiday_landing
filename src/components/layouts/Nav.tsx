@@ -16,8 +16,8 @@ const Nav = () => {
             href: "/about",
             icon: Info,
             submenu: [
-                { name: "Our Story", href: "/about/story" },
-                { name: "Team", href: "/about/team" },
+                { name: "Our Story", href: "/about" },
+                { name: "Team", href: "/about/teams" },
                 { name: "Careers", href: "/about/careers" }
             ]
         },
