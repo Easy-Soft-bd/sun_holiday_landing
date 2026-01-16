@@ -18,17 +18,12 @@ const Nav = () => {
             submenu: [
                 { name: "Our Story", href: "/about" },
                 { name: "Team", href: "/about/teams" },
-                { name: "Careers", href: "/about/careers" }
             ]
         },
         {
             name: "Visa",
             href: "/visa",
             icon: FileText,
-            submenu: [
-                { name: "Tourist Visa", href: "/visa/tourist" },
-                { name: "Business Visa", href: "/visa/business" }
-            ]
         },
         { name: "Ticket", href: "/tickets", icon: Ticket },
         {
