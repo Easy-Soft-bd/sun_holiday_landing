@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logo from "./Logo";
+import Logo from "../common/Logo";
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Send } from "lucide-react";
 
 const Footer = () => {
@@ -37,6 +37,7 @@ const Footer = () => {
                             <li><Link href="/tickets" className="hover:text-primary transition-colors">Air Ticketing</Link></li>
                             <li><Link href="/resorts" className="hover:text-primary transition-colors">Resort Bookings</Link></li>
                             <li><Link href="/tours" className="hover:text-primary transition-colors">Custom Tour Packages</Link></li>
+                            <li><Link href="/blog" className="hover:text-primary transition-colors">News & Blog</Link></li>
                         </ul>
                     </div>
 
