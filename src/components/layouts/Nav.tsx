@@ -1,13 +1,29 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Home, Info, FileText, Ticket, MapPin, Mail, Hotel, ChevronDown } from 'lucide-react';
+import { Menu, X, Home, Info, FileText, Ticket, MapPin, Mail, Hotel, ChevronDown, LayoutDashboard } from 'lucide-react';
 import Logo from '../common/Logo';
 
 const Nav = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const res = await fetch('/api/auth/me');
+                if (res.ok) {
+                    const data = await res.json();
+                    setIsAdmin(data.authenticated);
+                }
+            } catch (error) {
+                console.error('Nav auth check failed:', error);
+            }
+        };
+        checkAuth();
+    }, []);
 
     const navLinks = [
         { name: "Home", href: "/", icon: Home },
@@ -106,12 +122,22 @@ const Nav = () => {
 
                         {/* CTA & Mobile Toggle */}
                         <div className="flex items-center gap-3">
-                            <Link
-                                href="/services"
-                                className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-white border-none"
-                            >
-                                Our Services
-                            </Link>
+                            {isAdmin ? (
+                                <Link
+                                    href="/portal/admin/dashboard"
+                                    className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-white border-none flex items-center gap-2"
+                                >
+                                    <LayoutDashboard size={18} />
+                                    Dashboard
+                                </Link>
+                            ) : (
+                                <Link
+                                    href="/services"
+                                    className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-white border-none"
+                                >
+                                    Our Services
+                                </Link>
+                            )}
 
                             <button
                                 onClick={toggleDrawer}
@@ -185,9 +211,24 @@ const Nav = () => {
                     </div>
 
                     <div className="p-6 border-t border-base-200">
-                        <Link href="/services" className="btn btn-primary w-full rounded-full text-white" onClick={toggleDrawer}>
-                            Our Services
-                        </Link>
+                        {isAdmin ? (
+                            <Link 
+                                href="/portal/admin/dashboard" 
+                                className="btn btn-primary w-full rounded-full text-white flex items-center justify-center gap-2" 
+                                onClick={toggleDrawer}
+                            >
+                                <LayoutDashboard size={18} />
+                                Dashboard
+                            </Link>
+                        ) : (
+                            <Link 
+                                href="/services" 
+                                className="btn btn-primary w-full rounded-full text-white" 
+                                onClick={toggleDrawer}
+                            >
+                                Our Services
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>

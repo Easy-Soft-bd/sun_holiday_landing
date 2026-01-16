@@ -1,21 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import { Form, Input, Button, Checkbox, Card, Typography, Space, App } from "antd";
+import { Form, Input, Button, Checkbox, Card, Typography, Space, message } from "antd";
 import { UserOutlined, LockOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Logo from "@/src/components/common/Logo";
 
 const { Title, Text } = Typography;
 
 export default function AdminLoginPage() {
     const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
 
     const onFinish = async (values: any) => {
         setIsLoading(true);
-        console.log("Success:", values);
-        // Add login logic here later
-        setTimeout(() => setIsLoading(false), 2000);
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: values.email,
+                    password: values.password
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                message.success('Login successful!');
+                router.push('/portal/admin/dashboard');
+            } else {
+                message.error(data.message || 'Login failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            message.error('An error occurred. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
