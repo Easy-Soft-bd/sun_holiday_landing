@@ -20,7 +20,7 @@ export default async function Home() {
 
   return (
     <>
-      <Hero />
+      <Hero data={pageData?.hero} admin={admin} />
       {admin ? (
         <div className="bg-primary/10 border-b border-primary/20 py-2 text-center text-sm font-medium text-primary">
           You are logged in as <span className="font-bold underline">Admin</span>. (Admin Dashboard View)
