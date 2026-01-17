@@ -16,7 +16,7 @@ export default async function Home() {
   // Note: Data is fetched but not passed to components yet as they need to be updated to accept props.
   const pageDataRaw = await HomePage.findOne();
   const pageData = pageDataRaw?.get({ plain: true });
-  console.log('Fetched Page Data:', pageData, admin);
+  
 
   return (
     <>
@@ -25,12 +25,8 @@ export default async function Home() {
         <div className="bg-primary/10 border-b border-primary/20 py-2 text-center text-sm font-medium text-primary">
           You are logged in as <span className="font-bold underline">Admin</span>. (Admin Dashboard View)
         </div>
-      ) : (
-        <div className="bg-muted/50 py-1 text-center text-xs text-muted-foreground italic">
-          hello admin login please
-        </div>
-      )}
-      <AirLineMarquee />
+      ) : null}
+      <AirLineMarquee data={pageData?.airline_marquee} admin={admin} />
       <FeatureTour />
       <ResortCta />
       <HajjCta />
