@@ -1,4 +1,5 @@
 import User, { UserRole } from '@/src/models/User';
+import HomePage from '@/src/models/HomePage';
 import sequelize from '@/src/lib/db';
 
 export async function seedAdmin() {
