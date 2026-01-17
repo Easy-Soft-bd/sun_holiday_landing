@@ -57,7 +57,7 @@ const Nav = () => {
             href: "/resorts",
             icon: Hotel,
             submenu: [
-                { name: "Beach Resorts", href: "/resort/beach" },
+                { name: "Beach Resorts", href: "/sailor-moon-resorts" },
                 { name: "City Hotels", href: "/resort/city" }
             ]
         },
