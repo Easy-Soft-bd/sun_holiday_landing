@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "PORT=3012 next start",
     "lint": "eslint",
     "dbsync": "tsx scripts/db_model_sync.ts"
   },
