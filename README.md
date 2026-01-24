@@ -69,3 +69,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - `src/lib/`: Utilities, database connection (`db.ts`), authentication (`auth.ts`), and seed scripts.
 - `src/view/`: View-specific components (e.g., Home page sections).
 - `scripts/`: Maintenance scripts (e.g., `db_model_sync.ts`).
+
+
+http://localhost:3000/api/test-db?seed=true
