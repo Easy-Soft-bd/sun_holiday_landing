@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run dbsync && next build",
     "start": "PORT=3012 next start",
     "lint": "eslint",
     "dbsync": "tsx scripts/db_model_sync.ts"
