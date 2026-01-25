@@ -50,9 +50,9 @@ export default function AdminLayout({
             label: <Link href="/portal/admin/users">Users</Link>,
         },
         {
-            key: '/portal/admin/settings',
+            key: '/portal/admin/dashboard/settings',
             icon: <SettingOutlined />,
-            label: <Link href="/portal/admin/settings">Settings</Link>,
+            label: <Link href="/portal/admin/dashboard/settings">Settings</Link>,
         },
     ];
 

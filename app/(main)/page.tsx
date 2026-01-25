@@ -9,14 +9,14 @@ import ResortCta from "@/src/view/Home/resort_cta/ResortCta";
 import { isAdmin } from "@/src/lib/auth";
 import HomePage from "@/src/models/HomePage";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const admin = await isAdmin();
   
   // Fetch home page data from database
-  // Note: Data is fetched but not passed to components yet as they need to be updated to accept props.
   const pageDataRaw = await HomePage.findOne();
-  const pageData = pageDataRaw?.get({ plain: true });
-  
+  const pageData = pageDataRaw ? pageDataRaw.get({ plain: true }) : null;
 
   return (
     <>

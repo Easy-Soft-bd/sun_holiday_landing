@@ -11,12 +11,13 @@ async function syncModels() {
     // Import models to ensure they are registered
     await import('../src/models/User');
     await import('../src/models/HomePage');
+    await import('../src/models/GeneralSettings');
 
     console.log('Starting database synchronization...');
     await sequelize.authenticate();
     console.log('Connection to database established.');
 
-    console.log('Synchronizing models: User, HomePage...');
+    console.log('Synchronizing models: User, HomePage, GeneralSettings...');
     await sequelize.sync({ alter: true });
     
     console.log('All models synchronized successfully.');

@@ -1,9 +1,25 @@
+"use client";
+
 import Link from "next/link";
 import Logo from "../common/Logo";
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Send } from "lucide-react";
+import { useGetSettingsQuery } from "@/src/lib/redux/api/settingsApi";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
+    const { data: settingsData } = useGetSettingsQuery({});
+    const settings = settingsData?.data;
+
+    const contactEmail = settings?.contactEmail || "support@sunholidays.com";
+    const contactPhone = settings?.contactPhone || "+880 1234 567 890";
+    const address = settings?.address || "123 Travel Plaza, Suite 456\nDhaka, Bangladesh";
+    
+    const socialLinks = [
+        { Icon: Facebook, url: settings?.facebookUrl || "#" },
+        { Icon: Instagram, url: settings?.instagramUrl || "#" },
+        { Icon: Twitter, url: settings?.twitterUrl || "#" },
+        { Icon: Linkedin, url: settings?.linkedinUrl || "#" },
+    ];
 
     return (
         <footer className="bg-base-200 text-base-content border-t border-base-300">
@@ -17,12 +33,11 @@ const Footer = () => {
                             <Logo showText={false} width={60} height={60} />
                         </Link>
                         <p className="text-base-content/70 leading-relaxed text-sm">
-                            Sun Holidays Ltd is your premier gateway to world-class travel experiences.
-                            We specialize in curated holidays, seamless visa processing, and luxury resort bookings.
+                            {settings?.metaDescription || "Sun Holidays Ltd is your premier gateway to world-class travel experiences. We specialize in curated holidays, seamless visa processing, and luxury resort bookings."}
                         </p>
                         <div className="flex gap-4">
-                            {[Facebook, Instagram, Twitter, Linkedin].map((Icon, i) => (
-                                <Link key={i} href="#" className="btn btn-ghost btn-sm btn-circle hover:bg-primary hover:text-white transition-all">
+                            {socialLinks.map(({ Icon, url }, i) => (
+                                <Link key={i} href={url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm btn-circle hover:bg-primary hover:text-white transition-all">
                                     <Icon size={18} />
                                 </Link>
                             ))}
@@ -47,15 +62,15 @@ const Footer = () => {
                         <ul className="space-y-4 text-sm font-medium">
                             <li className="flex items-start gap-3">
                                 <MapPin size={18} className="text-primary shrink-0" />
-                                <span className="text-base-content/70">123 Travel Plaza, Suite 456<br />Dhaka, Bangladesh</span>
+                                <span className="text-base-content/70 whitespace-pre-line">{address}</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone size={18} className="text-primary shrink-0" />
-                                <span className="text-base-content/70">+880 1234 567 890</span>
+                                <span className="text-base-content/70">{contactPhone}</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail size={18} className="text-primary shrink-0" />
-                                <span className="text-base-content/70">support@sunholidays.com</span>
+                                <span className="text-base-content/70">{contactEmail}</span>
                             </li>
                         </ul>
                     </div>

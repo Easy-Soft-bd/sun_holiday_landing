@@ -43,6 +43,7 @@ const defaultData = {
     backgroundImage: "/hero/hero.jpg"
 };
 
+
 interface HeroProps {
     data?: HeroData;
     admin?: boolean;
@@ -50,7 +51,6 @@ interface HeroProps {
 
 export default function Hero({ data, admin = false }: HeroProps) {
     const heroData = { ...defaultData, ...data };
-
     return (
         <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center justify-center overflow-hidden bg-base-300 group/hero">
             
