@@ -101,7 +101,6 @@ export default function AirLineMarqueeEditModal({ isOpen, onClose, initialData }
             onCancel={handleCancel}
             width={900}
             footer={null}
-            forceRender
         >
             <Form
                 form={form}

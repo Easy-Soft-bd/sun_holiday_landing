@@ -110,7 +110,6 @@ export default function HajjCtaEditModal({ isOpen, onClose, initialData }: HajjC
             onCancel={handleCancel}
             width={1000}
             footer={null}
-            forceRender
         >
             <Form
                 form={form}

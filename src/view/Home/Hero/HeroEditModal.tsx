@@ -104,7 +104,6 @@ export default function HeroEditModal({ isOpen, onClose, initialData }: HeroEdit
             onCancel={handleCancel}
             width={900}
             footer={null}
-            forceRender
         >
             <Form
                 form={form}

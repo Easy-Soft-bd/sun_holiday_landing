@@ -140,7 +140,6 @@ export default function HolidayCategoriesEditModal({ isOpen, onClose, initialDat
             onCancel={handleCancel}
             width={1200}
             footer={null}
-            forceRender
         >
             <Form
                 form={form}

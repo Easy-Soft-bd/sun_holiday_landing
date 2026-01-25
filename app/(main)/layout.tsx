@@ -2,7 +2,7 @@ import React from 'react';
 import Nav from "@/src/components/layouts/Nav";
 import Footer from "@/src/components/layouts/Footer";
 import TopBanner from "@/src/components/common/TopBanner";
-import { getCachedAdminStatus, getCachedHomePageData } from "@/src/lib/get-page-data";
+import { getCachedAdminStatus, getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
 
 export default async function MainLayout({    
   children,
@@ -10,7 +10,8 @@ export default async function MainLayout({
   children: React.ReactNode;
 }>) {
     const admin = await getCachedAdminStatus();
-    await getCachedHomePageData();
+    const pageData = await getCachedHomePageData();
+    const settings = await getCachedSettings();
 
   return (
     <>
@@ -18,7 +19,7 @@ export default async function MainLayout({
       <div className="relative">
         <Nav />
         {children}
-        <Footer />
+        <Footer data={pageData?.footer} admin={admin} settings={settings} />
       </div>
     </>
   );

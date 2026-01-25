@@ -3,6 +3,7 @@ import Link from "next/link";
 import * as LucideIcons from "lucide-react";
 import { ArrowUpRight, Umbrella } from "lucide-react";
 import HolidayCategoriesEditButton from "./components/common/HolidayCategoriesEditButton";
+import ClientOnly from "./components/common/ClientOnly";
 
 interface CategoryItem {
     id: string;
@@ -94,9 +95,11 @@ export default function HolidayCategories({ data, admin = false }: HolidayCatego
             
             {/* Admin Edit Controls */}
             {admin && (
-                <div className="absolute bottom-4 left-4 z-50">
-                    <HolidayCategoriesEditButton data={holidayData} />
-                </div>
+                <ClientOnly>
+                    <div className="absolute bottom-4 left-4 z-50">
+                        <HolidayCategoriesEditButton data={holidayData} />
+                    </div>
+                </ClientOnly>
             )}
 
             <div className="container mx-auto px-4">

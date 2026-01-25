@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Marquee } from "../ui/marquee";
 import AirLineMarqueeEditButton from "./AirLineMarqueeEditButton";
+import ClientOnly from "./ClientOnly";
 
 interface AirlineItem {
     id: number;
@@ -71,9 +72,11 @@ export function AirLineMarquee({ data, admin = false }: AirLineMarqueeProps) {
             
             {/* Admin Edit Controls */}
             {admin && (
-                <div className="absolute bottom-4 left-4 z-50">
-                    <AirLineMarqueeEditButton data={marqueeData} />
-                </div>
+                <ClientOnly>
+                    <div className="absolute bottom-4 left-4 z-50">
+                        <AirLineMarqueeEditButton data={marqueeData} />
+                    </div>
+                </ClientOnly>
             )}
 
             {/* Premium Title Section */}

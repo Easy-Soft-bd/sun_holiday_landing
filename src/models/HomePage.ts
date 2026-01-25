@@ -11,6 +11,7 @@ class HomePage extends Model {
   declare holiday_categories: any;
   declare booking_process: any;
   declare why_choose_us: any;
+  declare footer: any;
 }
 
 HomePage.init(
@@ -106,6 +107,17 @@ HomePage.init(
       },
       set(value: any) {
         this.setDataValue('why_choose_us', value);
+      },
+    },
+    footer: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      get() {
+        const rawValue = this.getDataValue('footer');
+        return typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
+      },
+      set(value: any) {
+        this.setDataValue('footer', value);
       },
     },
   },

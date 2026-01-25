@@ -119,7 +119,6 @@ export default function ResortCtaEditModal({ isOpen, onClose, initialData }: Res
             onCancel={handleCancel}
             width={1000}
             footer={null}
-            forceRender
         >
             <Form
                 form={form}

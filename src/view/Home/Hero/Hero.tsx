@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Play, MapPin } from "lucide-react";
 import HeroEditButton from "./HeroEditButton";
+import ClientOnly from "@/src/components/common/ClientOnly";
 
 interface HeroData {
     badgeText?: string;
@@ -56,9 +57,11 @@ export default function Hero({ data, admin = false }: HeroProps) {
             
             {/* Admin Edit Controls */}
             {admin && (
-                <div className="absolute bottom-4 left-4 z-50">
-                    <HeroEditButton data={heroData} />
-                </div>
+                <ClientOnly>
+                    <div className="absolute bottom-4 left-4 z-50">
+                        <HeroEditButton data={heroData} />
+                    </div>
+                </ClientOnly>
             )}
 
             {/* 1. Fallback / Placeholder Image (Critical for LCP SEO) */}

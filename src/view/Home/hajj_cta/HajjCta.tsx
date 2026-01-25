@@ -11,6 +11,7 @@ import {
     ArrowRight
 } from "lucide-react";
 import HajjCtaEditButton from "./HajjCtaEditButton";
+import ClientOnly from "@/src/components/common/ClientOnly";
 
 interface Inclusion {
     icon: string;
@@ -76,9 +77,11 @@ const HajjCta = ({ data, admin = false }: HajjCtaProps) => {
             
             {/* Admin Edit Controls */}
             {admin && (
-                <div className="absolute bottom-4 left-4 z-50">
-                    <HajjCtaEditButton data={hajjData} />
-                </div>
+                <ClientOnly>
+                    <div className="absolute bottom-4 left-4 z-50">
+                        <HajjCtaEditButton data={hajjData} />
+                    </div>
+                </ClientOnly>
             )}
 
             {/* Decorative Background Elements */}

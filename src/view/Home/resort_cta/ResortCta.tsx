@@ -12,6 +12,7 @@ import {
     MapPin
 } from "lucide-react";
 import ResortCtaEditButton from "./ResortCtaEditButton";
+import ClientOnly from "@/src/components/common/ClientOnly";
 
 interface RoomDetail {
     label: string;
@@ -85,9 +86,11 @@ const ResortCta = ({ data, admin = false }: ResortCtaProps) => {
             
             {/* Admin Edit Controls */}
             {admin && (
-                <div className="absolute bottom-4 left-4 z-50">
-                    <ResortCtaEditButton data={resortData} />
-                </div>
+                <ClientOnly>
+                    <div className="absolute bottom-4 left-4 z-50">
+                        <ResortCtaEditButton data={resortData} />
+                    </div>
+                </ClientOnly>
             )}
 
             <div className="container mx-auto px-4 lg:px-8">
