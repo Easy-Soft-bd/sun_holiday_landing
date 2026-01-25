@@ -111,6 +111,35 @@
         }
     }
 
+    @keyframes sun-pulse {
+        0% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 10px rgba(var(--color-primary), 0.4));
+        }
+        50% {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 30px rgba(var(--color-secondary), 0.7));
+        }
+        100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 10px rgba(var(--color-primary), 0.4));
+        }
+    }
+
+    @keyframes fly {
+        0% {
+            transform: translateX(-50px) translateY(20px) rotate(-10deg);
+            opacity: 0;
+        }
+        20% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateX(50px) translateY(-20px) rotate(10deg);
+            opacity: 0;
+        }
+    }
+
     /* Animation Utility Classes */
     --animate-float: float 6s ease-in-out infinite;
     --animate-drift: drift 25s linear infinite;
@@ -118,6 +147,8 @@
 
     --animate-marquee: marquee 120s infinite linear;
     --animate-marquee-vertical: marquee-vertical 120s linear infinite;
+    --animate-sun-pulse: sun-pulse 2s ease-in-out infinite;
+    --animate-fly: fly 4s ease-in-out infinite;
 }
 
 /* 3. Global Base Styles */
