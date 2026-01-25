@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, message } from "antd";
-import { SaveOutlined } from "@ant-design/icons";
+import { Modal, Form, Input, Button, Divider, Row, Col, message, Upload, Space } from "antd";
+import { SaveOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
 
@@ -58,6 +58,9 @@ export default function HeroEditModal({ isOpen, onClose, initialData }: HeroEdit
     const [form] = Form.useForm();
     const [isSaving, setIsSaving] = useState(false);
 
+    // Watch values for preview and upload payload
+    const backgroundImage = Form.useWatch("backgroundImage", form);
+
     useEffect(() => {
         if (isOpen) {
             const mergedData = { ...defaultData, ...initialData };
@@ -101,7 +104,7 @@ export default function HeroEditModal({ isOpen, onClose, initialData }: HeroEdit
             onCancel={handleCancel}
             width={900}
             footer={null}
-            destroyOnHidden
+            forceRender
         >
             <Form
                 form={form}
@@ -261,12 +264,56 @@ export default function HeroEditModal({ isOpen, onClose, initialData }: HeroEdit
                 <Divider>Media</Divider>
                 <Row gutter={16}>
                     <Col xs={24} md={12}>
-                        <Form.Item
-                            label="Background Image URL"
-                            name="backgroundImage"
-                            rules={[{ required: true, message: 'Please enter background image URL' }]}
-                        >
-                            <Input placeholder="/hero/hero.jpg" />
+                        <Form.Item label="Background Image" extra="Optimized WebP will be generated. Old image will be deleted.">
+                            <div className="flex flex-col gap-4">
+                                <Space.Compact style={{ width: '100%' }}>
+                                    <Form.Item name="backgroundImage" noStyle rules={[{ required: true }]}>
+                                        <Input placeholder="Background Image URL" />
+                                    </Form.Item>
+                                    {backgroundImage && (
+                                        <Button 
+                                            type="default" 
+                                            href={backgroundImage} 
+                                            target="_blank" 
+                                            icon={<LinkOutlined />}
+                                        >
+                                            View
+                                        </Button>
+                                    )}
+                                </Space.Compact>
+                                <Upload
+                                    name="file"
+                                    action="/api/upload"
+                                    data={{ oldPath: backgroundImage }}
+                                    showUploadList={false}
+                                    onChange={(info) => {
+                                        if (info.file.status === 'uploading') {
+                                            setIsSaving(true);
+                                            return;
+                                        }
+                                        if (info.file.status === 'done') {
+                                            const url = info.file.response.url;
+                                            form.setFieldsValue({ backgroundImage: url });
+                                            message.success(`${info.file.name} uploaded successfully`);
+                                            setIsSaving(false);
+                                        } else if (info.file.status === 'error') {
+                                            message.error(`${info.file.name} upload failed.`);
+                                            setIsSaving(false);
+                                        }
+                                    }}
+                                >
+                                    <Button icon={<UploadOutlined />}>Upload Background Image</Button>
+                                </Upload>
+                                {backgroundImage && (
+                                    <div className="relative w-full h-32 rounded-lg overflow-hidden border border-base-300">
+                                        <img 
+                                            src={backgroundImage} 
+                                            alt="Preview" 
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </Form.Item>
                     </Col>
                     <Col xs={24} md={12}>

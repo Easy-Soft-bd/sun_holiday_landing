@@ -6,17 +6,14 @@ import FeatureTour from "@/src/view/Home/tour_slider/FeatureTour";
 import HajjCta from "@/src/view/Home/hajj_cta/HajjCta";
 import Hero from "@/src/view/Home/Hero/Hero";
 import ResortCta from "@/src/view/Home/resort_cta/ResortCta";
-import { isAdmin } from "@/src/lib/auth";
-import HomePage from "@/src/models/HomePage";
+import { getCachedAdminStatus, getCachedHomePageData } from "@/src/lib/get-page-data";
 
-export const dynamic = 'force-dynamic';
+
+// export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const admin = await isAdmin();
-  
-  // Fetch home page data from database
-  const pageDataRaw = await HomePage.findOne();
-  const pageData = pageDataRaw ? pageDataRaw.get({ plain: true }) : null;
+  const admin = await getCachedAdminStatus();
+  const pageData = await getCachedHomePageData();
 
   return (
     <>
@@ -28,9 +25,9 @@ export default async function Home() {
       ) : null}
       <AirLineMarquee data={pageData?.airline_marquee} admin={admin} />
       <FeatureTour />
-      <ResortCta />
-      <HajjCta />
-      <HolidayCategories />
+      <ResortCta data={pageData?.resort_cta} admin={admin} />
+      <HajjCta data={pageData?.hajj_cta} admin={admin} />
+      <HolidayCategories data={pageData?.holiday_categories} admin={admin} />
       <BookingProcess />
       <WhyChooseUs />
     </>

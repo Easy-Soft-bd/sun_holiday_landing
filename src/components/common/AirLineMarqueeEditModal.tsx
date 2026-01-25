@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, message, Space } from "antd";
+import { Modal, Form, Input, Button, Divider, message, Space, Row, Col } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import * as LucideIcons from "lucide-react";
 
 const { TextArea } = Input;
 
@@ -100,7 +101,7 @@ export default function AirLineMarqueeEditModal({ isOpen, onClose, initialData }
             onCancel={handleCancel}
             width={900}
             footer={null}
-            destroyOnHidden
+            forceRender
         >
             <Form
                 form={form}
@@ -171,21 +172,26 @@ export default function AirLineMarqueeEditModal({ isOpen, onClose, initialData }
                     {(fields, { add, remove }) => (
                         <>
                             {fields.map(({ key, name, ...restField }) => (
-                                <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'name']}
-                                        rules={[{ required: true, message: 'Missing airline name' }]}
-                                    >
-                                        <Input placeholder="Airline Name" style={{ width: 200 }} />
-                                    </Form.Item>
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'url']}
-                                        rules={[{ required: true, message: 'Missing logo URL' }]}
-                                    >
-                                        <Input placeholder="Logo URL" style={{ width: 400 }} />
-                                    </Form.Item>
+                                <div key={key} className="p-4 border border-base-300 rounded-xl bg-base-200/50 mb-4">
+                                    <div className="flex justify-between mb-4">
+                                        <span className="font-bold text-base-content/60">Airline Item #{key + 1}</span>
+                                        <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
+                                    </div>
+                                    <Row gutter={16} align="middle">
+                                        <Col span={8}>
+                                            <Form.Item
+                                                {...restField}
+                                                label="Airline Name"
+                                                name={[name, 'name']}
+                                                rules={[{ required: true, message: 'Missing airline name' }]}
+                                            >
+                                                <Input placeholder="Airline Name" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={12}>
+                                            <AirlineLogoItem form={form} fieldName={name} />
+                                        </Col>
+                                    </Row>
                                     <Form.Item
                                         {...restField}
                                         name={[name, 'id']}
@@ -193,13 +199,7 @@ export default function AirLineMarqueeEditModal({ isOpen, onClose, initialData }
                                     >
                                         <Input type="hidden" />
                                     </Form.Item>
-                                    <Button 
-                                        type="text" 
-                                        danger 
-                                        icon={<DeleteOutlined />} 
-                                        onClick={() => remove(name)}
-                                    />
-                                </Space>
+                                </div>
                             ))}
                             <Form.Item>
                                 <Button 
@@ -233,5 +233,40 @@ export default function AirLineMarqueeEditModal({ isOpen, onClose, initialData }
                 </Form.Item>
             </Form>
         </Modal>
+    );
+}
+
+function AirlineLogoItem({ form, fieldName }: { form: any, fieldName: number }) {
+    const url = Form.useWatch(['airlines', fieldName, 'url'], form);
+
+    return (
+        <Form.Item label="Logo URL">
+            <div className="flex flex-col gap-2">
+                <Space.Compact style={{ width: '100%' }}>
+                    <Form.Item name={[fieldName, 'url']} noStyle rules={[{ required: true }]}>
+                        <Input placeholder="Logo URL" />
+                    </Form.Item>
+                    {url && (
+                        <Button 
+                            type="default" 
+                            href={url} 
+                            target="_blank" 
+                            icon={<LucideIcons.ExternalLink size={14} />}
+                        >
+                            View
+                        </Button>
+                    )}
+                </Space.Compact>
+                {url && (
+                    <div className="relative w-full h-16 rounded-lg overflow-hidden border border-base-300 bg-white flex items-center justify-center p-2">
+                        <img 
+                            src={url} 
+                            alt="Logo Preview" 
+                            className="max-w-full max-h-full object-contain"
+                        />
+                    </div>
+                )}
+            </div>
+        </Form.Item>
     );
 }

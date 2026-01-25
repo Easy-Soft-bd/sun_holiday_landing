@@ -1,82 +1,57 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, readdir, unlink, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { isAdmin } from '@/src/lib/auth';
-import { v4 as uuidv4 } from 'uuid';
+import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs/promises";
+import sharp from "sharp";
+import { v4 as uuidv4 } from "uuid";
+import { isAdmin } from "@/src/lib/auth";
 
-export async function POST(request: NextRequest) {
-  try {
-    const isUserAdmin = await isAdmin();
-    if (!isUserAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const type = formData.get('type') as string;
-
-    if (!file) {
-      return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
-    }
-
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    let fileName: string;
-    let uploadDir: string;
-    let fileUrl: string;
-
-    if (type === 'logo') {
-      uploadDir = join(process.cwd(), 'public', 'logo', 'main');
-      
-      // Ensure directory exists
-      await mkdir(uploadDir, { recursive: true });
-
-      // Find current version and cleanup
-      const files = await readdir(uploadDir);
-      let maxVersion = 0;
-      for (const f of files) {
-        if (f.startsWith('logoV') && f.endsWith('.png')) {
-          const versionMatch = f.match(/logoV(\d+)\.png/);
-          if (versionMatch) {
-            const v = parseInt(versionMatch[1]);
-            if (v > maxVersion) maxVersion = v;
-          }
-          // Delete existing versions
-          try {
-            await unlink(join(uploadDir, f));
-          } catch (e) {
-            console.error(`Failed to delete old logo file ${f}:`, e);
-          }
+export async function POST(request: Request) {
+    try {
+        const isUserAdmin = await isAdmin();
+        if (!isUserAdmin) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-      }
 
-      const newVersion = maxVersion + 1;
-      fileName = `logoV${newVersion}.png`;
-      fileUrl = `/logo/main/${fileName}`;
-    } else {
-      // Generate unique filename for other uploads
-      const fileExtension = file.name.split('.').pop();
-      fileName = `${uuidv4()}.${fileExtension}`;
-      uploadDir = join(process.cwd(), 'public', 'uploads');
-      
-      // Ensure directory exists
-      await mkdir(uploadDir, { recursive: true });
-      
-      fileUrl = `/uploads/${fileName}`;
+        const formData = await request.formData();
+        const file = formData.get("file") as File;
+        const oldPath = formData.get("oldPath") as string;
+
+        if (!file) {
+            return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+        }
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const filename = `${uuidv4()}.webp`;
+        const uploadDir = path.join(process.cwd(), "public/uploads");
+
+        // Ensure directory exists
+        await fs.mkdir(uploadDir, { recursive: true });
+
+        const filePath = path.join(uploadDir, filename);
+
+        // Optimize and save image using sharp
+        await sharp(buffer)
+            .resize(1200, 1200, { fit: "inside", withoutEnlargement: true })
+            .toFormat("webp", { quality: 80 })
+            .toFile(filePath);
+
+        // Delete old file if provided and exists
+        if (oldPath && oldPath.startsWith("/uploads/")) {
+            const oldFilePath = path.join(process.cwd(), "public", oldPath);
+            try {
+                await fs.unlink(oldFilePath);
+                console.log("Deleted old file:", oldFilePath);
+            } catch (err) {
+                console.warn("Could not delete old file:", oldFilePath, err);
+            }
+        }
+
+        return NextResponse.json({ 
+            success: true, 
+            url: `/uploads/${filename}` 
+        });
+    } catch (error) {
+        console.error("Upload error:", error);
+        return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
     }
-
-    const path = join(uploadDir, fileName);
-    await writeFile(path, buffer);
-
-    return NextResponse.json({ 
-      success: true, 
-      url: fileUrl,
-      fileName: fileName,
-      originalName: file.name
-    });
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-  }
 }
