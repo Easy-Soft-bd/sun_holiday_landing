@@ -51,7 +51,7 @@ const Logo = ({
                     alt="Company Logo"
                     width={width}
                     height={height}
-                    priority // Ensures logo loads immediately (Good for LCP)
+                    unoptimized // Still needed for dynamic assets in production
                     className="object-contain"
                 />
             </div>

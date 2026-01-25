@@ -67,6 +67,7 @@ export default function Hero({ data, admin = false }: HeroProps) {
                 alt="Beautiful tropical holiday destination"
                 fill
                 priority
+                unoptimized
                 className="object-cover object-center"
                 sizes="100vw"
             />
