@@ -46,10 +46,6 @@ const Nav = () => {
             name: "Tour",
             href: "/tours",
             icon: MapPin,
-            submenu: [
-                { name: "Popular Destinations", href: "/tour/popular" },
-                { name: "Custom Tours", href: "/tour/custom" }
-            ]
         },
         { name: "Contact", href: "/contact", icon: Mail },
         {

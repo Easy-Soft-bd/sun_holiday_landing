@@ -1,20 +1,44 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import TourCard from "./components/TourCard";
 import TourFilter from "./components/TourFilter";
-import { mockTours } from "./data/mockTours";
-import { SlidersHorizontal } from "lucide-react";
+// import { mockTours } from "./data/mockTours"; // Removed mock data
+import { SlidersHorizontal, Loader2 } from "lucide-react";
 
 export default function ToursView() {
+    const [tours, setTours] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [maxPrice, setMaxPrice] = useState(500000);
     const [minPrice, setMinPrice] = useState(0);
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
+    useEffect(() => {
+        const fetchTours = async () => {
+            try {
+                const response = await fetch('/api/tours');
+                if (response.ok) {
+                    const data = await response.json();
+                     // Filter only Active tours for the public view
+                    const activeTours = data.filter((tour: any) => tour.status === 'Active');
+                    setTours(activeTours);
+                } else {
+                    console.error("Failed to fetch tours");
+                }
+            } catch (error) {
+                console.error("Error fetching tours:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTours();
+    }, []);
+
     const filteredTours = useMemo(() => {
-        return mockTours.filter(tour => {
+        return tours.filter(tour => {
             const matchesSearch = tour.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                                   tour.location.toLowerCase().includes(searchQuery.toLowerCase());
             
@@ -24,7 +48,18 @@ export default function ToursView() {
 
             return matchesSearch && matchesCategory && matchesPrice;
         });
-    }, [searchQuery, selectedCategory, maxPrice, minPrice]);
+    }, [tours, searchQuery, selectedCategory, maxPrice, minPrice]);
+
+    if (loading) {
+         return (
+            <main className="min-h-screen bg-base-50 flex justify-center items-center">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="animate-spin text-primary" size={48} />
+                    <p className="text-base-content/60 font-medium">Loading amazing experiences...</p>
+                </div>
+            </main>
+         );
+    }
 
     return (
         <main className="min-h-screen bg-base-50 pb-20">

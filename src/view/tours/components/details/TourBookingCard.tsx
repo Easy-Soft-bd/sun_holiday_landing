@@ -25,10 +25,12 @@ export default function TourBookingCard({ tour }: { tour: TourPackage }) {
                      <CalendarCheck size={20} />
                      Book Now
                  </button>
-                 <a href="tel:+8801873838301" className="btn btn-outline btn-ghost w-full rounded-xl gap-3">
-                     <PhoneCall size={20} />
-                     Call for Inquiry
-                 </a>
+                 {tour.inquiryPhone && (
+                     <a href={`tel:${tour.inquiryPhone}`} className="btn btn-outline btn-ghost w-full rounded-xl gap-3">
+                         <PhoneCall size={20} />
+                         Call for Inquiry
+                     </a>
+                 )}
             </div>
 
             <p className="text-xs text-center text-base-content/50 mt-6 leading-relaxed">

@@ -15,7 +15,7 @@ export interface TourPackage {
     duration: string;
     category: TourCategory;
     image: string;
-    startDate?: string;
+    inquiryPhone?: string;
     rating: number;
     reviews: number;
     description: string;
@@ -38,7 +38,7 @@ export const mockTours: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
         rating: 4.8,
         reviews: 124,
-        startDate: "2024-02-10",
+
         description: "Experience the world's longest natural sea beach in Cox's Bazar. Relax on the sandy shores, witness breathtaking sunsets, and enjoy fresh seafood. This package offers a perfect blend of relaxation and adventure.",
         highlights: [
             "Sunset viewing at Laboni Point",
@@ -76,7 +76,7 @@ export const mockTours: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=2070&auto=format&fit=crop",
         rating: 4.9,
         reviews: 85,
-        startDate: "2024-02-15",
+
         description: "Escape to Bangladesh's only coral island, Saint Martin's. Crystal clear blue waters, coconut groves, and fresh coral reefs await you. A true tropical paradise experience.",
         highlights: [
             "Cruise journey from Teknaf",
@@ -110,7 +110,7 @@ export const mockTours: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=2070&auto=format&fit=crop",
         rating: 4.7,
         reviews: 92,
-        startDate: "2024-02-20",
+
         description: "Touch the clouds at Sajek Valley, the 'Queen of Hills'. Famous for its morning cloud sea and serene green hills, Sajek offers a peaceful retreat amidst nature.",
         highlights: ["Sunrise over the clouds", "Konglak Para trek", "Alutila Cave expidition", "Hanging Bridge in Rangamati"],
         itinerary: [
@@ -138,7 +138,7 @@ export const mockTours: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=2070&auto=format&fit=crop",
         rating: 4.9,
         reviews: 210,
-        startDate: "2024-03-01",
+
         description: "Experience the glitz and glamour of Dubai. From the world's tallest building to desert safaris and luxury shopping, Dubai has it all.",
         highlights: ["Burj Khalifa Observation Deck", "Desert Safari with BBQ Dinner", "Dhow Cruise Marina", "Dubai Mall Aquarium"],
         itinerary: [
@@ -168,7 +168,7 @@ export const mockTours: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=2070&auto=format&fit=crop",
         rating: 4.6,
         reviews: 156,
-        startDate: "2024-03-05",
+
         description: "The perfect mix of city life and beach relaxation. Explore the vibrant streets of Bangkok and the coral islands of Pattaya.",
         highlights: ["Coral Island Tour (Pattaya)", "Bangkok City Temple Tour", "Alcazar Show", "Shopping at MBK/Pratunam"],
         itinerary: [
@@ -198,7 +198,7 @@ export const mockTours: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=2070&auto=format&fit=crop",
         rating: 5.0,
         reviews: 340,
-        startDate: "2024-02-25",
+
         description: "Perform your Umrah with peace of mind. Our premium package ensures 5-star accommodation near the Haram, transport, and complete guide support.",
         highlights: ["5-Star Hotels near Haram", "Private Transport", "Ziyarah in Makkah & Madinah", "Visa Processing"],
         itinerary: [
@@ -229,7 +229,7 @@ export const mockTours: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=2070&auto=format&fit=crop",
         rating: 4.8,
         reviews: 98,
-        startDate: "2024-03-10",
+
         description: "Where East meets West. Discover the rich history of the Ottoman Empire, cruise the Bosphorus, and shop at the Grand Bazaar.",
         highlights: ["Hagia Sophia & Blue Mosque", "Bosphorus Cruise", "Topkapi Palace", "Grand Bazaar"],
         itinerary: [
@@ -260,7 +260,7 @@ export const mockTours: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=2000&auto=format&fit=crop",
         rating: 4.9,
         reviews: 112,
-        startDate: "2024-06-15",
+
         description: "Fulfill your obligation of Hajj with our reliable standard package. We take care of logistics so you can focus on your prayers.",
         highlights: ["Shifting/Non-shifting options", "Moallim Service", "Mina & Arafat tents", "Full board meals"],
         itinerary: [
@@ -290,7 +290,7 @@ export const mockTours: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=2070&auto=format&fit=crop",
         rating: 4.7,
         reviews: 67,
-        startDate: "2024-02-28",
+
         description: "Explore the world's largest mangrove forest. Spot the Royal Bengal Tiger (if lucky!), deer, and crocodiles while cruising on a luxury vessel.",
         highlights: ["Kotka Beach", "Harbaria Eco Park", "Silent Boat Trip", "Jamtola Watch Tower"],
         itinerary: [

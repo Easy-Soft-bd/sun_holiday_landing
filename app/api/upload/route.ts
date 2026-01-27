@@ -1,57 +1,68 @@
-import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs/promises";
-import sharp from "sharp";
-import { v4 as uuidv4 } from "uuid";
-import { isAdmin } from "@/src/lib/auth";
+import { NextRequest, NextResponse } from 'next/server';
+import { writeFile, mkdir } from 'fs/promises';
+import path from 'path';
+import { existsSync } from 'fs';
+import { verifyAuth } from '@/src/lib/auth';
 
-export async function POST(request: Request) {
-    try {
-        const isUserAdmin = await isAdmin();
-        if (!isUserAdmin) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
-
-        const formData = await request.formData();
-        const file = formData.get("file") as File;
-        const oldPath = formData.get("oldPath") as string;
-
-        if (!file) {
-            return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-        }
-
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = `${uuidv4()}.webp`;
-        const uploadDir = path.join(process.cwd(), "public/uploads");
-
-        // Ensure directory exists
-        await fs.mkdir(uploadDir, { recursive: true });
-
-        const filePath = path.join(uploadDir, filename);
-
-        // Optimize and save image using sharp
-        await sharp(buffer)
-            .resize(1200, 1200, { fit: "inside", withoutEnlargement: true })
-            .toFormat("webp", { quality: 80 })
-            .toFile(filePath);
-
-        // Delete old file if provided and exists
-        if (oldPath && oldPath.startsWith("/uploads/")) {
-            const oldFilePath = path.join(process.cwd(), "public", oldPath);
-            try {
-                await fs.unlink(oldFilePath);
-                console.log("Deleted old file:", oldFilePath);
-            } catch (err) {
-                console.warn("Could not delete old file:", oldFilePath, err);
-            }
-        }
-
-        return NextResponse.json({ 
-            success: true, 
-            url: `/uploads/${filename}` 
-        });
-    } catch (error) {
-        console.error("Upload error:", error);
-        return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
+export async function POST(request: NextRequest) {
+  try {
+    // Check authentication
+    const auth = await verifyAuth(request);
+    if (!auth.authenticated) {
+      return NextResponse.json(
+        { error: 'Unauthorized. Please log in.' },
+        { status: 401 }
+      );
     }
+
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+    
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+    if (!validTypes.includes(file.type)) {
+      return NextResponse.json({ error: 'Invalid file type. Only images are allowed.' }, { status: 400 });
+    }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      return NextResponse.json({ error: 'File too large. Maximum size is 5MB.' }, { status: 400 });
+    }
+
+    // Generate unique filename
+    const timestamp = Date.now();
+    const originalName = file.name.replace(/\s+/g, '-');
+    const filename = `${timestamp}-${originalName}`;
+    
+    // Ensure upload directory exists
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'tours');
+    if (!existsSync(uploadDir)) {
+      await mkdir(uploadDir, { recursive: true });
+    }
+
+    // Convert file to buffer and save
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const filepath = path.join(uploadDir, filename);
+    
+    await writeFile(filepath, buffer);
+    
+    // Return the public URL
+    const fileUrl = `/uploads/tours/${filename}`;
+    
+    return NextResponse.json({ 
+      success: true, 
+      url: fileUrl,
+      filename: filename 
+    });
+    
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
+  }
 }

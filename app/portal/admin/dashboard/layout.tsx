@@ -35,9 +35,9 @@ export default function AdminLayout({
             label: <Link href="/portal/admin/dashboard">Dashboard</Link>,
         },
         {
-            key: '/portal/admin/tours',
+            key: '/portal/admin/dashboard/tours',
             icon: <EnvironmentOutlined />,
-            label: <Link href="/portal/admin/tours">Tours</Link>,
+            label: <Link href="/portal/admin/dashboard/tours">Tours</Link>,
         },
         {
             key: '/portal/admin/bookings',

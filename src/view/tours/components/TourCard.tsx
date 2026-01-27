@@ -10,7 +10,19 @@ const currencyFormatter = new Intl.NumberFormat('en-BD', {
     maximumFractionDigits: 0
 });
 
-export default function TourCard({ tour }: { tour: TourPackage }) {
+interface TourProps {
+    id: string | number;
+    title: string;
+    image: string;
+    category: string;
+    rating: number;
+    reviews: number;
+    location: string;
+    duration: string;
+    price: number;
+}
+
+export default function TourCard({ tour }: { tour: TourProps | any }) {
     return (
         <div className="group bg-base-100 rounded-3xl overflow-hidden shadow-sm border border-base-200 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full hover:-translate-y-1">
             <div className="relative aspect-[4/3] overflow-hidden">
