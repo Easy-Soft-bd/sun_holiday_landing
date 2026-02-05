@@ -40,7 +40,7 @@ export async function isAdmin(): Promise<boolean> {
     const secret = new TextEncoder().encode(JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);
 
-    return payload.role === 'admin';
+    return payload.role === 'ADMIN';
   } catch (error) {
     return false;
   }

@@ -39,8 +39,22 @@ export async function POST(request: NextRequest) {
     const originalName = file.name.replace(/\s+/g, '-');
     const filename = `${timestamp}-${originalName}`;
     
+    const type = formData.get('type') as string;
+    
+    // Determine directory and URL based on type
+    let uploadSubDir = 'uploads';
+    let urlPrefix = '/uploads';
+
+    if (type === 'logo') {
+      uploadSubDir = 'logo';
+      urlPrefix = '/logo';
+    } else if (type === 'tour') {
+      uploadSubDir = 'uploads/tours';
+      urlPrefix = '/uploads/tours';
+    }
+
     // Ensure upload directory exists
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'tours');
+    const uploadDir = path.join(process.cwd(), 'public', uploadSubDir);
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
@@ -53,7 +67,7 @@ export async function POST(request: NextRequest) {
     await writeFile(filepath, buffer);
     
     // Return the public URL
-    const fileUrl = `/uploads/tours/${filename}`;
+    const fileUrl = `${urlPrefix}/${filename}`;
     
     return NextResponse.json({ 
       success: true, 

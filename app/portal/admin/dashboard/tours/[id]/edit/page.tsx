@@ -181,6 +181,7 @@ export default function EditTourPage() {
                         beforeUpload={async (file) => {
                             const formData = new FormData();
                             formData.append('file', file);
+                            formData.append('type', 'tour');
                             
                             try {
                                 const response = await fetch('/api/upload', {
@@ -246,6 +247,7 @@ export default function EditTourPage() {
                 beforeUpload={async (file) => {
                     const formData = new FormData();
                     formData.append('file', file);
+                    formData.append('type', 'tour');
                     
                     try {
                         const response = await fetch('/api/upload', {
