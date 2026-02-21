@@ -11,6 +11,7 @@ class HomePage extends Model {
   declare holiday_categories: any;
   declare booking_process: any;
   declare why_choose_us: any;
+  declare sailor_moon_cta: any;
   declare footer: any;
 }
 
@@ -107,6 +108,17 @@ HomePage.init(
       },
       set(value: any) {
         this.setDataValue('why_choose_us', value);
+      },
+    },
+    sailor_moon_cta: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      get() {
+        const rawValue = this.getDataValue('sailor_moon_cta');
+        return typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
+      },
+      set(value: any) {
+        this.setDataValue('sailor_moon_cta', value);
       },
     },
     footer: {

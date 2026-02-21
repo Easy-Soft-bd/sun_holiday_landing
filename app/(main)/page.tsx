@@ -7,6 +7,7 @@ import HajjCta from "@/src/view/Home/hajj_cta/HajjCta";
 import Hero from "@/src/view/Home/Hero/Hero";
 import ResortCta from "@/src/view/Home/resort_cta/ResortCta";
 import { getCachedAdminStatus, getCachedHomePageData } from "@/src/lib/get-page-data";
+import SailorMoonCta from "@/src/view/Home/resort_cta/sailor-moon/SailorMoonCta";
 
 
 // export const dynamic = 'force-dynamic';
@@ -25,6 +26,7 @@ export default async function Home() {
       ) : null}
       <AirLineMarquee data={pageData?.airline_marquee} admin={admin} />
       <FeatureTour />
+      <SailorMoonCta data={pageData?.sailor_moon_cta} admin={admin} />
       <ResortCta data={pageData?.resort_cta} admin={admin} />
       <HajjCta data={pageData?.hajj_cta} admin={admin} />
       <HolidayCategories data={pageData?.holiday_categories} admin={admin} />
