@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import ResortCtaEditButton from "./ResortCtaEditButton";
 import ClientOnly from "@/src/components/common/ClientOnly";
+import IconRenderer from "@/src/components/common/IconRenderer";
 
 interface RoomDetail {
     label: string;
@@ -58,20 +59,15 @@ const defaultData = {
         { label: "Presidential", count: 5, size: "1500 sq. ft." },
     ],
     amenities: [
-        { icon: "Waves", label: "Huge Pool" },
-        { icon: "Dumbbell", label: "Gym & Spa" },
-        { icon: "Utensils", label: "Buffet & BBQ" },
-        { icon: "Users", label: "Conf. Room" },
-        { icon: "Coffee", label: "Coffee Shop" },
+        { icon: "LuWaves", label: "Huge Pool" },
+        { icon: "LuDumbbell", label: "Gym & Spa" },
+        { icon: "LuUtensils", label: "Buffet & BBQ" },
+        { icon: "LuUsers", label: "Conf. Room" },
+        { icon: "LuCoffee", label: "Coffee Shop" },
     ],
 };
 
-// Helper to get Lucide icon from string name
-const DynamicIcon = ({ name, className }: { name: string; className?: string }) => {
-    // @ts-ignore
-    const IconComponent = LucideIcons[name] || Hotel;
-    return <IconComponent className={className} />;
-};
+
 
 interface ResortCtaProps {
     data?: ResortCtaData;
@@ -162,7 +158,7 @@ const ResortCta = ({ data, admin = false }: ResortCtaProps) => {
                             <div className="flex flex-wrap gap-3">
                                 {resortData.amenities.map((item, i) => (
                                     <div key={i} className="flex items-center gap-2 bg-base-300/50 px-4 py-2 rounded-lg group hover:bg-primary hover:text-white transition-all duration-300">
-                                        <DynamicIcon name={item.icon} className="size-4 text-primary group-hover:text-white transition-colors" />
+                                        <IconRenderer iconName={item.icon} className="size-4 text-primary group-hover:text-white transition-colors" />
                                         <span className="text-xs font-bold">{item.label}</span>
                                     </div>
                                 ))}

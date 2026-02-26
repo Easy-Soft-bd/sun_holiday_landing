@@ -3,7 +3,13 @@ import Link from "next/link";
 import { Sparkles, MapPin, ChevronRight, Navigation, Sunset, Waves, Palmtree } from "lucide-react";
 import SailorMoonCtaEditButton from "./SailorMoonCtaEditButton";
 import ClientOnly from "@/src/components/common/ClientOnly";
+import IconRenderer from "@/src/components/common/IconRenderer";
 
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5917b2a (draft)
 interface Amenity {
     icon: string;
     label: string;
@@ -106,7 +112,7 @@ const SailorMoonCta = ({ data, admin = false }: SailorMoonCtaProps) => {
                 {/* Badge & Location */}
                 <div className="flex flex-wrap items-center gap-4">
                   <div className="flex items-center gap-2 bg-primary/20 backdrop-blur-md border border-primary/30 px-4 py-1.5 rounded-full">
-                    <DynamicIcon name={ctaData.badgeIcon} className="size-3 md:size-4 text-primary animate-pulse" />
+                    <IconRenderer iconName={ctaData.badgeIcon} className="size-3 md:size-4 text-primary animate-pulse" />
                     <span className="text-[10px] md:text-xs font-bold text-primary tracking-widest uppercase">{ctaData.badgeText}</span>
                   </div>
                   <div className="flex items-center gap-2 text-white/70">
@@ -130,6 +136,7 @@ const SailorMoonCta = ({ data, admin = false }: SailorMoonCtaProps) => {
               </span>
             </div>
 
+<<<<<<< HEAD
             <div className="space-y-1 md:space-y-2">
               <h1 className="font-magmawave text-4xl md:text-6xl text-white leading-none tracking-tighter">
                 {ctaData.titlePart1} <span className="text-primary italic">{ctaData.titlePart2}</span>
@@ -138,6 +145,19 @@ const SailorMoonCta = ({ data, admin = false }: SailorMoonCtaProps) => {
                 {ctaData.subHeadline}
               </h2>
             </div>
+=======
+                {/* Amenities Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 pt-2">
+                  {ctaData.amenities.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-2 md:gap-3 group/item">
+                      <div className="bg-white/10 p-1.5 md:p-2 rounded-lg group-hover/item:bg-primary/20 transition-colors">
+                        <IconRenderer iconName={item.icon} className="size-4 md:size-5 text-secondary group-hover/item:text-primary transition-colors" />
+                      </div>
+                      <span className="text-[10px] md:text-xs font-bold text-white/80 uppercase tracking-tighter">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+>>>>>>> 5917b2a (draft)
 
 <<<<<<< HEAD
             <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-lg line-clamp-3">
@@ -170,7 +190,7 @@ const SailorMoonCta = ({ data, admin = false }: SailorMoonCtaProps) => {
                   
                   <Link href={ctaData.galleryButtonLink} className="flex items-center gap-3 text-white/70 hover:text-white transition-colors group/gallery">
                      <div className="size-8 md:size-10 rounded-full border border-white/20 flex items-center justify-center group-hover/gallery:border-primary transition-colors">
-                        <DynamicIcon name={ctaData.galleryButtonIcon} className="size-4 md:size-5" />
+                        <IconRenderer iconName={ctaData.galleryButtonIcon} className="size-4 md:size-5" />
                      </div>
                      <span className="text-xs md:text-sm font-bold uppercase tracking-widest">{ctaData.galleryButtonText}</span>
                   </Link>
@@ -179,8 +199,12 @@ const SailorMoonCta = ({ data, admin = false }: SailorMoonCtaProps) => {
 
               {/* Decorative Floating Icons */}
               <div className="absolute top-10 right-10 text-primary/10 animate-float hidden lg:block">
+<<<<<<< HEAD
                 <DynamicIcon name={ctaData.floatingIcon} className="size-[100px]" />
 >>>>>>> 3ded553 (123)
+=======
+                <IconRenderer iconName={ctaData.floatingIcon} className="size-[100px]" />
+>>>>>>> 5917b2a (draft)
               </div>
             </div>
 

@@ -4,6 +4,7 @@ import * as LucideIcons from "lucide-react";
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Send, FacebookIcon, InstagramIcon, TwitterIcon, LinkedinIcon } from "lucide-react";
 import FooterEditButton from "./FooterEditButton";
 import ClientOnly from "../common/ClientOnly";
+import IconRenderer from "../common/IconRenderer";
 
 interface SocialLink {
     icon: string;
@@ -40,10 +41,10 @@ interface FooterData {
 const defaultData: FooterData = {
     bio: "Sun Holidays Ltd is your premier gateway to world-class travel experiences. We specialize in curated holidays, seamless visa processing, and luxury resort bookings.",
     socialLinks: [
-        { icon: "Facebook", url: "#" },
-        { icon: "Instagram", url: "#" },
-        { icon: "Twitter", url: "#" },
-        { icon: "Linkedin", url: "#" },
+        { icon: "LuFacebook", url: "#" },
+        { icon: "LuInstagram", url: "#" },
+        { icon: "LuTwitter", url: "#" },
+        { icon: "LuLinkedin", url: "#" },
     ],
     servicesTitle: "Services",
     servicesLinks: [
@@ -70,11 +71,7 @@ const defaultData: FooterData = {
     copyrightText: "Sun Holidays Ltd. All Rights Reserved.",
 };
 
-const DynamicIcon = ({ name, size = 18 }: { name: string; size?: number }) => {
-    // @ts-ignore
-    const IconComponent = LucideIcons[name] || LucideIcons.Link;
-    return <IconComponent size={size} />;
-};
+
 
 interface FooterProps {
     data?: FooterData;
@@ -119,7 +116,7 @@ const Footer = ({ data, admin = false, settings }: FooterProps) => {
                         <div className="flex gap-4">
                             {footerData.socialLinks?.map((social, i) => (
                                 <Link key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm btn-circle hover:bg-primary hover:text-white transition-all">
-                                    <DynamicIcon name={social.icon} />
+                                    <IconRenderer iconName={social.icon} />
                                 </Link>
                             ))}
                         </div>

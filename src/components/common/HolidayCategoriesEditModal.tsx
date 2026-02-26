@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Form, Input, Button, Divider, Row, Col, Space, message, Select, Upload } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
+import IconPicker from "@/src/components/common/IconPicker";
 
 const { TextArea } = Input;
 
@@ -40,7 +41,7 @@ const defaultData: HolidayCategoriesData = {
             description: "Turquoise waters & white sands.",
             image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800",
             className: "md:col-span-2 md:row-span-2",
-            icon: "Umbrella",
+            icon: "LuUmbrella",
             count: "120+ Locations",
             link: "/category/beach",
         },
@@ -50,7 +51,7 @@ const defaultData: HolidayCategoriesData = {
             description: "Reach new heights.",
             image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800",
             className: "md:col-span-2 md:row-span-1",
-            icon: "Mountain",
+            icon: "LuMountain",
             count: "85 Locations",
             link: "/category/mountain",
         },
@@ -60,7 +61,7 @@ const defaultData: HolidayCategoriesData = {
             description: "Metropolitan wonders.",
             image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=800",
             className: "md:col-span-1 md:row-span-1",
-            icon: "Building2",
+            icon: "LuBuilding2",
             count: "40+ Cities",
             link: "/category/city",
         },
@@ -70,14 +71,12 @@ const defaultData: HolidayCategoriesData = {
             description: "Nature's hidden gems.",
             image: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6?q=80&w=800",
             className: "md:col-span-1 md:row-span-1",
-            icon: "Palmtree",
+            icon: "LuPalmtree",
             count: "25+ Resorts",
             link: "/category/jungle",
         },
     ],
 };
-
-const LUCIDE_ICONS = ["Umbrella", "Mountain", "Building2", "Palmtree", "Waves", "Dumbbell", "Utensils", "Users", "Coffee", "Hotel", "MapPin", "ChevronRight", "Star", "Wifi", "Plane", "ShieldCheck"];
 
 const BENTO_CLASSES = [
     { label: "Large Featured (2x2)", value: "md:col-span-2 md:row-span-2" },
@@ -220,9 +219,7 @@ export default function HolidayCategoriesEditModal({ isOpen, onClose, initialDat
                                             <Row gutter={12}>
                                                 <Col span={12}>
                                                     <Form.Item {...restField} name={[name, 'icon']} label="Icon" rules={[{ required: true }]}>
-                                                        <Select>
-                                                            {LUCIDE_ICONS.map(icon => <Select.Option key={icon} value={icon}>{icon}</Select.Option>)}
-                                                        </Select>
+                                                        <IconPicker />
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={12}>
@@ -238,7 +235,7 @@ export default function HolidayCategoriesEditModal({ isOpen, onClose, initialDat
                                     </Col>
                                 ))}
                             </Row>
-                            <Button type="dashed" onClick={() => add({ id: Date.now().toString(), className: 'md:col-span-1 md:row-span-1', icon: 'Umbrella', link: '#' })} block icon={<PlusOutlined />} className="mt-4">
+                            <Button type="dashed" onClick={() => add({ id: Date.now().toString(), className: 'md:col-span-1 md:row-span-1', icon: 'LuUmbrella', link: '#' })} block icon={<PlusOutlined />} className="mt-4">
                                 Add Category
                             </Button>
                         </>

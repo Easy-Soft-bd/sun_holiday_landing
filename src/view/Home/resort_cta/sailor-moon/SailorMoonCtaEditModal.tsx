@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Form, Input, Button, Divider, Row, Col, Space, message, Select, Upload } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
+import IconPicker from "@/src/components/common/IconPicker";
 
 const { TextArea } = Input;
 
@@ -44,22 +45,20 @@ const defaultData: SailorMoonCtaData = {
     ctaButtonText: "Book Your Escape",
     ctaButtonLink: "/hotel/sailor-moon",
     amenities: [
-        { icon: "Sunset", label: "Beach Front" },
-        { icon: "Waves", label: "Infinity Pool" },
-        { icon: "Palmtree", label: "Tropical Garden" },
-        { icon: "Sparkles", label: "Star Gazing" },
+        { icon: "LuSun", label: "Beach Front" },
+        { icon: "LuWaves", label: "Infinity Pool" },
+        { icon: "LuPalmtree", label: "Tropical Garden" },
+        { icon: "LuSparkles", label: "Star Gazing" },
     ],
     badgeText: "New Escape",
-    badgeIcon: "Sparkles",
+    badgeIcon: "LuSparkles",
     galleryButtonText: "Experience Gallery",
     galleryButtonLink: "#view-gallery",
-    galleryButtonIcon: "Navigation",
-    floatingIcon: "Stars",
+    galleryButtonIcon: "LuNavigation",
+    floatingIcon: "LuStars",
     promoImageTitle: "Ocean View Premier Room",
     promoImageSubtitle: "Experience celestial luxury in every corner.",
 };
-
-const LUCIDE_ICONS = ["Sunset", "Waves", "Palmtree", "Sparkles", "Moon", "Stars", "Navigation", "Hotel", "MapPin", "Coffee", "Wifi", "Wind"];
 
 interface SailorMoonCtaEditModalProps {
     isOpen: boolean;
@@ -171,11 +170,7 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                             </Col>
                             <Col span={8}>
                                 <Form.Item label="Badge Icon" name="badgeIcon" rules={[{ required: true }]}>
-                                    <Select>
-                                        {LUCIDE_ICONS.map(icon => (
-                                            <Select.Option key={icon} value={icon}>{icon}</Select.Option>
-                                        ))}
-                                    </Select>
+                                    <IconPicker />
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -198,11 +193,7 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                             </Col>
                         </Row>
                         <Form.Item label="Gallery Icon" name="galleryButtonIcon" rules={[{ required: true }]}>
-                            <Select>
-                                {LUCIDE_ICONS.map(icon => (
-                                    <Select.Option key={icon} value={icon}>{icon}</Select.Option>
-                                ))}
-                            </Select>
+                            <IconPicker />
                         </Form.Item>
                     </Col>
 
@@ -269,11 +260,7 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                         </Form.Item>
 
                         <Form.Item label="Floating Decorative Icon" name="floatingIcon" rules={[{ required: true }]}>
-                            <Select>
-                                {LUCIDE_ICONS.map(icon => (
-                                    <Select.Option key={icon} value={icon}>{icon}</Select.Option>
-                                ))}
-                            </Select>
+                            <IconPicker />
                         </Form.Item>
 
                         <Divider titlePlacement="left">Amenities</Divider>
@@ -283,11 +270,7 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                                     {fields.map(({ key, name, ...restField }) => (
                                         <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                                             <Form.Item {...restField} name={[name, 'icon']} rules={[{ required: true }]}>
-                                                <Select placeholder="Icon" style={{ width: 120 }}>
-                                                    {LUCIDE_ICONS.map(icon => (
-                                                        <Select.Option key={icon} value={icon}>{icon}</Select.Option>
-                                                    ))}
-                                                </Select>
+                                                <IconPicker placeholder="Icon" />
                                             </Form.Item>
                                             <Form.Item {...restField} name={[name, 'label']} rules={[{ required: true }]}>
                                                 <Input placeholder="Label" style={{ width: 220 }} />

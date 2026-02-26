@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Form, Input, Button, Divider, Row, Col, Space, message, Select, Upload } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
+import IconPicker from "@/src/components/common/IconPicker";
 
 const { TextArea } = Input;
 
@@ -44,14 +45,12 @@ const defaultData: HajjCtaData = {
     viewDetailsLink: "/packages/umrah",
     contactAgentLink: "/contact",
     inclusions: [
-        { icon: "Plane", text: "Air Ticket" },
-        { icon: "ShieldCheck", text: "Visa Processing" },
-        { icon: "Map", text: "Transport & Ziyarah" },
-        { icon: "Hotel", text: "Premium Accommodation" },
+        { icon: "LuPlane", text: "Air Ticket" },
+        { icon: "LuShieldCheck", text: "Visa Processing" },
+        { icon: "LuMap", text: "Transport & Ziyarah" },
+        { icon: "LuHotel", text: "Premium Accommodation" },
     ],
 };
-
-const LUCIDE_ICONS = ["Plane", "ShieldCheck", "Map", "Hotel", "Calendar", "UserCheck", "ArrowRight", "Star", "Wifi", "Coffee", "Waves", "Dumbbell", "Utensils", "Users"];
 
 interface HajjCtaEditModalProps {
     isOpen: boolean;
@@ -241,11 +240,7 @@ export default function HajjCtaEditModal({ isOpen, onClose, initialData }: HajjC
                                     {fields.map(({ key, name, ...restField }) => (
                                         <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                                             <Form.Item {...restField} name={[name, 'icon']} rules={[{ required: true, message: 'Icon' }]}>
-                                                <Select placeholder="Icon" style={{ width: 120 }}>
-                                                    {LUCIDE_ICONS.map(icon => (
-                                                        <Select.Option key={icon} value={icon}>{icon}</Select.Option>
-                                                    ))}
-                                                </Select>
+                                                <IconPicker placeholder="Icon" />
                                             </Form.Item>
                                             <Form.Item {...restField} name={[name, 'text']} rules={[{ required: true, message: 'Text' }]}>
                                                 <Input placeholder="Air Ticket" style={{ width: 220 }} />

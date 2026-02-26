@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Form, Input, Button, Divider, Row, Col, Space, message, Upload, Select } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
-import * as LucideIcons from "lucide-react";
+import IconPicker from "@/src/components/common/IconPicker";
+import IconRenderer from "@/src/components/common/IconRenderer";
 
 const { TextArea } = Input;
 
@@ -43,10 +44,10 @@ interface FooterData {
 const defaultData: FooterData = {
     bio: "Sun Holidays Ltd is your premier gateway to world-class travel experiences. We specialize in curated holidays, seamless visa processing, and luxury resort bookings.",
     socialLinks: [
-        { icon: "Facebook", url: "#" },
-        { icon: "Instagram", url: "#" },
-        { icon: "Twitter", url: "#" },
-        { icon: "Linkedin", url: "#" },
+        { icon: "LuFacebook", url: "#" },
+        { icon: "LuInstagram", url: "#" },
+        { icon: "LuTwitter", url: "#" },
+        { icon: "LuLinkedin", url: "#" },
     ],
     servicesTitle: "Services",
     servicesLinks: [
@@ -73,15 +74,7 @@ const defaultData: FooterData = {
     copyrightText: "Sun Holidays Ltd. All Rights Reserved.",
 };
 
-const SOCIAL_PLATFORMS = [
-    { label: "Facebook", value: "Facebook" },
-    { label: "Instagram", value: "Instagram" },
-    { label: "Twitter / X", value: "Twitter" },
-    { label: "LinkedIn", value: "Linkedin" },
-    { label: "YouTube", value: "Youtube" },
-    { label: "WhatsApp", value: "Phone" },
-    { label: "Mail", value: "Mail" },
-];
+
 
 interface FooterEditModalProps {
     isOpen: boolean;
@@ -172,8 +165,8 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
                                         <div key={key} className="mb-4 p-3 border border-base-300 rounded-lg bg-base-100/50">
                                             <Row gutter={12} align="middle">
                                                 <Col span={8}>
-                                                    <Form.Item {...restField} name={[name, 'icon']} label="Platform" rules={[{ required: true, message: 'Platform' }]}>
-                                                        <Select options={SOCIAL_PLATFORMS} placeholder="Select Platform" />
+                                                    <Form.Item {...restField} name={[name, 'icon']} label="Icon" rules={[{ required: true, message: 'Icon' }]}>
+                                                        <IconPicker placeholder="Select Icon" />
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={14}>
@@ -289,20 +282,11 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
 function SocialIconPreview({ form, fieldName }: { form: any, fieldName: number }) {
     const iconName = Form.useWatch(['socialLinks', fieldName, 'icon'], form);
     
-    // Dynamically import icons for preview in modal
-    // Note: In a real app we'd want a more robust icon mapper
     return (
         <div className="flex items-center gap-2 mt-[-8px] mb-2 px-1">
             <span className="text-xs text-base-content/40 font-medium uppercase tracking-wider">Icon Preview:</span>
             <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary">
-                {iconName === "Facebook" && <LucideIcons.Facebook size={16} />}
-                {iconName === "Instagram" && <LucideIcons.Instagram size={16} />}
-                {iconName === "Twitter" && <LucideIcons.Twitter size={16} />}
-                {iconName === "Linkedin" && <LucideIcons.Linkedin size={16} />}
-                {iconName === "Youtube" && <LucideIcons.Youtube size={16} />}
-                {iconName === "Phone" && <LucideIcons.Phone size={16} />}
-                {iconName === "Mail" && <LucideIcons.Mail size={16} />}
-                {!["Facebook", "Instagram", "Twitter", "Linkedin", "Youtube", "Phone", "Mail"].includes(iconName) && <LinkOutlined />}
+                <IconRenderer iconName={iconName} />
             </div>
             <span className="text-xs font-bold text-primary">{iconName || "None"}</span>
         </div>

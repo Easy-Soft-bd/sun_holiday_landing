@@ -1,18 +1,18 @@
-import { Award, Star, BadgePercent } from "lucide-react";
+import IconRenderer from "./IconRenderer";
 
 const features = [
     {
-        icon: Award,
+        icon: "LuAward",
         title: "Experienced",
         desc: "15+ years of travel excellence.",
     },
     {
-        icon: Star,
+        icon: "LuStar",
         title: "World Class Service",
         desc: "VIP treatment for every traveler.",
     },
     {
-        icon: BadgePercent,
+        icon: "LuBadgePercent",
         title: "Best Price Guarantee",
         desc: "No hidden fees, only best rates.",
     },
@@ -40,8 +40,8 @@ const WhyChooseUs = () => {
                                 className="flex items-center gap-4 p-4 rounded-2xl bg-base-200/50 hover:bg-base-100 hover:shadow-xl hover:shadow-primary/5 transition-all group border border-transparent hover:border-primary/20"
                             >
                                 {/* Icon Circle */}
-                                <div className="shrink-0 size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
-                                    <item.icon size={24} strokeWidth={2.5} />
+                                <div className="shrink-0 size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all text-primary">
+                                    <IconRenderer iconName={item.icon} size={24} />
                                 </div>
 
                                 {/* Text Content */}

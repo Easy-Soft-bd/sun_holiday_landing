@@ -4,6 +4,7 @@ import * as LucideIcons from "lucide-react";
 import { ArrowUpRight, Umbrella } from "lucide-react";
 import HolidayCategoriesEditButton from "./components/common/HolidayCategoriesEditButton";
 import ClientOnly from "./components/common/ClientOnly";
+import IconRenderer from "./components/common/IconRenderer";
 
 interface CategoryItem {
     id: string;
@@ -38,7 +39,7 @@ const defaultData: HolidayCategoriesData = {
             description: "Turquoise waters & white sands.",
             image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800",
             className: "md:col-span-2 md:row-span-2",
-            icon: "Umbrella",
+            icon: "LuUmbrella",
             count: "120+ Locations",
             link: "/category/beach",
         },
@@ -48,7 +49,7 @@ const defaultData: HolidayCategoriesData = {
             description: "Reach new heights.",
             image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800",
             className: "md:col-span-2 md:row-span-1",
-            icon: "Mountain",
+            icon: "LuMountain",
             count: "85 Locations",
             link: "/category/mountain",
         },
@@ -58,7 +59,7 @@ const defaultData: HolidayCategoriesData = {
             description: "Metropolitan wonders.",
             image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=800",
             className: "md:col-span-1 md:row-span-1",
-            icon: "Building2",
+            icon: "LuBuilding2",
             count: "40+ Cities",
             link: "/category/city",
         },
@@ -68,19 +69,14 @@ const defaultData: HolidayCategoriesData = {
             description: "Nature's hidden gems.",
             image: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6?q=80&w=800",
             className: "md:col-span-1 md:row-span-1",
-            icon: "Palmtree",
+            icon: "LuPalmtree",
             count: "25+ Resorts",
             link: "/category/jungle",
         },
     ],
 };
 
-// Helper for dynamic icons
-const DynamicIcon = ({ name, className }: { name: string; className?: string }) => {
-    // @ts-ignore
-    const IconComponent = LucideIcons[name] || Umbrella;
-    return <IconComponent className={className} />;
-};
+
 
 interface HolidayCategoriesProps {
     data?: HolidayCategoriesData;
@@ -141,7 +137,7 @@ export default function HolidayCategories({ data, admin = false }: HolidayCatego
                             {/* Top Badge */}
                             <div className="absolute top-4 left-4">
                                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full">
-                                    <DynamicIcon name={cat.icon} className="size-4 text-primary" />
+                                    <IconRenderer iconName={cat.icon} className="size-4 text-primary" />
                                     <span className="text-[10px] font-bold uppercase tracking-widest text-white">
                                         {cat.count}
                                     </span>

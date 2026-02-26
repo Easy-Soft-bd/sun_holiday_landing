@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Search, FileText, Pointer, CheckCircle, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import IconRenderer from "./IconRenderer";
 
 const steps = [
     {
@@ -7,7 +8,7 @@ const steps = [
         title: "Step 1",
         subtitle: "Find Your Package",
         description: "Find out your best tour Package. Use Search or click here to find the best tour Package for you.",
-        icon: Search,
+        icon: "LuSearch",
         link: "/destinations",
         linkText: "Find Package",
     },
@@ -16,14 +17,14 @@ const steps = [
         title: "Step 2",
         subtitle: "Review Details",
         description: "Click details to get information about the tour Package and read the full details about the tour.",
-        icon: FileText,
+        icon: "LuFileText",
     },
     {
         id: "03",
         title: "Step 3",
         subtitle: "Secure Booking",
         description: "Click on Book Now and fill the form with your correct information to start the process.",
-        icon: Pointer,
+        icon: "LuPointer",
     },
 ];
 
@@ -56,7 +57,7 @@ const BookingProcess = () => {
                                 {/* Step Number & Icon */}
                                 <div className="relative mb-8">
                                     <div className="size-16 rounded-2xl bg-base-100 shadow-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                                        <step.icon size={28} />
+                                        <IconRenderer iconName={step.icon} size={28} />
                                     </div>
                                     <span className="absolute -top-4 -right-4 text-4xl font-black text-base-content/5 group-hover:text-primary/10 transition-colors">
                                         {step.id}
@@ -92,7 +93,7 @@ const BookingProcess = () => {
 
                                 <div className="relative z-10 space-y-4">
                                     <div className="size-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
-                                        <CheckCircle size={24} />
+                                        <IconRenderer iconName="LuCheckCircle" size={24} />
                                     </div>
                                     <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/80">
                                         Success

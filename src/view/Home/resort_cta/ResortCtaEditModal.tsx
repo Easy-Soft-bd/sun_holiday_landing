@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Form, Input, Button, Divider, Row, Col, Space, message, Select, Upload } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
+import IconPicker from "@/src/components/common/IconPicker";
 
 const { TextArea } = Input;
 
@@ -51,16 +52,13 @@ const defaultData: ResortCtaData = {
         { label: "Presidential", count: 5, size: "1500 sq. ft." },
     ],
     amenities: [
-        { icon: "Waves", label: "Huge Pool" },
-        { icon: "Dumbbell", label: "Gym & Spa" },
-        { icon: "Utensils", label: "Buffet & BBQ" },
-        { icon: "Users", label: "Conf. Room" },
-        { icon: "Coffee", label: "Coffee Shop" },
+        { icon: "LuWaves", label: "Huge Pool" },
+        { icon: "LuDumbbell", label: "Gym & Spa" },
+        { icon: "LuUtensils", label: "Buffet & BBQ" },
+        { icon: "LuUsers", label: "Conf. Room" },
+        { icon: "LuCoffee", label: "Coffee Shop" },
     ],
 };
-
-// Available icons from Lucide
-const LUCIDE_ICONS = ["Waves", "Dumbbell", "Utensils", "Users", "Coffee", "Hotel", "MapPin", "ChevronRight", "Star", "Wifi", "Tv", "Wind"];
 
 interface ResortCtaEditModalProps {
     isOpen: boolean;
@@ -266,11 +264,7 @@ export default function ResortCtaEditModal({ isOpen, onClose, initialData }: Res
                                     {fields.map(({ key, name, ...restField }) => (
                                         <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                                             <Form.Item {...restField} name={[name, 'icon']} rules={[{ required: true, message: 'Icon' }]}>
-                                                <Select placeholder="Icon" style={{ width: 120 }}>
-                                                    {LUCIDE_ICONS.map(icon => (
-                                                        <Select.Option key={icon} value={icon}>{icon}</Select.Option>
-                                                    ))}
-                                                </Select>
+                                                <IconPicker placeholder="Icon" />
                                             </Form.Item>
                                             <Form.Item {...restField} name={[name, 'label']} rules={[{ required: true, message: 'Label' }]}>
                                                 <Input placeholder="Label" style={{ width: 220 }} />

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import HajjCtaEditButton from "./HajjCtaEditButton";
 import ClientOnly from "@/src/components/common/ClientOnly";
+import IconRenderer from "@/src/components/common/IconRenderer";
 
 interface Inclusion {
     icon: string;
@@ -50,19 +51,14 @@ const defaultData = {
     viewDetailsLink: "/packages/umrah",
     contactAgentLink: "/contact",
     inclusions: [
-        { icon: "Plane", text: "Air Ticket" },
-        { icon: "ShieldCheck", text: "Visa Processing" },
-        { icon: "Map", text: "Transport & Ziyarah" },
-        { icon: "Hotel", text: "Premium Accommodation" },
+        { icon: "LuPlane", text: "Air Ticket" },
+        { icon: "LuShieldCheck", text: "Visa Processing" },
+        { icon: "LuMap", text: "Transport & Ziyarah" },
+        { icon: "LuHotel", text: "Premium Accommodation" },
     ],
 };
 
-// Helper to get Lucide icon from string name
-const DynamicIcon = ({ name, className }: { name: string; className?: string }) => {
-    // @ts-ignore
-    const IconComponent = LucideIcons[name] || Map;
-    return <IconComponent className={className} />;
-};
+
 
 interface HajjCtaProps {
     data?: HajjCtaData;
@@ -148,7 +144,7 @@ const HajjCta = ({ data, admin = false }: HajjCtaProps) => {
                                     className="flex items-center gap-4 p-4 rounded-xl border border-base-200 bg-base-200/30 hover:bg-base-100 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group"
                                 >
                                     <div className="bg-base-100 p-2 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
-                                        <DynamicIcon name={item.icon} className="size-5" />
+                                        <IconRenderer iconName={item.icon} className="size-5" />
                                     </div>
                                     <span className="text-sm font-bold text-base-content/80 group-hover:text-base-content transition-colors">
                                         {item.text}
