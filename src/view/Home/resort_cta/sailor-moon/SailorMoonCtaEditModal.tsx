@@ -23,6 +23,14 @@ interface SailorMoonCtaData {
     ctaButtonText: string;
     ctaButtonLink: string;
     amenities: Amenity[];
+    badgeText: string;
+    badgeIcon: string;
+    galleryButtonText: string;
+    galleryButtonLink: string;
+    galleryButtonIcon: string;
+    floatingIcon: string;
+    promoImageTitle: string;
+    promoImageSubtitle: string;
 }
 
 const defaultData: SailorMoonCtaData = {
@@ -41,6 +49,14 @@ const defaultData: SailorMoonCtaData = {
         { icon: "Palmtree", label: "Tropical Garden" },
         { icon: "Sparkles", label: "Star Gazing" },
     ],
+    badgeText: "New Escape",
+    badgeIcon: "Sparkles",
+    galleryButtonText: "Experience Gallery",
+    galleryButtonLink: "#view-gallery",
+    galleryButtonIcon: "Navigation",
+    floatingIcon: "Stars",
+    promoImageTitle: "Ocean View Premier Room",
+    promoImageSubtitle: "Experience celestial luxury in every corner.",
 };
 
 const LUCIDE_ICONS = ["Sunset", "Waves", "Palmtree", "Sparkles", "Moon", "Stars", "Navigation", "Hotel", "MapPin", "Coffee", "Wifi", "Wind"];
@@ -146,8 +162,47 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                             </Col>
                         </Row>
 
+                        <Divider titlePlacement="left">Badge & Location</Divider>
+                        <Row gutter={16}>
+                            <Col span={16}>
+                                <Form.Item label="Badge Text" name="badgeText" rules={[{ required: true }]}>
+                                    <Input placeholder="New Escape" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={8}>
+                                <Form.Item label="Badge Icon" name="badgeIcon" rules={[{ required: true }]}>
+                                    <Select>
+                                        {LUCIDE_ICONS.map(icon => (
+                                            <Select.Option key={icon} value={icon}>{icon}</Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
                         <Form.Item label="Location Text" name="locationText" rules={[{ required: true }]}>
                             <Input />
+                        </Form.Item>
+
+                        <Divider titlePlacement="left">Experience Gallery</Divider>
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item label="Gallery Text" name="galleryButtonText" rules={[{ required: true }]}>
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item label="Gallery Link" name="galleryButtonLink" rules={[{ required: true }]}>
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Form.Item label="Gallery Icon" name="galleryButtonIcon" rules={[{ required: true }]}>
+                            <Select>
+                                {LUCIDE_ICONS.map(icon => (
+                                    <Select.Option key={icon} value={icon}>{icon}</Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                     </Col>
 
@@ -204,6 +259,21 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                             >
                                 <Button icon={<UploadOutlined />} style={{ marginTop: 8 }}>Upload Promo Image</Button>
                             </Upload>
+
+                            <Form.Item label="Promo Title" name="promoImageTitle" style={{ marginTop: 16 }}>
+                                <Input placeholder="Ocean View Premier Room" />
+                            </Form.Item>
+                            <Form.Item label="Promo Subtitle" name="promoImageSubtitle">
+                                <Input placeholder="Experience celestial luxury..." />
+                            </Form.Item>
+                        </Form.Item>
+
+                        <Form.Item label="Floating Decorative Icon" name="floatingIcon" rules={[{ required: true }]}>
+                            <Select>
+                                {LUCIDE_ICONS.map(icon => (
+                                    <Select.Option key={icon} value={icon}>{icon}</Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                         <Divider titlePlacement="left">Amenities</Divider>
