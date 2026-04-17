@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Skeleton } from 'antd';
 import { useGetSettingsQuery } from "@/src/lib/redux/api/settingsApi";
@@ -13,7 +12,7 @@ interface LogoProps {
     showText?: boolean;
 }
 
-const DEFAULT_LOGO_URL = '/logo.png';
+const DEFAULT_LOGO_URL = '/logo/logo.png';
 
 const Logo = ({
     className,
