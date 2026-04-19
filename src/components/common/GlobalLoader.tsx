@@ -7,18 +7,25 @@ const GlobalLoader = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
         const handleLoad = () => {
-            // Extend delay to ensure users see the branding (logo) and prevent rapid flashing
-            setTimeout(() => setIsLoading(false), 2500);
+            timeoutId = setTimeout(() => setIsLoading(false), 120);
         };
 
         if (document.readyState === "complete") {
             handleLoad();
         } else {
             window.addEventListener("load", handleLoad);
-            return () => window.removeEventListener("load", handleLoad);
         }
-    },[]);
+
+        return () => {
+            window.removeEventListener("load", handleLoad);
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+    }, []);
 
     return <LoadingScreen show={isLoading} />;
 };

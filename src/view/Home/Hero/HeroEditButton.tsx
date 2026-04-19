@@ -1,8 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Edit } from "lucide-react";
-import HeroEditModal from "./HeroEditModal";
+
+const HeroEditModal = dynamic(() => import("./HeroEditModal"));
 
 interface HeroData {
     badgeText?: string;
@@ -40,11 +42,13 @@ export default function HeroEditButton({ data }: HeroEditButtonProps) {
                 <Edit size={16} /> Edit Hero
             </button>
 
-            <HeroEditModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                initialData={data}
-            />
+            {isModalOpen ? (
+                <HeroEditModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    initialData={data}
+                />
+            ) : null}
         </>
     );
 }

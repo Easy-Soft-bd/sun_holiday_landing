@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import IconRenderer from "./IconRenderer";
+import PublicIconRenderer from "./PublicIconRenderer";
 
 const steps = [
     {
@@ -57,7 +57,7 @@ const BookingProcess = () => {
                                 {/* Step Number & Icon */}
                                 <div className="relative mb-8">
                                     <div className="size-16 rounded-2xl bg-base-100 shadow-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                                        <IconRenderer iconName={step.icon} size={28} />
+                                        <PublicIconRenderer iconName={step.icon} size={28} />
                                     </div>
                                     <span className="absolute -top-4 -right-4 text-4xl font-black text-base-content/5 group-hover:text-primary/10 transition-colors">
                                         {step.id}
@@ -93,7 +93,7 @@ const BookingProcess = () => {
 
                                 <div className="relative z-10 space-y-4">
                                     <div className="size-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
-                                        <IconRenderer iconName="LuCheckCircle" size={24} />
+                                        <PublicIconRenderer iconName="LuCheckCircle" size={24} />
                                     </div>
                                     <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/80">
                                         Success
@@ -102,7 +102,7 @@ const BookingProcess = () => {
                                         Ready to Fly!
                                     </h4>
                                     <p className="text-sm text-white/80 leading-relaxed font-medium">
-                                        That's it! Now we will contact you shortly and provide booking confirmation.
+                                        That&apos;s it! Now we will contact you shortly and provide booking confirmation.
                                     </p>
                                 </div>
                             </div>

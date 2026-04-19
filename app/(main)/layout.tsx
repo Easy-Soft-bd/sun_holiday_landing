@@ -2,24 +2,31 @@ import React from 'react';
 import Nav from "@/src/components/layouts/Nav";
 import Footer from "@/src/components/layouts/Footer";
 import TopBanner from "@/src/components/common/TopBanner";
-import { getCachedAdminStatus, getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
+import { getCachedAdminSession, getCachedAdminStatus, getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
 
 export default async function MainLayout({    
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    const admin = await getCachedAdminStatus();
-    const pageData = await getCachedHomePageData();
-    const settings = await getCachedSettings();
+    const [admin, adminSession, pageData, settings] = await Promise.all([
+      getCachedAdminStatus(),
+      getCachedAdminSession(),
+      getCachedHomePageData(),
+      getCachedSettings(),
+    ]);
+    const branding = {
+      siteName: settings?.siteName,
+      siteLogo: settings?.siteLogo,
+    };
 
   return (
     <>
-      <TopBanner />
+      <TopBanner adminUser={adminSession.user} />
       <div className="relative">
-        <Nav />
+        <Nav branding={branding} admin={admin} />
         {children}
-        <Footer data={pageData?.footer} admin={admin} settings={settings} />
+        <Footer data={pageData?.footer} admin={admin} settings={settings} branding={branding} />
       </div>
     </>
   );

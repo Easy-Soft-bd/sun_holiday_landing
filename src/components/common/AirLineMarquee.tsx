@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Marquee } from "../ui/marquee";
-import AirLineMarqueeEditButton from "./AirLineMarqueeEditButton";
 import ClientOnly from "./ClientOnly";
 
 interface AirlineItem {
@@ -47,6 +46,18 @@ interface AirLineMarqueeProps {
     admin?: boolean;
 }
 
+async function AirLineMarqueeAdminSlot({ data }: { data: AirLineMarqueeData }) {
+    const AirLineMarqueeAdminControl = (await import("./AirLineMarqueeAdminControl")).default;
+
+    return (
+        <ClientOnly>
+            <div className="absolute bottom-4 left-4 z-50">
+                <AirLineMarqueeAdminControl data={data} />
+            </div>
+        </ClientOnly>
+    );
+}
+
 const LogoCard = ({ url, name }: { url: string; name: string }) => {
     return (
         <div className="relative group flex items-center justify-center px-[5px] ml-10">
@@ -64,7 +75,7 @@ const LogoCard = ({ url, name }: { url: string; name: string }) => {
     );
 };
 
-export function AirLineMarquee({ data, admin = false }: AirLineMarqueeProps) {
+export async function AirLineMarquee({ data, admin = false }: AirLineMarqueeProps) {
     const marqueeData = { ...defaultData, ...data };
 
     return (
@@ -72,11 +83,7 @@ export function AirLineMarquee({ data, admin = false }: AirLineMarqueeProps) {
             
             {/* Admin Edit Controls */}
             {admin && (
-                <ClientOnly>
-                    <div className="absolute bottom-4 left-4 z-50">
-                        <AirLineMarqueeEditButton data={marqueeData} />
-                    </div>
-                </ClientOnly>
+                <AirLineMarqueeAdminSlot data={marqueeData} />
             )}
 
             {/* Premium Title Section */}

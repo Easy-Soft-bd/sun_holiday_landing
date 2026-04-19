@@ -1,29 +1,21 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, Home, Info, FileText, Ticket, MapPin, Mail, Hotel, ChevronDown, LayoutDashboard } from 'lucide-react';
 import Logo from '../common/Logo';
 
-const Nav = () => {
+interface NavProps {
+    branding?: {
+        siteName?: string | null;
+        siteLogo?: string | null;
+    };
+    admin?: boolean;
+}
+
+const Nav = ({ branding, admin = false }: NavProps) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-    const [isAdmin, setIsAdmin] = useState(false);
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const res = await fetch('/api/auth/me');
-                if (res.ok) {
-                    const data = await res.json();
-                    setIsAdmin(data.authenticated);
-                }
-            } catch (error) {
-                console.error('Nav auth check failed:', error);
-            }
-        };
-        checkAuth();
-    }, []);
 
     const navLinks = [
         { name: "Home", href: "/", icon: Home },
@@ -54,7 +46,7 @@ const Nav = () => {
             icon: Hotel,
             submenu: [
                 { name: "Beach Resorts", href: "/sailor-moon-resorts" },
-                { name: "City Hotels", href: "/resort/city" }
+                { name: "City Hotels", href: "/resort/city-dhaka" }
             ]
         },
     ];
@@ -77,7 +69,7 @@ const Nav = () => {
 
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            <Logo width={55} height={55} showText={false} />
+                            <Logo width={55} height={55} showText={false} siteName={branding?.siteName} logoUrl={branding?.siteLogo} />
                         </Link>
 
                         {/* Desktop Navigation */}
@@ -118,7 +110,7 @@ const Nav = () => {
 
                         {/* CTA & Mobile Toggle */}
                         <div className="flex items-center gap-3">
-                            {isAdmin ? (
+                            {admin ? (
                                 <Link
                                     href="/portal/admin/dashboard"
                                     className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-white border-none flex items-center gap-2"
@@ -156,7 +148,7 @@ const Nav = () => {
             <div className={`fixed top-0 right-0 h-full w-full max-w-xs bg-base-100 z-50 transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 <div className="flex flex-col h-full">
                     <div className="flex items-center justify-between p-6 border-b border-base-200">
-                        <Logo width={35} height={35} />
+                        <Logo width={35} height={35} siteName={branding?.siteName} logoUrl={branding?.siteLogo} />
                         <button onClick={toggleDrawer} className="btn btn-ghost btn-circle btn-sm">
                             <X size={24} />
                         </button>
@@ -207,7 +199,7 @@ const Nav = () => {
                     </div>
 
                     <div className="p-6 border-t border-base-200">
-                        {isAdmin ? (
+                        {admin ? (
                             <Link 
                                 href="/portal/admin/dashboard" 
                                 className="btn btn-primary w-full rounded-full text-white flex items-center justify-center gap-2" 

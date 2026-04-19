@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import Tour from '@/src/models/Tour';
 import sequelize from '@/src/lib/db';
 import { verifyAuth } from '@/src/lib/auth';
+import { revalidateTag } from 'next/cache';
+import { getCachedTourById } from '@/src/lib/data/tours';
+import { TAG_TOURS_LIST, tourDetailTag } from '@/src/lib/revalidate-tags';
 
 interface Params {
   params: Promise<{ id: string }>;
 }
 
-export async function GET(request: Request, { params }: Params) {
+export async function GET(_: Request, { params }: Params) {
   try {
     const { id } = await params;
-    await sequelize.authenticate();
-
-    const tour = await Tour.findByPk(id);
+    const tour = await getCachedTourById(id);
 
     if (!tour) {
       return NextResponse.json(
@@ -34,7 +35,7 @@ export async function GET(request: Request, { params }: Params) {
 export async function PUT(request: NextRequest, { params }: Params) {
   try {
     // Check authentication
-    const auth = await verifyAuth(request);
+    const auth = await verifyAuth();
     if (!auth.authenticated) {
       return NextResponse.json(
         { error: 'Unauthorized. Please log in.' },
@@ -56,6 +57,8 @@ export async function PUT(request: NextRequest, { params }: Params) {
     }
 
     await tour.update(body);
+    revalidateTag(TAG_TOURS_LIST, 'max');
+    revalidateTag(tourDetailTag(id), 'max');
 
     return NextResponse.json(tour);
   } catch (error) {
@@ -70,7 +73,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 export async function DELETE(request: NextRequest, { params }: Params) {
   try {
     // Check authentication
-    const auth = await verifyAuth(request);
+    const auth = await verifyAuth();
     if (!auth.authenticated) {
       return NextResponse.json(
         { error: 'Unauthorized. Please log in.' },
@@ -91,6 +94,8 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     }
 
     await tour.destroy();
+    revalidateTag(TAG_TOURS_LIST, 'max');
+    revalidateTag(tourDetailTag(id), 'max');
 
     return NextResponse.json({ message: 'Tour deleted successfully' });
   } catch (error) {

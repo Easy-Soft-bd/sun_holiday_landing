@@ -1,11 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Edit } from "lucide-react";
-import HajjCtaEditModal from "./HajjCtaEditModal";
+
+const HajjCtaEditModal = dynamic(() => import("./HajjCtaEditModal"));
 
 interface HajjCtaEditButtonProps {
-    data?: any;
+    data?: unknown;
 }
 
 export default function HajjCtaEditButton({ data }: HajjCtaEditButtonProps) {
@@ -20,11 +22,13 @@ export default function HajjCtaEditButton({ data }: HajjCtaEditButtonProps) {
                 <Edit size={16} /> Edit Hajj/Umrah Section
             </button>
 
-            <HajjCtaEditModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                initialData={data}
-            />
+            {isModalOpen ? (
+                <HajjCtaEditModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    initialData={data}
+                />
+            ) : null}
         </>
     );
 }

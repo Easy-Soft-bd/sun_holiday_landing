@@ -1,12 +1,13 @@
-import { MetadataRoute } from 'next'
- 
+import { MetadataRoute } from 'next';
+import { absoluteUrl } from '@/src/lib/site';
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: '/private/',
+      disallow: ['/portal/'],
     },
-    sitemap: 'https://sunholidaysltd.com/sitemap.xml', // Replace with actual domain
-  }
+    sitemap: absoluteUrl('/sitemap.xml'),
+  };
 }

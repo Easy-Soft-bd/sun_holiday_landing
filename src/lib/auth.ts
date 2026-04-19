@@ -1,10 +1,17 @@
-import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_here';
 
-export async function verifyAuth(request: NextRequest) {
+export type AdminSession = {
+  authenticated: boolean;
+  user: {
+    email: string;
+    role: string;
+  } | null;
+};
+
+async function readAdminSession(): Promise<AdminSession> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('admin_token')?.value;
@@ -21,27 +28,22 @@ export async function verifyAuth(request: NextRequest) {
       user: {
         email: payload.email as string,
         role: payload.role as string,
-      }
+      },
     };
-  } catch (error) {
+  } catch {
     return { authenticated: false, user: null };
   }
 }
 
+export async function verifyAuth() {
+  return readAdminSession();
+}
+
+export async function getAdminSession(): Promise<AdminSession> {
+  return readAdminSession();
+}
+
 export async function isAdmin(): Promise<boolean> {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('admin_token')?.value;
-
-    if (!token) {
-      return false;
-    }
-
-    const secret = new TextEncoder().encode(JWT_SECRET);
-    const { payload } = await jwtVerify(token, secret);
-
-    return payload.role === 'ADMIN';
-  } catch (error) {
-    return false;
-  }
+  const session = await readAdminSession();
+  return session.user?.role === 'ADMIN';
 }

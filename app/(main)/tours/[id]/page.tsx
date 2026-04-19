@@ -2,8 +2,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import TourDetailsView from '@/src/view/tours/TourDetailsView';
-import Tour from '@/src/models/Tour';
-import sequelize from '@/src/lib/db';
+import { getCachedTourById } from '@/src/lib/data/tours';
+import { buildPageMetadata } from '@/src/lib/site';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -16,50 +16,47 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   
   try {
-    await sequelize.authenticate();
-    const tour = await Tour.findByPk(id);
+    const tour = await getCachedTourById(id);
 
     if (!tour) {
-      return {
+      return buildPageMetadata({
         title: 'Tour Not Found - Sun Holidays Ltd',
-      };
+        description: 'The requested tour package could not be found.',
+        path: `/tours/${id}`,
+      });
     }
 
-    return {
+    return buildPageMetadata({
       title: `${tour.title} - Sun Holidays Ltd`,
-      description: tour.description.substring(0, 160), // Truncate description for meta tag
-      openGraph: {
-          images: [tour.image],
-      }
-    };
+      description: tour.description.substring(0, 160),
+      path: `/tours/${id}`,
+      image: tour.image,
+      keywords: [tour.title, tour.location, tour.category, 'Sun Holidays Ltd'],
+    });
   } catch (error) {
     console.error('Error fetching tour metadata:', error);
-    return {
+    return buildPageMetadata({
       title: 'Error - Sun Holidays Ltd',
-    };
+      description: 'There was a problem loading this tour package.',
+      path: `/tours/${id}`,
+    });
   }
 }
 
 export default async function TourDetailsPage({ params }: Props) {
   const { id } = await params;
+  let tour;
   
   try {
-    await sequelize.authenticate();
-    const tour = await Tour.findByPk(id);
-
-    if (!tour) {
-      notFound();
-    }
-    
-    // Serialize to plain object to pass to client component if needed, 
-    // though Server Components can pass serializable data directly.
-    // Sequelize instances are not directly serializable due to methods.
-    const tourData = tour.toJSON();
-
-    return <TourDetailsView tour={tourData} />;
+    tour = await getCachedTourById(id);
   } catch (error) {
     console.error('Error fetching tour details:', error);
-    // You might want to show an error page or notFound
     throw error; 
   }
+
+  if (!tour) {
+    notFound();
+  }
+
+  return <TourDetailsView tour={{ ...tour, id: String(tour.id) }} />;
 }

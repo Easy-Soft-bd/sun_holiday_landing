@@ -1,5 +1,5 @@
-import LoadingScreen from "@/src/components/common/LoadingScreen";
-
 export default function Loading() {
-    return <LoadingScreen />;
+    return (
+        <div className="min-h-screen bg-base-100" aria-hidden="true" />
+    );
 }

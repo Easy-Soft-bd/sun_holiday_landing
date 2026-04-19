@@ -1,10 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import * as LucideIcons from "lucide-react";
-import { ArrowUpRight, Umbrella } from "lucide-react";
-import HolidayCategoriesEditButton from "./components/common/HolidayCategoriesEditButton";
+import { ArrowUpRight } from "lucide-react";
 import ClientOnly from "./components/common/ClientOnly";
-import IconRenderer from "./components/common/IconRenderer";
+import PublicIconRenderer from "./components/common/PublicIconRenderer";
 
 interface CategoryItem {
     id: string;
@@ -83,7 +81,19 @@ interface HolidayCategoriesProps {
     admin?: boolean;
 }
 
-export default function HolidayCategories({ data, admin = false }: HolidayCategoriesProps) {
+async function HolidayCategoriesAdminSlot({ data }: { data: HolidayCategoriesData }) {
+    const HolidayCategoriesAdminControl = (await import("./components/common/HolidayCategoriesAdminControl")).default;
+
+    return (
+        <ClientOnly>
+            <div className="absolute bottom-4 left-4 z-50">
+                <HolidayCategoriesAdminControl data={data} />
+            </div>
+        </ClientOnly>
+    );
+}
+
+export default async function HolidayCategories({ data, admin = false }: HolidayCategoriesProps) {
     const holidayData = { ...defaultData, ...data };
 
     return (
@@ -91,11 +101,7 @@ export default function HolidayCategories({ data, admin = false }: HolidayCatego
             
             {/* Admin Edit Controls */}
             {admin && (
-                <ClientOnly>
-                    <div className="absolute bottom-4 left-4 z-50">
-                        <HolidayCategoriesEditButton data={holidayData} />
-                    </div>
-                </ClientOnly>
+                <HolidayCategoriesAdminSlot data={holidayData} />
             )}
 
             <div className="container mx-auto px-4">
@@ -137,7 +143,7 @@ export default function HolidayCategories({ data, admin = false }: HolidayCatego
                             {/* Top Badge */}
                             <div className="absolute top-4 left-4">
                                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full">
-                                    <IconRenderer iconName={cat.icon} className="size-4 text-primary" />
+                                    <PublicIconRenderer iconName={cat.icon} className="size-4 text-primary" />
                                     <span className="text-[10px] font-bold uppercase tracking-widest text-white">
                                         {cat.count}
                                     </span>

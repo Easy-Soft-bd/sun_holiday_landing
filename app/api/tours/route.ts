@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Tour from '@/src/models/Tour';
 import sequelize from '@/src/lib/db';
 import { verifyAuth } from '@/src/lib/auth';
+import Tour from '@/src/models/Tour';
+import { revalidateTag } from 'next/cache';
+import { getCachedTours } from '@/src/lib/data/tours';
+import { TAG_TOURS_LIST } from '@/src/lib/revalidate-tags';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    await sequelize.authenticate();
-    await Tour.sync(); // Ensure table exists - acceptable for prototype/dev
-
-    const tours = await Tour.findAll({
-      order: [['createdAt', 'DESC']],
-    });
+    const tours = await getCachedTours();
 
     return NextResponse.json(tours);
   } catch (error) {
@@ -25,7 +23,7 @@ export async function GET(request: Request) {
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const auth = await verifyAuth(request);
+    const auth = await verifyAuth();
     if (!auth.authenticated) {
       return NextResponse.json(
         { error: 'Unauthorized. Please log in.' },
@@ -40,6 +38,7 @@ export async function POST(request: NextRequest) {
     await sequelize.authenticate();
     
     const tour = await Tour.create(body);
+    revalidateTag(TAG_TOURS_LIST, 'max');
 
     return NextResponse.json(tour, { status: 201 });
   } catch (error) {

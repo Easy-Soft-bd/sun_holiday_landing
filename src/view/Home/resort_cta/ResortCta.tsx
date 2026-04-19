@@ -1,19 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import * as LucideIcons from "lucide-react";
 import {
     Hotel,
-    Waves,
-    Dumbbell,
-    Utensils,
-    Users,
-    Coffee,
     ChevronRight,
     MapPin
 } from "lucide-react";
-import ResortCtaEditButton from "./ResortCtaEditButton";
 import ClientOnly from "@/src/components/common/ClientOnly";
-import IconRenderer from "@/src/components/common/IconRenderer";
+import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
 
 interface RoomDetail {
     label: string;
@@ -74,7 +67,19 @@ interface ResortCtaProps {
     admin?: boolean;
 }
 
-const ResortCta = ({ data, admin = false }: ResortCtaProps) => {
+async function ResortCtaAdminSlot({ data }: { data: ResortCtaData }) {
+    const ResortCtaAdminControl = (await import("./ResortCtaAdminControl")).default;
+
+    return (
+        <ClientOnly>
+            <div className="absolute bottom-4 left-4 z-50">
+                <ResortCtaAdminControl data={data} />
+            </div>
+        </ClientOnly>
+    );
+}
+
+const ResortCta = async ({ data, admin = false }: ResortCtaProps) => {
     const resortData = { ...defaultData, ...data };
 
     return (
@@ -82,11 +87,7 @@ const ResortCta = ({ data, admin = false }: ResortCtaProps) => {
             
             {/* Admin Edit Controls */}
             {admin && (
-                <ClientOnly>
-                    <div className="absolute bottom-4 left-4 z-50">
-                        <ResortCtaEditButton data={resortData} />
-                    </div>
-                </ClientOnly>
+                <ResortCtaAdminSlot data={resortData} />
             )}
 
             <div className="container mx-auto px-4 lg:px-8">
@@ -158,7 +159,7 @@ const ResortCta = ({ data, admin = false }: ResortCtaProps) => {
                             <div className="flex flex-wrap gap-3">
                                 {resortData.amenities.map((item, i) => (
                                     <div key={i} className="flex items-center gap-2 bg-base-300/50 px-4 py-2 rounded-lg group hover:bg-primary hover:text-white transition-all duration-300">
-                                        <IconRenderer iconName={item.icon} className="size-4 text-primary group-hover:text-white transition-colors" />
+                                        <PublicIconRenderer iconName={item.icon} className="size-4 text-primary group-hover:text-white transition-colors" />
                                         <span className="text-xs font-bold">{item.label}</span>
                                     </div>
                                 ))}

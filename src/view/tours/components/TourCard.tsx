@@ -1,7 +1,8 @@
 
+import Image from "next/image";
 import { MapPin, Clock, Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { TourPackage } from "../data/mockTours";
+import { canUseNextImage } from "@/src/lib/media";
 
 const currencyFormatter = new Intl.NumberFormat('en-BD', {
     style: 'currency',
@@ -22,13 +23,18 @@ interface TourProps {
     price: number;
 }
 
-export default function TourCard({ tour }: { tour: TourProps | any }) {
+export default function TourCard({ tour }: { tour: TourProps }) {
+    const supportsImageOptimization = canUseNextImage(tour.image);
+
     return (
         <div className="group bg-base-100 rounded-3xl overflow-hidden shadow-sm border border-base-200 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full hover:-translate-y-1">
             <div className="relative aspect-[4/3] overflow-hidden">
-                <img 
-                    src={tour.image} 
+                <Image
+                    src={tour.image}
                     alt={tour.title}
+                    fill
+                    unoptimized={!supportsImageOptimization}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute top-4 left-4 bg-base-100/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-primary shadow-sm">

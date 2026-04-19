@@ -1,11 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Edit } from "lucide-react";
-import ResortCtaEditModal from "./ResortCtaEditModal";
+
+const ResortCtaEditModal = dynamic(() => import("./ResortCtaEditModal"));
 
 interface ResortCtaEditButtonProps {
-    data?: any;
+    data?: unknown;
 }
 
 export default function ResortCtaEditButton({ data }: ResortCtaEditButtonProps) {
@@ -20,11 +22,13 @@ export default function ResortCtaEditButton({ data }: ResortCtaEditButtonProps) 
                 <Edit size={16} /> Edit Resort Section
             </button>
 
-            <ResortCtaEditModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                initialData={data}
-            />
+            {isModalOpen ? (
+                <ResortCtaEditModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    initialData={data}
+                />
+            ) : null}
         </>
     );
 }

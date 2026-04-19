@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, MapPin, ChevronRight, Navigation, Sunset, Waves, Palmtree } from "lucide-react";
-import SailorMoonCtaEditButton from "./SailorMoonCtaEditButton";
 import ClientOnly from "@/src/components/common/ClientOnly";
 
 interface Amenity {
@@ -37,18 +36,26 @@ interface SailorMoonCtaProps {
     admin?: boolean;
 }
 
-const SailorMoonCta = ({ data, admin = false }: SailorMoonCtaProps) => {
+async function SailorMoonCtaAdminSlot({ data }: { data: Required<SailorMoonCtaData> }) {
+    const SailorMoonCtaAdminControl = (await import("./SailorMoonCtaAdminControl")).default;
+
+    return (
+        <ClientOnly>
+            <div className="absolute top-8 right-8 z-50">
+                <SailorMoonCtaAdminControl data={data} />
+            </div>
+        </ClientOnly>
+    );
+}
+
+const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
   const ctaData = { ...defaultData, ...data } as Required<SailorMoonCtaData>;
 
   return (
     <section className="py-4 md:py-6 px-4 w-full relative">
       {/* Admin Edit Controls */}
       {admin && (
-          <ClientOnly>
-              <div className="absolute top-8 right-8 z-50">
-                  <SailorMoonCtaEditButton data={ctaData} />
-              </div>
-          </ClientOnly>
+          <SailorMoonCtaAdminSlot data={ctaData} />
       )}
 
       <div className="container mx-auto">

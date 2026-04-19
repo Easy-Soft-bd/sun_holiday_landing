@@ -1,11 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Edit } from "lucide-react";
-import SailorMoonCtaEditModal from "./SailorMoonCtaEditModal";
+
+const SailorMoonCtaEditModal = dynamic(() => import("./SailorMoonCtaEditModal"));
 
 interface SailorMoonCtaEditButtonProps {
-    data?: any;
+    data?: unknown;
 }
 
 export default function SailorMoonCtaEditButton({ data }: SailorMoonCtaEditButtonProps) {
@@ -20,11 +22,13 @@ export default function SailorMoonCtaEditButton({ data }: SailorMoonCtaEditButto
                 <Edit size={16} /> Edit Sailor Moon Section
             </button>
 
-            <SailorMoonCtaEditModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                initialData={data}
-            />
+            {isModalOpen ? (
+                <SailorMoonCtaEditModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    initialData={data}
+                />
+            ) : null}
         </>
     );
 }

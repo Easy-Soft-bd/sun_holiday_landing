@@ -1,8 +1,17 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { Play, MapPin } from "lucide-react";
-import HeroEditButton from "./HeroEditButton";
 import ClientOnly from "@/src/components/common/ClientOnly";
+import { canUseNextImage } from "@/src/lib/media";
+
+const HeroEditButton = dynamic(() => import("./HeroEditButton"), {
+    ssr: false,
+    loading: () => null,
+});
 
 interface HeroData {
     badgeText?: string;
@@ -50,8 +59,65 @@ interface HeroProps {
     admin?: boolean;
 }
 
+type IdleWindow = Window & {
+    requestIdleCallback?: (
+        callback: IdleRequestCallback,
+        options?: IdleRequestOptions
+    ) => number;
+    cancelIdleCallback?: (handle: number) => void;
+    navigator: Window['navigator'] & {
+        connection?: {
+            saveData?: boolean;
+            effectiveType?: string;
+        };
+    };
+};
+
 export default function Hero({ data, admin = false }: HeroProps) {
     const heroData = { ...defaultData, ...data };
+    const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+    const supportsImageOptimization = canUseNextImage(heroData.backgroundImage);
+
+    useEffect(() => {
+        const idleWindow = window as IdleWindow;
+        let timeoutId: ReturnType<typeof setTimeout> | undefined;
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const connection = idleWindow.navigator.connection;
+        const hasSlowConnection =
+            connection?.saveData ||
+            connection?.effectiveType === "slow-2g" ||
+            connection?.effectiveType === "2g";
+
+        const startVideoLoad = () => {
+            timeoutId = setTimeout(() => setShouldLoadVideo(true), 2500);
+        };
+
+        if (prefersReducedMotion || hasSlowConnection || window.innerWidth < 1024) {
+            return undefined;
+        }
+
+        if (typeof idleWindow.requestIdleCallback === "function") {
+            const idleId = idleWindow.requestIdleCallback(startVideoLoad, { timeout: 1500 });
+
+            return () => {
+                if (typeof idleWindow.cancelIdleCallback === "function") {
+                    idleWindow.cancelIdleCallback(idleId);
+                }
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                }
+            };
+        }
+
+        startVideoLoad();
+
+        return () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+    }, []);
+
     return (
         <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center justify-center overflow-hidden bg-base-300 group/hero">
             
@@ -65,27 +131,42 @@ export default function Hero({ data, admin = false }: HeroProps) {
             )}
 
             {/* 1. Fallback / Placeholder Image (Critical for LCP SEO) */}
-            <Image
-                src={heroData.backgroundImage}
-                alt="Beautiful tropical holiday destination"
-                fill
-                priority
-                unoptimized
-                className="object-cover object-center"
-                sizes="100vw"
-            />
+            {supportsImageOptimization ? (
+                <Image
+                    src={heroData.backgroundImage}
+                    alt="Beautiful tropical holiday destination"
+                    fill
+                    priority
+                    unoptimized={!supportsImageOptimization}
+                    className="object-cover object-center"
+                    sizes="100vw"
+                />
+            ) : (
+                <Image
+                    src={heroData.backgroundImage}
+                    alt="Beautiful tropical holiday destination"
+                    fill
+                    priority
+                    unoptimized
+                    className="object-cover object-center"
+                    sizes="100vw"
+                />
+            )}
 
             {/* 2. Video Background */}
-            <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover z-10"
-            >
-                <source src={heroData.videoSrc} type="video/mp4" />
-                {/* Your browser does not support the video tag. */}
-            </video>
+            {shouldLoadVideo ? (
+                <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="none"
+                    poster={heroData.backgroundImage}
+                    className="absolute inset-0 w-full h-full object-cover z-10"
+                >
+                    <source src={heroData.videoSrc} type="video/mp4" />
+                </video>
+            ) : null}
 
             {/* 3. Dark Overlay for Text Readability */}
             <div className="absolute inset-0 z-20 bg-gradient-to-b from-black/60 via-black/30 to-black/60" />

@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { existsSync } from 'fs';
+import { revalidateTag } from 'next/cache';
 import { verifyAuth } from '@/src/lib/auth';
+import { TAG_GENERAL_SETTINGS, TAG_HOME_PAGE } from '@/src/lib/revalidate-tags';
 
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const auth = await verifyAuth(request);
+    const auth = await verifyAuth();
     if (!auth.authenticated) {
       return NextResponse.json(
         { error: 'Unauthorized. Please log in.' },
@@ -65,6 +67,9 @@ export async function POST(request: NextRequest) {
     const filepath = path.join(uploadDir, filename);
     
     await writeFile(filepath, buffer);
+    // Uploads are currently used by admin-managed CMS content and branding assets.
+    revalidateTag(TAG_HOME_PAGE, 'max');
+    revalidateTag(TAG_GENERAL_SETTINGS, 'max');
     
     // Return the public URL
     const fileUrl = `${urlPrefix}/${filename}`;

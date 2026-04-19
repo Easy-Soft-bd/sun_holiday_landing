@@ -1,11 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Edit } from "lucide-react";
-import AirLineMarqueeEditModal from "./AirLineMarqueeEditModal";
+
+const AirLineMarqueeEditModal = dynamic(() => import("./AirLineMarqueeEditModal"));
 
 interface AirLineMarqueeEditButtonProps {
-    data?: any;
+    data?: unknown;
 }
 
 export default function AirLineMarqueeEditButton({ data }: AirLineMarqueeEditButtonProps) {
@@ -20,11 +22,13 @@ export default function AirLineMarqueeEditButton({ data }: AirLineMarqueeEditBut
                 <Edit size={16} /> Edit Airline Marquee
             </button>
 
-            <AirLineMarqueeEditModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                initialData={data}
-            />
+            {isModalOpen ? (
+                <AirLineMarqueeEditModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    initialData={data}
+                />
+            ) : null}
         </>
     );
 }

@@ -1,18 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import * as LucideIcons from "lucide-react";
 import {
     Calendar,
-    Plane,
-    Map,
     Hotel,
     UserCheck,
-    ShieldCheck,
     ArrowRight
 } from "lucide-react";
-import HajjCtaEditButton from "./HajjCtaEditButton";
 import ClientOnly from "@/src/components/common/ClientOnly";
-import IconRenderer from "@/src/components/common/IconRenderer";
+import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
 
 interface Inclusion {
     icon: string;
@@ -65,7 +60,19 @@ interface HajjCtaProps {
     admin?: boolean;
 }
 
-const HajjCta = ({ data, admin = false }: HajjCtaProps) => {
+async function HajjCtaAdminSlot({ data }: { data: HajjCtaData }) {
+    const HajjCtaAdminControl = (await import("./HajjCtaAdminControl")).default;
+
+    return (
+        <ClientOnly>
+            <div className="absolute bottom-4 left-4 z-50">
+                <HajjCtaAdminControl data={data} />
+            </div>
+        </ClientOnly>
+    );
+}
+
+const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
     const hajjData = { ...defaultData, ...data };
 
     return (
@@ -73,11 +80,7 @@ const HajjCta = ({ data, admin = false }: HajjCtaProps) => {
             
             {/* Admin Edit Controls */}
             {admin && (
-                <ClientOnly>
-                    <div className="absolute bottom-4 left-4 z-50">
-                        <HajjCtaEditButton data={hajjData} />
-                    </div>
-                </ClientOnly>
+                <HajjCtaAdminSlot data={hajjData} />
             )}
 
             {/* Decorative Background Elements */}
@@ -144,7 +147,7 @@ const HajjCta = ({ data, admin = false }: HajjCtaProps) => {
                                     className="flex items-center gap-4 p-4 rounded-xl border border-base-200 bg-base-200/30 hover:bg-base-100 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group"
                                 >
                                     <div className="bg-base-100 p-2 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
-                                        <IconRenderer iconName={item.icon} className="size-5" />
+                                        <PublicIconRenderer iconName={item.icon} className="size-5" />
                                     </div>
                                     <span className="text-sm font-bold text-base-content/80 group-hover:text-base-content transition-colors">
                                         {item.text}

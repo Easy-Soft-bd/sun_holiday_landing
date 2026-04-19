@@ -2,41 +2,30 @@
 
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Skeleton } from 'antd';
-import { useGetSettingsQuery } from "@/src/lib/redux/api/settingsApi";
+import { canUseNextImage } from "@/src/lib/media";
 
 interface LogoProps {
     className?: string;
     width?: number;
     height?: number;
     showText?: boolean;
+    siteName?: string | null;
+    logoUrl?: string | null;
 }
 
 const DEFAULT_LOGO_URL = '/logo/logo.png';
+const DEFAULT_SITE_NAME = 'Sun Holidays LTD';
 
 const Logo = ({
     className,
     width = 40,
     height = 40,
-    showText = true
+    showText = true,
+    siteName = DEFAULT_SITE_NAME,
+    logoUrl = DEFAULT_LOGO_URL,
 }: LogoProps) => {
-    const { data: settingsData, isLoading } = useGetSettingsQuery({});
-    const logoUrl = settingsData?.data?.siteLogo || DEFAULT_LOGO_URL;
-    const siteName = settingsData?.data?.siteName || 'Sun Holidays LTD';
-
-    if (isLoading) {
-        return (
-            <div className={cn("flex items-center gap-2", className)}>
-                <div
-                    className="blur-md bg-linear-to-br from-primary to-primary/60 animate-pulse select-none pointer-events-none"
-                    style={{ width, height }}
-                />
-                {showText && (
-                    <Skeleton.Input active size="small" style={{ width: 120 }} className="hidden sm:inline-block" />
-                )}
-            </div>
-        );
-    }
+    const resolvedLogoUrl = logoUrl || DEFAULT_LOGO_URL;
+    const supportsImageOptimization = canUseNextImage(resolvedLogoUrl);
 
     return (
         <div
@@ -46,11 +35,11 @@ const Logo = ({
             {/* Logo Image */}
             <div className="relative">
                 <Image
-                    src={logoUrl}
+                    src={resolvedLogoUrl}
                     alt="Company Logo"
                     width={width}
                     height={height}
-                    unoptimized // Still needed for dynamic assets in production
+                    unoptimized={!supportsImageOptimization}
                     className="object-contain"
                 />
             </div>
@@ -58,7 +47,7 @@ const Logo = ({
             {/* Brand Name - Dynamic from DB */}
             {showText && (
                 <span className="font-bold text-primary text-xl tracking-tight text-foreground hidden sm:block">
-                    {siteName}
+                    {siteName || DEFAULT_SITE_NAME}
                 </span>
             )}
         </div>

@@ -6,29 +6,11 @@ import TourItinerary from "./components/details/TourItinerary";
 import TourOverview from "./components/details/TourOverview";
 import TourGallery from "./components/details/TourGallery";
 import TourVideo from "./components/details/TourVideo";
+import type { TourPackage } from "@/src/view/tours/data/mockTours";
 
-// Define a compatible interface for the view
-interface TourDetailsProps {
-    id: string | number;
-    title: string;
-    image: string;
-    category: string;
-    rating: number;
-    reviews: number;
-    location: string;
-    duration: string;
-    price: number;
-    inquiryPhone?: string;
-    description: string;
-    highlights: string[];
-    itinerary: any[];
-    includes: string[];
-    excludes: string[];
-    gallery: string[];
-    videoUrl?: string;
-}
+type TourDetailsProps = TourPackage;
 
-export default function TourDetailsView({ tour }: { tour: TourDetailsProps | any }) {
+export default function TourDetailsView({ tour }: { tour: TourDetailsProps }) {
     return (
         <main className="min-h-screen bg-base-50 pb-20">
             <TourHero tour={tour} />

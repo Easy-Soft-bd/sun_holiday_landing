@@ -1,41 +1,22 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import TourCard from "./components/TourCard";
 import TourFilter from "./components/TourFilter";
-// import { mockTours } from "./data/mockTours"; // Removed mock data
 import { SlidersHorizontal, Loader2 } from "lucide-react";
+import type { TourRecord } from "@/src/lib/data/tours";
 
-export default function ToursView() {
-    const [tours, setTours] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+interface ToursViewProps {
+    initialTours?: TourRecord[];
+}
+
+export default function ToursView({ initialTours = [] }: ToursViewProps) {
+    const [tours] = useState<TourRecord[]>(initialTours);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [maxPrice, setMaxPrice] = useState(500000);
     const [minPrice, setMinPrice] = useState(0);
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-
-    useEffect(() => {
-        const fetchTours = async () => {
-            try {
-                const response = await fetch('/api/tours');
-                if (response.ok) {
-                    const data = await response.json();
-                     // Filter only Active tours for the public view
-                    const activeTours = data.filter((tour: any) => tour.status === 'Active');
-                    setTours(activeTours);
-                } else {
-                    console.error("Failed to fetch tours");
-                }
-            } catch (error) {
-                console.error("Error fetching tours:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTours();
-    }, []);
 
     const filteredTours = useMemo(() => {
         return tours.filter(tour => {
@@ -50,12 +31,12 @@ export default function ToursView() {
         });
     }, [tours, searchQuery, selectedCategory, maxPrice, minPrice]);
 
-    if (loading) {
+    if (!initialTours.length) {
          return (
             <main className="min-h-screen bg-base-50 flex justify-center items-center">
                 <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="animate-spin text-primary" size={48} />
-                    <p className="text-base-content/60 font-medium">Loading amazing experiences...</p>
+                    <Loader2 className="text-primary" size={48} />
+                    <p className="text-base-content/60 font-medium">No tour packages are available right now.</p>
                 </div>
             </main>
          );

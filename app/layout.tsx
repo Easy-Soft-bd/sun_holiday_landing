@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import StoreProvider from "@/src/lib/redux/StoreProvider";
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import GlobalLoader from "@/src/components/common/GlobalLoader";
+import { absoluteUrl, getDefaultSeo, getSiteUrl, splitKeywords } from "@/src/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,14 +14,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: "Sun Holidays Ltd | Experience World-Class Travel",
-  description: "Book your dream holiday with Sun Holidays Ltd. Specialists in Hajj, Umrah, and exotic getaways. Curating memories that last a lifetime.",
-  keywords: ["Travel", "Holidays", "Hajj", "Umrah", "Sun Holidays Ltd", "Tours", "Vacation"],
+  description: getDefaultSeo().description,
+  keywords: splitKeywords("Travel, Holidays, Hajj, Umrah, Sun Holidays Ltd, Tours, Vacation"),
+  alternates: {
+    canonical: absoluteUrl('/'),
+  },
   openGraph: {
     title: "Sun Holidays Ltd | Experience World-Class Travel",
-    description: "Book your dream holiday with Sun Holidays Ltd. Specialists in Hajj, Umrah, and exotic getaways.",
+    description: getDefaultSeo().description,
     type: "website",
-    locale: "en_GB", // Assuming UK based on 'Ltd'? Or defaulting to US 'en_US'
+    locale: "en_BD",
+    url: absoluteUrl('/'),
+    siteName: getDefaultSeo().siteName,
+    images: [
+      {
+        url: absoluteUrl(getDefaultSeo().image),
+        alt: getDefaultSeo().siteName,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sun Holidays Ltd | Experience World-Class Travel",
+    description: getDefaultSeo().description,
+    images: [absoluteUrl(getDefaultSeo().image)],
   },
 };
 
@@ -37,12 +53,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <StoreProvider>
-          <AntdRegistry>
-            <GlobalLoader />
-            {children}
-          </AntdRegistry>
-        </StoreProvider>
+        {children}
       </body>
     </html>
   );

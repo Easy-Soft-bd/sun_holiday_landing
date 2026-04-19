@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import HomePage from '@/src/models/HomePage';
 import { isAdmin } from '@/src/lib/auth';
+import { TAG_HOME_PAGE } from '@/src/lib/revalidate-tags';
 
 export async function POST(request: Request) {
   try {
@@ -27,6 +29,8 @@ export async function POST(request: Request) {
     homePage.set(section, data);
     
     await homePage.save();
+    revalidateTag(TAG_HOME_PAGE, 'max');
+    revalidatePath('/');
 
     return NextResponse.json({ success: true, data: homePage });
   } catch (error) {

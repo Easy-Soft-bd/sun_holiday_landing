@@ -1,4 +1,4 @@
-import IconRenderer from "./IconRenderer";
+import PublicIconRenderer from "./PublicIconRenderer";
 
 const features = [
     {
@@ -41,7 +41,7 @@ const WhyChooseUs = () => {
                             >
                                 {/* Icon Circle */}
                                 <div className="shrink-0 size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all text-primary">
-                                    <IconRenderer iconName={item.icon} size={24} />
+                                    <PublicIconRenderer iconName={item.icon} size={24} />
                                 </div>
 
                                 {/* Text Content */}

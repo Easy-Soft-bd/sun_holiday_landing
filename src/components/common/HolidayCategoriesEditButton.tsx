@@ -1,11 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Edit } from "lucide-react";
-import HolidayCategoriesEditModal from "./HolidayCategoriesEditModal";
+
+const HolidayCategoriesEditModal = dynamic(() => import("./HolidayCategoriesEditModal"));
 
 interface HolidayCategoriesEditButtonProps {
-    data?: any;
+    data?: unknown;
 }
 
 export default function HolidayCategoriesEditButton({ data }: HolidayCategoriesEditButtonProps) {
@@ -20,11 +22,13 @@ export default function HolidayCategoriesEditButton({ data }: HolidayCategoriesE
                 <Edit size={16} /> Edit Categories
             </button>
 
-            <HolidayCategoriesEditModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                initialData={data}
-            />
+            {isModalOpen ? (
+                <HolidayCategoriesEditModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    initialData={data}
+                />
+            ) : null}
         </>
     );
 }

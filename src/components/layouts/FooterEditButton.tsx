@@ -1,11 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Edit } from "lucide-react";
-import FooterEditModal from "./FooterEditModal";
+
+const FooterEditModal = dynamic(() => import("./FooterEditModal"));
 
 interface FooterEditButtonProps {
-    data?: any;
+    data?: unknown;
 }
 
 export default function FooterEditButton({ data }: FooterEditButtonProps) {
@@ -20,11 +22,13 @@ export default function FooterEditButton({ data }: FooterEditButtonProps) {
                 <Edit size={16} /> Edit Footer
             </button>
 
-            <FooterEditModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                initialData={data}
-            />
+            {isModalOpen ? (
+                <FooterEditModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    initialData={data}
+                />
+            ) : null}
         </>
     );
 }

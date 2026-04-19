@@ -176,6 +176,14 @@
 
   > Run `npm run lint` and `npm run build` from the project root. Fix any TypeScript or ESLint issues introduced by `unstable_cache`/`revalidateTag` imports. Do not fix unrelated pre-existing issues unless they block the build.
 
+### Manual verification checklist
+
+1. Load `/` twice and confirm the second request is noticeably faster than the first warmup request.
+2. Update a home-page CMS section from admin, save, then refresh `/` and confirm the new content appears without redeploying.
+3. Update general settings and confirm shared layout content such as branding or footer details refresh after reload.
+4. Create, update, and delete a tour from admin. Confirm `/tours` and `/tours/[id]` reflect those changes after refresh.
+5. Upload a CMS image, then refresh the affected page and confirm the new asset URL is visible.
+
 ---
 
 ## Quick reference — imports

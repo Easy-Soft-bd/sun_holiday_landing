@@ -1,10 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import Logo from "../common/Logo";
-import * as LucideIcons from "lucide-react";
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Send, FacebookIcon, InstagramIcon, TwitterIcon, LinkedinIcon } from "lucide-react";
-import FooterEditButton from "./FooterEditButton";
+import { Mail, Phone, MapPin, Send } from "lucide-react";
 import ClientOnly from "../common/ClientOnly";
-import IconRenderer from "../common/IconRenderer";
+import PublicIconRenderer from "../common/PublicIconRenderer";
 
 interface SocialLink {
     icon: string;
@@ -76,10 +75,31 @@ const defaultData: FooterData = {
 interface FooterProps {
     data?: FooterData;
     admin?: boolean;
-    settings?: any; // Pass existing site settings
+    settings?: {
+        contactEmail?: string | null;
+        contactPhone?: string | null;
+        address?: string | null;
+        metaDescription?: string | null;
+    };
+    branding?: {
+        siteName?: string | null;
+        siteLogo?: string | null;
+    };
 }
 
-const Footer = ({ data, admin = false, settings }: FooterProps) => {
+async function FooterAdminSlot({ data }: { data: FooterData }) {
+    const FooterAdminControl = (await import("./FooterAdminControl")).default;
+
+    return (
+        <ClientOnly>
+            <div className="absolute top-4 left-4 z-50">
+                <FooterAdminControl data={data} />
+            </div>
+        </ClientOnly>
+    );
+}
+
+const Footer = async ({ data, admin = false, settings, branding }: FooterProps) => {
     const footerData = { ...defaultData, ...data };
     const currentYear = new Date().getFullYear();
 
@@ -94,11 +114,7 @@ const Footer = ({ data, admin = false, settings }: FooterProps) => {
             
             {/* Admin Edit Controls */}
             {admin && (
-                <ClientOnly>
-                    <div className="absolute top-4 left-4 z-50">
-                        <FooterEditButton data={footerData} />
-                    </div>
-                </ClientOnly>
+                <FooterAdminSlot data={footerData} />
             )}
 
             {/* Main Footer Content */}
@@ -108,7 +124,13 @@ const Footer = ({ data, admin = false, settings }: FooterProps) => {
                     {/* Column 1: Brand & Bio */}
                     <div className="space-y-6">
                         <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
-                            <Logo showText={false} width={60} height={60} />
+                            <Logo
+                                showText={false}
+                                width={60}
+                                height={60}
+                                siteName={branding?.siteName}
+                                logoUrl={branding?.siteLogo}
+                            />
                         </Link>
                         <p className="text-base-content/70 leading-relaxed text-sm">
                             {bio}
@@ -116,7 +138,7 @@ const Footer = ({ data, admin = false, settings }: FooterProps) => {
                         <div className="flex gap-4">
                             {footerData.socialLinks?.map((social, i) => (
                                 <Link key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm btn-circle hover:bg-primary hover:text-white transition-all">
-                                    <IconRenderer iconName={social.icon} />
+                                    <PublicIconRenderer iconName={social.icon} />
                                 </Link>
                             ))}
                         </div>
@@ -185,7 +207,14 @@ const Footer = ({ data, admin = false, settings }: FooterProps) => {
                             <h4 className="text-xs font-bold uppercase tracking-widest text-base-content/40 mb-4">{footerData.certificationsTitle}</h4>
                             <div className="flex flex-wrap justify-center md:justify-start gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                                 {footerData.certifications?.map((cert, i) => (
-                                    <img key={i} src={cert.image} alt={cert.name} className="h-10 object-contain" />
+                                    <Image
+                                        key={i}
+                                        src={cert.image}
+                                        alt={cert.name}
+                                        width={120}
+                                        height={40}
+                                        className="h-10 w-auto object-contain"
+                                    />
                                 ))}
                             </div>
                         </div>
