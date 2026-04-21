@@ -74,17 +74,17 @@ async function getResorts(): Promise<Resort[]> {
             status: "coming-soon"
         },
         {
-            id: "city-hotel-dhaka",
-            name: "Sun Holidays City Hotel",
-            tagline: "Premium Business Hotel",
-            location: "Dhanmondi, Dhaka",
+            id: "sunvia-eco-resort",
+            name: "Sunvia Eco Resort",
+            tagline: "5-Star Luxury Resort",
+            location: "Manikganj, Bangladesh",
             category: "city",
-            rating: 4,
-            image: "/placeholder-city-hotel.jpg",
-            description: "Modern business hotel in the heart of Dhaka. Perfect for business travelers and city explorers seeking comfort and convenience.",
-            features: ["Business Center", "Meeting Rooms", "Restaurant", "Free WiFi"],
+            rating: 5,
+            image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2080&auto=format&fit=crop",
+            description: "A state-of-the-art luxury escape nestled adjacent to the serene Inani Beach. Experience sophistication and coastal tranquility.",
+            features: ["250 Luxury Rooms", "Spa & Gym", "Conference Facilities", "Multiple Restaurants"],
             established: "Coming Soon",
-            href: "/resort/city-dhaka",
+            href: "/sunvia-eco-resort",
             status: "coming-soon"
         }
     ];
@@ -114,7 +114,7 @@ const ResortCard = ({ resort }: { resort: Resort }) => {
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                
+
                 {/* Status Badge */}
                 {isComingSoon && (
                     <div className="absolute top-4 right-4 bg-warning text-warning-content px-4 py-2 rounded-full text-xs uppercase tracking-wider shadow-lg">
@@ -177,8 +177,8 @@ const ResortCard = ({ resort }: { resort: Resort }) => {
                             <span>Est. {resort.established}</span>
                         </div>
                     )}
-                    
-                    <Link 
+
+                    <Link
                         href={resort.href}
                         className={`btn ${isComingSoon ? 'btn-outline' : 'btn-primary'} btn-sm rounded-full px-6 group/btn`}
                     >
@@ -216,15 +216,15 @@ export default async function ResortsPage() {
                         <Hotel className="size-4 text-primary" />
                         <span className="text-sm tracking-wide">Premium Accommodations</span>
                     </div>
-                    
+
                     <h1 className="font-magmawave text-5xl md:text-7xl lg:text-8xl leading-none tracking-tighter mb-4">
                         Our <span className="text-primary italic">Resorts</span>
                     </h1>
-                    
+
                     <p className="text-xl md:text-2xl tracking-[0.2em] uppercase mb-6 text-primary">
                         Experience Luxury & Comfort
                     </p>
-                    
+
                     <p className="max-w-2xl text-lg md:text-xl leading-relaxed text-white/90">
                         Discover our collection of premium resorts and hotels across Bangladesh. From pristine beaches to vibrant cities, we offer exceptional stays.
                     </p>
@@ -242,7 +242,7 @@ export default async function ResortsPage() {
                             <div className="text-3xl md:text-4xl font-black text-primary mb-1">{resorts.length}</div>
                             <div className="text-xs md:text-sm text-base-content/60 uppercase tracking-wider">Properties</div>
                         </div>
-                        
+
                         <div className="text-center">
                             <div className="bg-primary/10 p-4 rounded-2xl w-fit mx-auto mb-3">
                                 <Waves className="size-8 text-primary" />
@@ -250,7 +250,7 @@ export default async function ResortsPage() {
                             <div className="text-3xl md:text-4xl font-black text-primary mb-1">{beachResorts.length}</div>
                             <div className="text-xs md:text-sm text-base-content/60 uppercase tracking-wider">Beach Resorts</div>
                         </div>
-                        
+
                         <div className="text-center">
                             <div className="bg-primary/10 p-4 rounded-2xl w-fit mx-auto mb-3">
                                 <Building2 className="size-8 text-primary" />
@@ -258,7 +258,7 @@ export default async function ResortsPage() {
                             <div className="text-3xl md:text-4xl font-black text-primary mb-1">{cityHotels.length}</div>
                             <div className="text-xs md:text-sm text-base-content/60 uppercase tracking-wider">City Hotels</div>
                         </div>
-                        
+
                         <div className="text-center">
                             <div className="bg-primary/10 p-4 rounded-2xl w-fit mx-auto mb-3">
                                 <Users className="size-8 text-primary" />
@@ -334,15 +334,15 @@ export default async function ResortsPage() {
                                 Contact us today to reserve your perfect accommodation. Our team is ready to help you plan an unforgettable experience.
                             </p>
                             <div className="flex flex-wrap gap-4 justify-center">
-                                <Link 
-                                    href="/contact" 
+                                <Link
+                                    href="/contact"
                                     className="btn btn-primary btn-lg rounded-full px-12 text-white shadow-xl shadow-primary/20 group"
                                 >
                                     Contact Us
                                     <ChevronRight className="size-5 group-hover:translate-x-1 transition-transform" />
                                 </Link>
-                                <Link 
-                                    href="/tours" 
+                                <Link
+                                    href="/tours"
                                     className="btn btn-outline btn-lg rounded-full px-12"
                                 >
                                     Explore Tour Packages

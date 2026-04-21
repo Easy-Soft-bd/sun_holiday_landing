@@ -45,8 +45,9 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             href: "/resorts",
             icon: Hotel,
             submenu: [
-                { name: "Beach Resorts", href: "/sailor-moon-resorts" },
-                { name: "City Hotels", href: "/resort/city-dhaka" }
+                { name: "Sailor Moon Resorts", href: "/sailor-moon-resorts" },
+                { name: "Sunvia Eco Resort", href: "/sunvia-eco-resort" },
+                { name: "Grandeur Bliss", href: "/resort/grandeur-bliss" },
             ]
         },
     ];
@@ -200,18 +201,18 @@ const Nav = ({ branding, admin = false }: NavProps) => {
 
                     <div className="p-6 border-t border-base-200">
                         {admin ? (
-                            <Link 
-                                href="/portal/admin/dashboard" 
-                                className="btn btn-primary w-full rounded-full text-white flex items-center justify-center gap-2" 
+                            <Link
+                                href="/portal/admin/dashboard"
+                                className="btn btn-primary w-full rounded-full text-white flex items-center justify-center gap-2"
                                 onClick={toggleDrawer}
                             >
                                 <LayoutDashboard size={18} />
                                 Dashboard
                             </Link>
                         ) : (
-                            <Link 
-                                href="/services" 
-                                className="btn btn-primary w-full rounded-full text-white" 
+                            <Link
+                                href="/services"
+                                className="btn btn-primary w-full rounded-full text-white"
                                 onClick={toggleDrawer}
                             >
                                 Our Services
