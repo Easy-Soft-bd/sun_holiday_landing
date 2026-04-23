@@ -1,43 +1,49 @@
 import Image from "next/image";
 import { Leaf, Calendar, Users, Ruler } from "lucide-react";
-import type { ResortConfig } from "../Index";
+import SectionAdminControl from "./SectionAdminControl";
+import type { ResortAboutData } from "@/src/lib/data/sunvia-eco-resort";
 
 interface AboutSectionProps {
-  config: ResortConfig;
+  data: ResortAboutData;
+  admin?: boolean;
 }
 
 const highlightIcons: Record<string, React.ReactNode> = {
   Area: <Ruler className="size-5 text-emerald-600" />,
   Established: <Calendar className="size-5 text-emerald-600" />,
-  "200–250 Guests": <Users className="size-5 text-emerald-600" />,
+  "200-250 Guests": <Users className="size-5 text-emerald-600" />,
 };
 
 function getHighlightIcon(value: string) {
   return highlightIcons[value] ?? <Leaf className="size-5 text-emerald-600" />;
 }
 
-export default function AboutSection({ config }: AboutSectionProps) {
-  const { about } = config;
-
+export default function AboutSection({ data, admin = false }: AboutSectionProps) {
   return (
-    <section className="py-16 md:py-24 bg-base-100">
+    <section className="relative py-16 md:py-24 bg-base-100">
+      {admin ? (
+        <div className="absolute right-4 top-4 z-20">
+          <SectionAdminControl section="about" title="Edit About" data={data} />
+        </div>
+      ) : null}
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           {/* Image Side */}
           <div className="flex-1 relative w-full max-w-lg lg:max-w-none">
             <div className="absolute inset-0 lg:-inset-4 bg-emerald-500/10 rounded-3xl -z-10 rotate-1 lg:rotate-3" />
             <Image
-              src={about.image}
+              src={data.image}
               alt="Sunvia Eco Resort surroundings"
               width={800}
               height={500}
               className="rounded-2xl shadow-2xl w-full object-cover aspect-video"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
             {/* Floating Badge */}
             <div className="absolute -bottom-5 right-4 lg:-right-5 bg-base-100 p-4 rounded-xl shadow-lg border border-emerald-500/20">
               <div className="flex items-center gap-2 text-emerald-700 font-bold text-sm">
                 <Leaf className="size-5" />
-                <span>100% Eco-Friendly</span>
+                <span>{data.floatingBadgeText}</span>
               </div>
             </div>
           </div>
@@ -46,20 +52,20 @@ export default function AboutSection({ config }: AboutSectionProps) {
           <div className="flex-1 space-y-6 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-700 text-sm font-bold uppercase tracking-wider">
               <Leaf size={16} />
-              About Our Resort
+              {data.badgeText}
             </div>
 
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-              {about.heading}
+              {data.heading}
             </h2>
 
             <p className="text-base-content/70 text-lg leading-relaxed">
-              {about.description}
+              {data.description}
             </p>
 
             {/* Highlight Stats */}
             <div className="grid grid-cols-3 gap-4 pt-4">
-              {about.highlights.map((h) => (
+              {data.highlights.map((h) => (
                 <div
                   key={h.label}
                   className="bg-base-200/80 p-4 rounded-2xl border border-base-300 text-center"

@@ -4,7 +4,7 @@ import path from 'path';
 import { existsSync } from 'fs';
 import { revalidateTag } from 'next/cache';
 import { verifyAuth } from '@/src/lib/auth';
-import { TAG_GENERAL_SETTINGS, TAG_HOME_PAGE } from '@/src/lib/revalidate-tags';
+import { TAG_GENERAL_SETTINGS, TAG_HOME_PAGE, TAG_SUNVIA_ECO_RESORT } from '@/src/lib/revalidate-tags';
 
 export async function POST(request: NextRequest) {
   try {
@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
     // Uploads are currently used by admin-managed CMS content and branding assets.
     revalidateTag(TAG_HOME_PAGE, 'max');
     revalidateTag(TAG_GENERAL_SETTINGS, 'max');
+    revalidateTag(TAG_SUNVIA_ECO_RESORT, 'max');
     
     // Return the public URL
     const fileUrl = `${urlPrefix}/${filename}`;

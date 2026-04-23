@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Leaf, MapPin, ChevronRight, Play, BedDouble, Utensils, Activity } from "lucide-react";
+import SectionAdminControl from "@/src/view/sunvia-eco-resort/components/SectionAdminControl";
+import type { ResortHeroData } from "@/src/lib/data/sunvia-eco-resort";
 
 interface SunviaEcoResortData {
   bgImageUrl?: string;
@@ -25,16 +27,37 @@ const defaultData: SunviaEcoResortData = {
 };
 
 interface SunviaEcoResortProps {
-  data?: SunviaEcoResortData;
+  data?: SunviaEcoResortData | ResortHeroData;
+  admin?: boolean;
 }
 
-const SunviaEcoResort = ({ data }: SunviaEcoResortProps) => {
-  const ctaData = { ...defaultData, ...data } as Required<SunviaEcoResortData>;
+const SunviaEcoResort = ({ data, admin = false }: SunviaEcoResortProps) => {
+  const sourceData = data as ResortHeroData | undefined;
+  const ctaData = {
+    ...defaultData,
+    ...(sourceData
+      ? {
+          bgImageUrl: sourceData.backgroundImage,
+          locationText: sourceData.locationText,
+          subHeadline: sourceData.subtitle,
+          titlePart1: sourceData.titlePart1,
+          titlePart2: sourceData.titlePart2,
+          description: sourceData.description,
+          ctaButtonText: sourceData.ctaPrimaryText,
+          ctaButtonLink: sourceData.ctaPrimaryHref,
+        }
+      : data),
+  } as Required<SunviaEcoResortData>;
 
   return (
     <section className="py-4 md:py-6 px-4 w-full">
       <div className="container mx-auto">
         <div className="relative w-full rounded-[2rem] overflow-hidden min-h-[300px] md:min-h-[400px] flex items-center shadow-2xl group border border-emerald-900/30">
+          {admin && sourceData ? (
+            <div className="absolute right-4 top-4 z-20">
+              <SectionAdminControl section="hero" title="Edit Resort Hero" data={sourceData} />
+            </div>
+          ) : null}
 
           {/* Background Image */}
           <Image
@@ -42,6 +65,7 @@ const SunviaEcoResort = ({ data }: SunviaEcoResortProps) => {
             alt="Sunvia Eco Resort"
             fill
             className="object-cover transition-transform duration-1000 group-hover:scale-105"
+            sizes="100vw"
           />
 
           {/* Gradient Overlay (Left to Right) */}

@@ -1,32 +1,39 @@
 import Image from "next/image";
 import { BedDouble, Check } from "lucide-react";
-import type { ResortConfig } from "../Index";
+import SectionAdminControl from "./SectionAdminControl";
+import type { ResortAccommodationData } from "@/src/lib/data/sunvia-eco-resort";
 
 interface AccommodationSectionProps {
-  accommodations: ResortConfig["accommodations"];
+  data: ResortAccommodationData;
+  admin?: boolean;
 }
 
-export default function AccommodationSection({ accommodations }: AccommodationSectionProps) {
+export default function AccommodationSection({ data, admin = false }: AccommodationSectionProps) {
   return (
-    <section className="py-16 md:py-24 bg-base-200/50">
+    <section className="relative py-16 md:py-24 bg-base-200/50">
+      {admin ? (
+        <div className="absolute right-4 top-4 z-20">
+          <SectionAdminControl section="accommodations" title="Stay" data={data} />
+        </div>
+      ) : null}
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Heading */}
         <div className="text-center mb-14">
           <p className="text-emerald-600 font-bold tracking-[0.3em] uppercase text-sm mb-4">
-            Stay With Us
+            {data.eyebrow}
           </p>
           <h2 className="font-gilliequest text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tighter">
-            Luxury{" "}
-            <span className="text-emerald-600 italic">Accommodations</span>
+            {data.titlePrefix}{" "}
+            <span className="text-emerald-600 italic">{data.titleAccent}</span>
           </h2>
           <p className="text-base-content/60 text-lg mt-4 max-w-2xl mx-auto">
-            Choose from 100 thoughtfully designed units, each blending modern comfort with natural beauty.
+            {data.description}
           </p>
         </div>
 
         {/* Accommodation Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {accommodations.map((room, index) => (
+          {data.items.map((room, index) => (
             <div
               key={index}
               className="bg-base-100 rounded-3xl overflow-hidden border border-base-300 hover:border-emerald-500/30 transition-all duration-300 hover:shadow-xl group"
@@ -38,6 +45,7 @@ export default function AccommodationSection({ accommodations }: AccommodationSe
                   alt={room.type}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-emerald-500/90 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">

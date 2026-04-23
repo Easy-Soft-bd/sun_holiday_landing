@@ -8,7 +8,12 @@ import FeatureTour from "@/src/view/Home/tour_slider/FeatureTour";
 import HajjCta from "@/src/view/Home/hajj_cta/HajjCta";
 import Hero from "@/src/view/Home/Hero/Hero";
 import ResortCta from "@/src/view/Home/resort_cta/ResortCta";
-import { getCachedAdminStatus, getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
+import {
+  getCachedAdminStatus,
+  getCachedHomePageData,
+  getCachedSettings,
+  getCachedSunviaEcoResortPageData,
+} from "@/src/lib/get-page-data";
 import SailorMoonCta from "@/src/view/Home/resort_cta/sailor-moon/SailorMoonCta";
 import SunviaEcoResort from "@/src/view/Home/sunvia_eco_resort/SunviaEcoResort";
 import { absoluteUrl, buildPageMetadata } from "@/src/lib/site";
@@ -42,10 +47,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [admin, pageData, settings] = await Promise.all([
+  const [admin, pageData, settings, resortPageData] = await Promise.all([
     getCachedAdminStatus(),
     getCachedHomePageData(),
     getCachedSettings(),
+    getCachedSunviaEcoResortPageData(),
   ]);
   const organizationJsonLd = {
     '@context': 'https://schema.org',
@@ -94,7 +100,7 @@ export default async function Home() {
       <AirLineMarquee data={pageData?.airline_marquee} admin={admin} />
       <FeatureTour />
       <SailorMoonCta data={pageData?.sailor_moon_cta} admin={admin} />
-      <SunviaEcoResort />
+      <SunviaEcoResort data={resortPageData.hero} admin={admin} />
       <ResortCta data={pageData?.resort_cta} admin={admin} />
       <HajjCta data={pageData?.hajj_cta} admin={admin} />
       <HolidayCategories data={pageData?.holiday_categories} admin={admin} />

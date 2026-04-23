@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { MapPin, Phone, Mail, Clock, ChevronRight, Heart, Briefcase, Users } from "lucide-react";
-import type { ResortConfig } from "../Index";
+import SectionAdminControl from "./SectionAdminControl";
+import type { ResortContactData } from "@/src/lib/data/sunvia-eco-resort";
 
 interface ContactSectionProps {
-  config: ResortConfig;
+  data: ResortContactData;
+  admin?: boolean;
 }
 
 const audienceIcons: Record<string, React.ReactNode> = {
@@ -12,23 +14,26 @@ const audienceIcons: Record<string, React.ReactNode> = {
   "Corporate Clients": <Briefcase className="size-5 text-emerald-600" />,
 };
 
-export default function ContactSection({ config }: ContactSectionProps) {
-  const { contact, location, targetAudience } = config;
-
+export default function ContactSection({ data, admin = false }: ContactSectionProps) {
   return (
-    <section id="contact" className="py-16 md:py-24 bg-base-100">
+    <section id="contact" className="relative py-16 md:py-24 bg-base-100">
+      {admin ? (
+        <div className="absolute right-4 top-4 z-20">
+          <SectionAdminControl section="contact" title="Edit Contact" data={data} />
+        </div>
+      ) : null}
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-14">
           <p className="text-emerald-600 font-bold tracking-[0.3em] uppercase text-sm mb-4">
-            Plan Your Stay
+            {data.eyebrow}
           </p>
           <h2 className="font-gilliequest text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tighter mb-4">
-            Booking{" "}
-            <span className="text-emerald-600 italic">Information</span>
+            {data.titlePrefix}{" "}
+            <span className="text-emerald-600 italic">{data.titleAccent}</span>
           </h2>
           <p className="text-base-content/60 text-lg max-w-2xl mx-auto">
-            Ready to experience sustainable luxury? Get in touch with us to book your escape.
+            {data.description}
           </p>
         </div>
 
@@ -44,7 +49,7 @@ export default function ContactSection({ config }: ContactSectionProps) {
                   </div>
                   <div>
                     <h3 className="font-bold text-lg">Check-in</h3>
-                    <p className="text-base-content/60">{contact.checkIn}</p>
+                    <p className="text-base-content/60">{data.checkIn}</p>
                   </div>
                 </div>
               </div>
@@ -56,7 +61,7 @@ export default function ContactSection({ config }: ContactSectionProps) {
                   </div>
                   <div>
                     <h3 className="font-bold text-lg">Check-out</h3>
-                    <p className="text-base-content/60">{contact.checkOut}</p>
+                    <p className="text-base-content/60">{data.checkOut}</p>
                   </div>
                 </div>
               </div>
@@ -75,7 +80,7 @@ export default function ContactSection({ config }: ContactSectionProps) {
                       Phone
                     </h3>
                     <div className="space-y-1">
-                      {contact.phone.map((phone, index) => (
+                      {data.phones.map((phone, index) => (
                         <a
                           key={index}
                           href={`tel:${phone.replace(/\s/g, "")}`}
@@ -100,7 +105,7 @@ export default function ContactSection({ config }: ContactSectionProps) {
                       Email
                     </h3>
                     <div className="space-y-1">
-                      {contact.email.map((email, index) => (
+                      {data.emails.map((email, index) => (
                         <a
                           key={index}
                           href={`mailto:${email}`}
@@ -125,7 +130,7 @@ export default function ContactSection({ config }: ContactSectionProps) {
                       Location
                     </h3>
                     <p className="text-sm text-base-content/70 leading-relaxed">
-                      {location.full}
+                      {data.locationFull}
                     </p>
                   </div>
                 </div>
@@ -138,7 +143,7 @@ export default function ContactSection({ config }: ContactSectionProps) {
                 Perfect For
               </h3>
               <div className="flex flex-wrap items-center justify-center gap-4">
-                {targetAudience.map((audience) => (
+                {data.audience.map((audience) => (
                   <div
                     key={audience}
                     className="flex items-center gap-2 bg-base-100 px-4 py-2.5 rounded-full border border-emerald-500/20 text-sm font-medium"
@@ -153,14 +158,14 @@ export default function ContactSection({ config }: ContactSectionProps) {
             {/* CTA */}
             <div className="text-center">
               <Link
-                href="/contact"
+                href={data.ctaHref}
                 className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-full px-10 py-3.5 transition-all shadow-xl shadow-emerald-500/20 group"
               >
-                Book Your Escape Now
+                {data.ctaText}
                 <ChevronRight className="size-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <p className="text-xs text-base-content/40 mt-3">
-                * Advance booking recommended. Conditions apply.
+                {data.note}
               </p>
             </div>
           </div>
