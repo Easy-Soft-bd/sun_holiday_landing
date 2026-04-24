@@ -1,6 +1,6 @@
-# Sun Holidays Ltd. - Landing Page
+# Sun Tourism Ltd. - Landing Page
 
-This is a [Next.js](https://nextjs.org) project for the Sun Holidays Ltd. landing page.
+This is a [Next.js](https://nextjs.org) project for the Sun Tourism Ltd. landing page.
 
 ## Getting Started
 

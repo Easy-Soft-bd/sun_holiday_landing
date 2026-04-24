@@ -14,7 +14,7 @@ interface LogoProps {
 }
 
 const DEFAULT_LOGO_URL = '/logo/logo.png';
-const DEFAULT_SITE_NAME = 'Sun Holidays LTD';
+const DEFAULT_SITE_NAME = 'Sun Tourism Ltd';
 
 const Logo = ({
     className,

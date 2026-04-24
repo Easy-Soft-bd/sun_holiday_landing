@@ -3,8 +3,8 @@ import StaticContentPage from '@/src/components/common/StaticContentPage';
 import { buildPageMetadata } from '@/src/lib/site';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: 'Terms of Service - Sun Holidays Ltd',
-  description: 'Review the service terms that apply to enquiries, travel planning, bookings, and support provided by Sun Holidays Ltd.',
+  title: 'Terms of Service - Sun Tourism Ltd',
+  description: 'Review the service terms that apply to enquiries, travel planning, bookings, and support provided by Sun Tourism Ltd.',
   path: '/terms',
 });
 
@@ -13,7 +13,7 @@ export default function TermsPage() {
     <StaticContentPage
       eyebrow="Terms"
       title="Terms of Service"
-      intro="These terms describe the general conditions for using Sun Holidays Ltd services, requesting travel support, and confirming bookings."
+      intro="These terms describe the general conditions for using Sun Tourism Ltd services, requesting travel support, and confirming bookings."
       sections={[
         {
           title: 'Quotes and Availability',

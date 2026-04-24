@@ -3,9 +3,9 @@ import type { TourRecord } from '@/src/lib/data/tours';
 import { stripHtml } from '@/src/lib/html';
 
 const DEFAULT_SITE_URL = 'https://sunholidaysltd.com';
-const DEFAULT_SITE_NAME = 'Sun Holidays Ltd';
+const DEFAULT_SITE_NAME = 'Sun Tourism Ltd';
 const DEFAULT_DESCRIPTION =
-  'Book your dream holiday with Sun Holidays Ltd. Specialists in tours, Hajj, Umrah, visa support, and curated travel experiences.';
+  'Book your dream holiday with Sun Tourism Ltd. Specialists in tours, Hajj, Umrah, visa support, and curated travel experiences.';
 const DEFAULT_OG_IMAGE = '/hero/hero.jpg';
 
 function trimTrailingSlash(value: string) {

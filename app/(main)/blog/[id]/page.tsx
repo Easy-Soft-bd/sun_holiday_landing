@@ -21,14 +21,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!post) {
     return buildPageMetadata({
-      title: "Blog Post Not Found | Sun Holidays Ltd",
+      title: "Blog Post Not Found | Sun Tourism Ltd",
       description: "The requested blog post could not be found.",
       path: `/blog/${id}`,
     });
   }
 
   return buildPageMetadata({
-    title: `${post.title} | Sun Holidays Ltd`,
+    title: `${post.title} | Sun Tourism Ltd`,
     description: post.excerpt,
     path: `/blog/${id}`,
     image: post.image,

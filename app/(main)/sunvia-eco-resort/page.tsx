@@ -51,7 +51,7 @@ export default async function SunviaEcoResortPage() {
       name: item.type,
       description: item.description,
     })),
-    brand: settings?.siteName || "Sun Holidays Ltd",
+    brand: settings?.siteName || "Sun Tourism Ltd",
   };
 
   return (

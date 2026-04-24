@@ -30,11 +30,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const title =
     settings?.metaTitle ||
     [hero.titlePart1, hero.titlePart2, hero.titlePart3].filter(Boolean).join(' ').trim() ||
-    'Sun Holidays Ltd | Experience World-Class Travel';
+    'Sun Tourism Ltd | Experience World-Class Travel';
   const description =
     settings?.metaDescription ||
     hero.description ||
-    'Book your dream holiday with Sun Holidays Ltd. Specialists in tours, Hajj, Umrah, visa support, and curated travel experiences.';
+    'Book your dream holiday with Sun Tourism Ltd. Specialists in tours, Hajj, Umrah, visa support, and curated travel experiences.';
   const image = settings?.metaImage || hero.backgroundImage || '/hero/hero.jpg';
 
   return buildPageMetadata({
@@ -56,7 +56,7 @@ export default async function Home() {
   const organizationJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: settings?.siteName || 'Sun Holidays Ltd',
+    name: settings?.siteName || 'Sun Tourism Ltd',
     url: absoluteUrl('/'),
     logo: absoluteUrl(settings?.siteLogo || '/logo/logo.png'),
     email: settings?.contactEmail || undefined,
@@ -71,12 +71,12 @@ export default async function Home() {
   const websiteJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: settings?.siteName || 'Sun Holidays Ltd',
+    name: settings?.siteName || 'Sun Tourism Ltd',
     url: absoluteUrl('/'),
     description:
       settings?.metaDescription ||
       pageData?.hero?.description ||
-      'Book your dream holiday with Sun Holidays Ltd.',
+      'Book your dream holiday with Sun Tourism Ltd.',
   };
 
   return (

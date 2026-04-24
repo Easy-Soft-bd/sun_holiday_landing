@@ -15,14 +15,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
-  title: "Sun Holidays Ltd | Experience World-Class Travel",
+  title: "Sun Tourism Ltd | Experience World-Class Travel",
   description: getDefaultSeo().description,
-  keywords: splitKeywords("Travel, Holidays, Hajj, Umrah, Sun Holidays Ltd, Tours, Vacation"),
+  keywords: splitKeywords("Travel, Holidays, Hajj, Umrah, Sun Tourism Ltd, Tours, Vacation"),
   alternates: {
     canonical: absoluteUrl('/'),
   },
   openGraph: {
-    title: "Sun Holidays Ltd | Experience World-Class Travel",
+    title: "Sun Tourism Ltd | Experience World-Class Travel",
     description: getDefaultSeo().description,
     type: "website",
     locale: "en_BD",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sun Holidays Ltd | Experience World-Class Travel",
+    title: "Sun Tourism Ltd | Experience World-Class Travel",
     description: getDefaultSeo().description,
     images: [absoluteUrl(getDefaultSeo().image)],
   },

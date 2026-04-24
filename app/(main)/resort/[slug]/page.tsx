@@ -14,14 +14,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!resort) {
     return buildPageMetadata({
-      title: 'Resort Not Found - Sun Holidays Ltd',
+      title: 'Resort Not Found - Sun Tourism Ltd',
       description: 'The requested resort page could not be found.',
       path: `/resort/${slug}`,
     });
   }
 
   return buildPageMetadata({
-    title: `${resort.title} - Sun Holidays Ltd`,
+    title: `${resort.title} - Sun Tourism Ltd`,
     description: resort.description,
     path: `/resort/${slug}`,
     keywords: resort.keywords,
@@ -51,7 +51,7 @@ export default async function ResortSlugPage({ params }: Props) {
         {
           title: 'Planning Status',
           body:
-            'This hospitality experience is currently presented as an upcoming property. Contact Sun Holidays Ltd for the latest availability, launch timelines, and package discussions.',
+            'This hospitality experience is currently presented as an upcoming property. Contact Sun Tourism Ltd for the latest availability, launch timelines, and package discussions.',
         },
         {
           title: 'How to Enquire',

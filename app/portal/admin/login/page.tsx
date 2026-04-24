@@ -118,7 +118,7 @@ export default function AdminLoginPage() {
                 {/* Footer Links */}
                 <div className="text-center mt-8">
                     <Text type="secondary" className="text-sm">
-                        &copy; {new Date().getFullYear()} Sun Holidays Ltd. All rights reserved.
+                        &copy; {new Date().getFullYear()} Sun Tourism Ltd. All rights reserved.
                     </Text>
                     <div className="mt-4 flex items-center justify-center gap-4 text-xs font-medium">
                         <Link href="/" className="text-gray-400 hover:text-primary transition-colors">Main Site</Link>

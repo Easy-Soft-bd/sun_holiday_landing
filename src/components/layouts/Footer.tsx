@@ -38,7 +38,7 @@ interface FooterData {
 }
 
 const defaultData: FooterData = {
-    bio: "Sun Holidays Ltd is your premier gateway to world-class travel experiences. We specialize in curated holidays, seamless visa processing, and luxury resort bookings.",
+    bio: "Sun Tourism Ltd is your premier gateway to world-class travel experiences. We specialize in curated holidays, seamless visa processing, and luxury resort bookings.",
     socialLinks: [
         { icon: "LuFacebook", url: "#" },
         { icon: "LuInstagram", url: "#" },
@@ -67,7 +67,7 @@ const defaultData: FooterData = {
         { name: "ISO", image: "/certs/iso.png" },
     ],
     paymentsTitle: "Secure Payments",
-    copyrightText: "Sun Holidays Ltd. All Rights Reserved.",
+    copyrightText: "Sun Tourism Ltd. All Rights Reserved.",
 };
 
 

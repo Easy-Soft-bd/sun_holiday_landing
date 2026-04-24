@@ -39,7 +39,7 @@ const defaultData: HajjCtaData = {
     offerBadge: "Take a Look at Special Offers",
     titlePart1: "UMRAH",
     titlePart2: "HAJJ PACKAGE",
-    description: "Sun Holidays Ltd. ensures that you complete your long-awaited travel to the two holy cities of Makkah and Madinah with ease and spiritual focus.",
+    description: "Sun Tourism Ltd. ensures that you complete your long-awaited travel to the two holy cities of Makkah and Madinah with ease and spiritual focus.",
     accommodationTitle: "Accommodation Included",
     accommodationDescription: "Verified quality hotels in both Makkah and Madinah, located within walking distance to the Haram.",
     viewDetailsLink: "/packages/umrah",

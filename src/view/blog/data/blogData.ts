@@ -95,7 +95,7 @@ export const blogPosts: BlogPost[] = [
             <h3>Seek Professional Guidance</h3>
             <p>If you're unsure about any part of the process, don't hesitate to consult with visa experts. They can provide valuable insights and ensure your application is as strong as possible.</p>
             
-            <p>At Sun Holidays Ltd, we specialize in making the visa process seamless for you. Contact us today for expert assistance.</p>
+            <p>At Sun Tourism Ltd, we specialize in making the visa process seamless for you. Contact us today for expert assistance.</p>
         `
     },
     {

@@ -57,10 +57,10 @@ export default function AboutView() {
                         <h2 className="text-3xl md:text-4xl font-bold">Born from Passion</h2>
                         <div className="space-y-4 text-lg text-base-content/80 leading-relaxed">
                             <p>
-                                Sun Holidays Ltd. started when a group of friends decided to make something out of their common passion for travel. 
+                                Sun Tourism Ltd. started when a group of friends decided to make something out of their common passion for travel. 
                             </p>
                             <p>
-                                Armed with a wide array of experience brought by their many travels within Bangladesh and abroad, these friends bonded together to form Sun Holidays Ltd.
+                                Armed with a wide array of experience brought by their many travels within Bangladesh and abroad, these friends bonded together to form Sun Tourism Ltd.
                             </p>
                         </div>
                     </div>

@@ -17,7 +17,7 @@ import {
 
 // Metadata for SEO
 export const metadata: Metadata = {
-    title: "Sailor Moon Resorts, Saint Martin | Premium Beach Resort - Sun Holidays Ltd",
+    title: "Sailor Moon Resorts, Saint Martin | Premium Beach Resort - Sun Tourism Ltd",
     description: "Experience paradise at Sailor Moon Resorts, Saint Martin. Premium 3-star beach resort offering dining, BBQ, beach activities, and stunning ocean views. Book your stay at Cox's Bazar's finest resort.",
     keywords: ["Sailor Moon Resort", "Saint Martin Resort", "Cox's Bazar Beach Resort", "Bangladesh Beach Hotel", "Sun Holidays Resort", "Saint Martin Island Accommodation"],
     openGraph: {

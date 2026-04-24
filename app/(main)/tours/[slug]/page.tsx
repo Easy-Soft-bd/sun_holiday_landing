@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!tour || tour.status !== "Active") {
     return {
-      title: "Tour not found | Sun Holidays Ltd",
+      title: "Tour not found | Sun Tourism Ltd",
       description: "This tour is unavailable or no longer listed.",
       robots: { index: false, follow: false },
     };

@@ -15,11 +15,11 @@ import {
 
 // Metadata for SEO
 export const metadata: Metadata = {
-    title: "Our Resorts & Hotels | Premium Accommodations - Sun Holidays Ltd",
-    description: "Discover our collection of premium resorts and hotels across Bangladesh. From beachfront paradises to luxury city hotels, find your perfect stay with Sun Holidays Ltd.",
+    title: "Our Resorts & Hotels | Premium Accommodations - Sun Tourism Ltd",
+    description: "Discover our collection of premium resorts and hotels across Bangladesh. From beachfront paradises to luxury city hotels, find your perfect stay with Sun Tourism Ltd.",
     keywords: ["Sun Holidays Resorts", "Bangladesh Hotels", "Beach Resorts", "City Hotels", "Luxury Accommodation", "Cox's Bazar Hotels", "Saint Martin Resort"],
     openGraph: {
-        title: "Our Resorts & Hotels | Sun Holidays Ltd",
+        title: "Our Resorts & Hotels | Sun Tourism Ltd",
         description: "Explore our premium collection of resorts and hotels. Experience luxury, comfort, and exceptional service.",
         images: ["/sailor/SHA_6244 copy.jpg"],
         type: "website",

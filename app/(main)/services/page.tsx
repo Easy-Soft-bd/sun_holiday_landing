@@ -3,11 +3,11 @@ import StaticContentPage from '@/src/components/common/StaticContentPage';
 import { buildPageMetadata } from '@/src/lib/site';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: 'Travel Services - Sun Holidays Ltd',
+  title: 'Travel Services - Sun Tourism Ltd',
   description:
-    'Discover Sun Holidays Ltd services including curated tours, visa support, air ticketing, resort bookings, and Hajj and Umrah assistance.',
+    'Discover Sun Tourism Ltd services including curated tours, visa support, air ticketing, resort bookings, and Hajj and Umrah assistance.',
   path: '/services',
-  keywords: ['Travel Services', 'Visa Support', 'Air Ticketing', 'Resort Bookings', 'Sun Holidays Ltd'],
+  keywords: ['Travel Services', 'Visa Support', 'Air Ticketing', 'Resort Bookings', 'Sun Tourism Ltd'],
 });
 
 export default function ServicesPage() {
@@ -15,7 +15,7 @@ export default function ServicesPage() {
     <StaticContentPage
       eyebrow="What We Do"
       title="Travel Services Built Around Real Journeys"
-      intro="Sun Holidays Ltd supports travelers from the first inquiry to the final itinerary with practical planning, trusted support, and destination knowledge."
+      intro="Sun Tourism Ltd supports travelers from the first inquiry to the final itinerary with practical planning, trusted support, and destination knowledge."
       ctaLabel="Plan Your Trip"
       ctaHref="/contact"
       sections={[

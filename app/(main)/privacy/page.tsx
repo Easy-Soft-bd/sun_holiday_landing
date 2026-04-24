@@ -3,8 +3,8 @@ import StaticContentPage from '@/src/components/common/StaticContentPage';
 import { buildPageMetadata } from '@/src/lib/site';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: 'Privacy Policy - Sun Holidays Ltd',
-  description: 'Read how Sun Holidays Ltd collects, uses, and protects customer information across enquiries, bookings, and support requests.',
+  title: 'Privacy Policy - Sun Tourism Ltd',
+  description: 'Read how Sun Tourism Ltd collects, uses, and protects customer information across enquiries, bookings, and support requests.',
   path: '/privacy',
 });
 
@@ -13,7 +13,7 @@ export default function PrivacyPage() {
     <StaticContentPage
       eyebrow="Privacy"
       title="Privacy Policy"
-      intro="Sun Holidays Ltd handles personal information carefully and only uses it to operate enquiries, bookings, customer support, and lawful business activities."
+      intro="Sun Tourism Ltd handles personal information carefully and only uses it to operate enquiries, bookings, customer support, and lawful business activities."
       sections={[
         {
           title: 'What We Collect',

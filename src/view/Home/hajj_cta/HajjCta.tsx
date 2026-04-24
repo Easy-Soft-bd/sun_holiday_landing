@@ -40,7 +40,7 @@ const defaultData = {
     offerBadge: "Take a Look at Special Offers",
     titlePart1: "UMRAH",
     titlePart2: "HAJJ PACKAGE",
-    description: "Sun Holidays Ltd. ensures that you complete your long-awaited travel to the two holy cities of Makkah and Madinah with ease and spiritual focus.",
+    description: "Sun Tourism Ltd. ensures that you complete your long-awaited travel to the two holy cities of Makkah and Madinah with ease and spiritual focus.",
     accommodationTitle: "Accommodation Included",
     accommodationDescription: "Verified quality hotels in both Makkah and Madinah, located within walking distance to the Haram.",
     viewDetailsLink: "/packages/umrah",
@@ -94,7 +94,7 @@ const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
                         <div className="relative h-[450px] md:h-[550px] w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
                             <Image
                                 src={hajjData.imageUrl}
-                                alt="Umrah Hajj Package Bangladesh - Sun Holidays Ltd"
+                                alt="Umrah Hajj Package Bangladesh - Sun Tourism Ltd"
                                 fill
                                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
                             />

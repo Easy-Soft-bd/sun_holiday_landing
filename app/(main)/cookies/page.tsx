@@ -3,8 +3,8 @@ import StaticContentPage from '@/src/components/common/StaticContentPage';
 import { buildPageMetadata } from '@/src/lib/site';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: 'Cookie Policy - Sun Holidays Ltd',
-  description: 'Learn how Sun Holidays Ltd uses cookies and similar technologies to support website functionality and improve the user experience.',
+  title: 'Cookie Policy - Sun Tourism Ltd',
+  description: 'Learn how Sun Tourism Ltd uses cookies and similar technologies to support website functionality and improve the user experience.',
   path: '/cookies',
 });
 

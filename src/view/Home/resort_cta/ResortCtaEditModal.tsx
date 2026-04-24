@@ -42,7 +42,7 @@ const defaultData: ResortCtaData = {
     subHeadline: "Take Experience To Our 5 Star Hotel",
     titlePart1: "GRANDEUR",
     titlePart2: "BLISS",
-    description: "A state-of-the-art luxury escape by Sun Holidays Ltd. Nestled adjacent to the serene Inani Beach, we offer a world of sophistication and coastal tranquility.",
+    description: "A state-of-the-art luxury escape by Sun Tourism Ltd. Nestled adjacent to the serene Inani Beach, we offer a world of sophistication and coastal tranquility.",
     ctaButtonText: "Details & Booking",
     ctaButtonLink: "/hotel/grandeur-bliss",
     roomDetails: [

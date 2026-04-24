@@ -32,7 +32,7 @@ const defaultData: HeroData = {
     titlePart1: "SUN",
     titlePart2: "HOLIDAYS",
     titlePart3: "LTD",
-    description: "Experience world-class travel with Sun Holidays Ltd. From exotic beaches to mountain retreats, we curate memories that last a lifetime.",
+    description: "Experience world-class travel with Sun Tourism Ltd. From exotic beaches to mountain retreats, we curate memories that last a lifetime.",
     button1Text: "Find a Destination",
     button1Link: "/destinations",
     button2Text: "Watch Story",

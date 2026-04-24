@@ -232,7 +232,7 @@ export type ResortSectionKey = (typeof RESORT_SECTION_KEYS)[number];
 
 export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
   seo: {
-    metaTitle: "Sunvia Eco Resort | 5-Star Eco-Luxury Resort in Manikganj - Sun Holidays Ltd",
+    metaTitle: "Sunvia Eco Resort | 5-Star Eco-Luxury Resort in Manikganj - Sun Tourism Ltd",
     metaDescription:
       "Experience sustainable luxury at Sunvia Eco Resort, a 12-acre nature-focused destination in Manikganj, Bangladesh. 100 premium accommodations, organic dining, adventure activities, and eco-friendly living.",
     metaKeywords: [

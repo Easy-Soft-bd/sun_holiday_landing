@@ -4,8 +4,8 @@ import TicketsView from "@/src/view/tickets/TicketsView";
 import { buildPageMetadata } from "@/src/lib/site";
 
 export const metadata: Metadata = buildPageMetadata({
-    title: "Flight Tickets - Sun Holidays Ltd | Book Domestic & Int'l Flights",
-    description: "Find the best flight deals. Book air tickets to any destination with Sun Holidays Ltd. Contact us for instant booking.",
+    title: "Flight Tickets - Sun Tourism Ltd | Book Domestic & Int'l Flights",
+    description: "Find the best flight deals. Book air tickets to any destination with Sun Tourism Ltd. Contact us for instant booking.",
     path: "/tickets",
     keywords: ["Air Tickets", "Flight Booking", "Dhaka to Dubai", "Cheap Flights Bangladesh"],
 });
