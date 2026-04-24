@@ -12,11 +12,14 @@ export function tourDetailTag(id: string | number) {
   return `tour-${id}`;
 }
 
+/** Invalidate cached HTML/data for a public tour URL segment (slug or legacy numeric id). */
+export function tourRouteTag(param: string) {
+  return `tour-url-${param}`;
+}
+
 /*
 Tag to route mapping:
-- TAG_HOME_PAGE -> `/`
-- TAG_SUNVIA_ECO_RESORT -> `/sunvia-eco-resort`
-- TAG_GENERAL_SETTINGS -> shared `(main)` layout content like nav branding, metadata, and footer
-- TAG_TOURS_LIST -> `/tours`, sitemap tour entries, and admin/public list consumers
-- tourDetailTag(id) -> `/tours/[id]` for the matching tour detail page and metadata
+- TAG_TOURS_LIST -> `/tours`, sitemap, list consumers
+- tourDetailTag(id) -> legacy admin/API cache keys by primary key
+- tourRouteTag(param) -> `/tours/[slug]` where param is the URL segment used in fetch
 */

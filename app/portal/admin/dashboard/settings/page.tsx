@@ -128,7 +128,7 @@ export default function SettingsPage() {
       ),
       children: (
         <Card bordered={false} className="shadow-sm">
-          <Space direction="vertical" size="large" className="w-full">
+          <Space orientation="vertical" size="large" className="w-full">
             <Form.Item
               label="Site Name"
               name="siteName"
@@ -195,7 +195,7 @@ export default function SettingsPage() {
       ),
       children: (
         <Card bordered={false} className="shadow-sm">
-          <Space direction="vertical" size="large" className="w-full">
+          <Space orientation="vertical" size="large" className="w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Form.Item label="Contact Email" name="contactEmail">
                 <Input placeholder="info@sunholidaysltd.com" />
@@ -247,7 +247,7 @@ export default function SettingsPage() {
       ),
       children: (
         <Card bordered={false} className="shadow-sm">
-          <Space direction="vertical" size="large" className="w-full">
+          <Space orientation="vertical" size="large" className="w-full">
             <Form.Item
               label="Meta Title"
               name="metaTitle"

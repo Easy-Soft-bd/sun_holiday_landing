@@ -3,6 +3,7 @@ import Image from "next/image";
 import { MapPin, Clock, Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { canUseNextImage } from "@/src/lib/media";
+import { getTourPublicPath } from "@/src/lib/tours/public-path";
 
 const currencyFormatter = new Intl.NumberFormat('en-BD', {
     style: 'currency',
@@ -13,6 +14,7 @@ const currencyFormatter = new Intl.NumberFormat('en-BD', {
 
 interface TourProps {
     id: string | number;
+    slug?: string | null;
     title: string;
     image: string;
     category: string;
@@ -25,6 +27,7 @@ interface TourProps {
 
 export default function TourCard({ tour }: { tour: TourProps }) {
     const supportsImageOptimization = canUseNextImage(tour.image);
+    const detailHref = getTourPublicPath({ id: Number(tour.id), slug: tour.slug ?? null });
 
     return (
         <div className="group bg-base-100 rounded-3xl overflow-hidden shadow-sm border border-base-200 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full hover:-translate-y-1">
@@ -74,7 +77,7 @@ export default function TourCard({ tour }: { tour: TourProps }) {
                         </p>
                     </div>
                     <Link 
-                        href={`/tours/${tour.id}`}
+                        href={detailHref}
                         className="btn btn-primary btn-sm rounded-full text-white px-4"
                     >
                         Details <ArrowRight size={16} />

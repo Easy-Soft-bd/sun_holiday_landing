@@ -9,6 +9,7 @@ export interface TourItineraryDay {
 
 export interface TourPackage {
     id: string;
+    slug?: string | null;
     title: string;
     location: string;
     price: number;
@@ -30,6 +31,7 @@ export interface TourPackage {
 export const mockTours: TourPackage[] = [
     {
         id: '1',
+        slug: 'cox-bazar-beach-paradise',
         title: "Cox's Bazar Beach Paradise",
         location: "Cox's Bazar, Bangladesh",
         price: 5500,
@@ -68,6 +70,7 @@ export const mockTours: TourPackage[] = [
     },
     {
         id: '2',
+        slug: 'magical-saint-martins-island',
         title: "Magical Saint Martin's Island",
         location: "Saint Martin, Bangladesh",
         price: 8500,
@@ -102,6 +105,7 @@ export const mockTours: TourPackage[] = [
     },
     {
         id: '3',
+        slug: 'sajek-valley-clouds',
         title: "Sajek Valley Clouds",
         location: "Rangamati, Bangladesh",
         price: 6500,
@@ -130,6 +134,7 @@ export const mockTours: TourPackage[] = [
     },
     {
         id: '4',
+        slug: 'dubai-city-of-gold',
         title: "Discover Dubai",
         location: "Dubai, UAE",
         price: 45000,
@@ -160,6 +165,7 @@ export const mockTours: TourPackage[] = [
     },
     {
         id: '5',
+        slug: 'bangkok-pattaya-escape',
         title: "Bangkok & Pattaya Escape",
         location: "Thailand",
         price: 32000,
@@ -190,6 +196,7 @@ export const mockTours: TourPackage[] = [
     },
     {
         id: '6',
+        slug: 'premium-umrah-package-14d',
         title: "Premium Umrah Package",
         location: "Mecca & Medina, Saudi Arabia",
         price: 150000,
@@ -221,6 +228,7 @@ export const mockTours: TourPackage[] = [
     },
     {
         id: '7',
+        slug: 'istanbul-cultural-tour',
         title: "Istanbul Cultural Tour",
         location: "Istanbul, Turkey",
         price: 65000,
@@ -252,6 +260,7 @@ export const mockTours: TourPackage[] = [
     },
     {
         id: '8',
+        slug: 'standard-hajj-package',
         title: "Standard Hajj Package",
         location: "Mecca, Saudi Arabia",
         price: 450000,
@@ -282,6 +291,7 @@ export const mockTours: TourPackage[] = [
     },
     {
         id: '9',
+        slug: 'sundarbans-adventure',
         title: "Sundarbans Adventure",
         location: "Khulna, Bangladesh",
         price: 12500,

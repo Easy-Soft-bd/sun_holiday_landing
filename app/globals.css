@@ -237,3 +237,62 @@
     --gap: 1rem;
     /* Default for marquee */
 }
+
+/* Tiptap / ProseMirror — Tailwind preflight strips list markers; restore inside admin editor */
+.tiptap-shell .tiptap-editor-content.ProseMirror {
+    outline: none;
+}
+
+.tiptap-shell .ProseMirror ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin: 0.5rem 0 0.75rem;
+}
+
+.tiptap-shell .ProseMirror ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin: 0.5rem 0 0.75rem;
+}
+
+.tiptap-shell .ProseMirror li {
+    display: list-item;
+    margin: 0.125rem 0;
+}
+
+.tiptap-shell .ProseMirror li p {
+    margin: 0;
+}
+
+.tiptap-shell .ProseMirror p {
+    margin: 0.5rem 0;
+}
+
+.tiptap-shell .ProseMirror p:first-child {
+    margin-top: 0;
+}
+
+.tiptap-shell .ProseMirror p:last-child {
+    margin-bottom: 0;
+}
+
+.tiptap-shell .ProseMirror strong {
+    font-weight: 700;
+}
+
+.tiptap-shell .ProseMirror em {
+    font-style: italic;
+}
+
+.tiptap-shell .ProseMirror s {
+    text-decoration: line-through;
+}
+
+/* Placeholder (Tiptap — decoration uses .is-empty + data-placeholder) */
+.tiptap-shell .ProseMirror .is-empty::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #94a3b8;
+    pointer-events: none;
+    height: 0;
+}

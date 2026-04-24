@@ -12,6 +12,7 @@ async function syncModels() {
     await import('../src/models/User');
     await import('../src/models/HomePage');
     await import('../src/models/GeneralSettings');
+    await import('../src/models/Location');
     await import('../src/models/Tour');
     await import('../src/models/SunviaEcoResortPage');
 
@@ -19,7 +20,7 @@ async function syncModels() {
     await sequelize.authenticate();
     console.log('Connection to database established.');
 
-    console.log('Synchronizing models: User, HomePage, GeneralSettings, Tour, SunviaEcoResortPage...');
+    console.log('Synchronizing models: User, HomePage, GeneralSettings, Location, Tour, SunviaEcoResortPage...');
     await sequelize.sync({ alter: true });
     
     console.log('All models synchronized successfully.');

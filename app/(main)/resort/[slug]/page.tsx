@@ -1,39 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import StaticContentPage from '@/src/components/common/StaticContentPage';
+import { staticResortPages } from '@/src/lib/resorts/static-resort-pages';
 import { buildPageMetadata } from '@/src/lib/site';
-
-const resortPages: Record<
-  string,
-  {
-    title: string;
-    intro: string;
-    description: string;
-    keywords: string[];
-  }
-> = {
-  'grandeur-bliss': {
-    title: 'Grandeur Bliss',
-    intro: 'A luxury beachfront project by Sun Holidays Ltd planned for travelers who want spacious hospitality, elevated comfort, and destination-led stays.',
-    description:
-      'Grandeur Bliss is a coming-soon resort concept designed around coastal relaxation, premium accommodation, dining, and event-ready hospitality.',
-    keywords: ['Grandeur Bliss', 'Coxs Bazar Resort', 'Luxury Resort Bangladesh', 'Sun Holidays Ltd'],
-  },
-  'city-dhaka': {
-    title: 'Sun Holidays City Hotel',
-    intro: 'A Dhaka city property concept created for business travelers and guests who want a comfortable base close to the capital’s commercial rhythm.',
-    description:
-      'Sun Holidays City Hotel is a coming-soon hospitality concept focused on practical comfort, central access, and dependable service for urban stays.',
-    keywords: ['City Hotel Dhaka', 'Business Hotel Dhaka', 'Sun Holidays City Hotel', 'Sun Holidays Ltd'],
-  },
-  city: {
-    title: 'Sun Holidays City Hotel',
-    intro: 'A Dhaka city property concept created for business travelers and guests who want a comfortable base close to the capital’s commercial rhythm.',
-    description:
-      'Sun Holidays City Hotel is a coming-soon hospitality concept focused on practical comfort, central access, and dependable service for urban stays.',
-    keywords: ['City Hotel Dhaka', 'Business Hotel Dhaka', 'Sun Holidays City Hotel', 'Sun Holidays Ltd'],
-  },
-};
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -41,7 +10,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const resort = resortPages[slug];
+  const resort = staticResortPages[slug];
 
   if (!resort) {
     return buildPageMetadata({
@@ -61,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ResortSlugPage({ params }: Props) {
   const { slug } = await params;
-  const resort = resortPages[slug];
+  const resort = staticResortPages[slug];
 
   if (!resort) {
     notFound();

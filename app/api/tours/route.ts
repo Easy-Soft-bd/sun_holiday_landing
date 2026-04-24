@@ -5,6 +5,8 @@ import Tour from '@/src/models/Tour';
 import { revalidateTag } from 'next/cache';
 import { getCachedTours } from '@/src/lib/data/tours';
 import { TAG_TOURS_LIST } from '@/src/lib/revalidate-tags';
+import { allocateUniqueTourSlug } from '@/src/lib/tours/slug';
+import { resolveTourLocationFields } from '@/src/lib/locations/resolve-tour-location';
 
 export async function GET() {
   try {
@@ -31,13 +33,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
-    
-    // Basic validation could go here, but Sequelize handles model validation
-    
+    const body = await request.json() as Record<string, unknown>;
+    const { slug: slugFromBody, locationId, location: locationField, ...rest } = body;
+    const title = typeof rest.title === 'string' ? rest.title : '';
+
     await sequelize.authenticate();
-    
-    const tour = await Tour.create(body);
+
+    let resolvedLoc: { locationId: number; location: string };
+    try {
+      resolvedLoc = await resolveTourLocationFields({ locationId, location: locationField });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Invalid location';
+      return NextResponse.json({ error: msg }, { status: 400 });
+    }
+
+    const slug = await allocateUniqueTourSlug(
+      title,
+      typeof slugFromBody === 'string' ? slugFromBody : null
+    );
+
+    // Sequelize JSON fields + dynamic admin payload; validated at runtime
+    const tour = await Tour.create({ ...rest, ...resolvedLoc, slug } as never);
     revalidateTag(TAG_TOURS_LIST, 'max');
 
     return NextResponse.json(tour, { status: 201 });

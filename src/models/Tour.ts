@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../lib/db';
+import Location from './Location';
 
 export type TourCategory = 'International' | 'Domestic' | 'Hajj & Umrah';
 
@@ -12,6 +13,10 @@ export interface TourItineraryDay {
 interface TourAttributes {
   id: number;
   title: string;
+  /** URL segment for public tour pages (unique). */
+  slug: string | null;
+  /** FK to `locations`; denormalized `location` string kept for legacy rows and quick reads. */
+  locationId: number | null;
   location: string;
   price: number;
   duration: string;
@@ -32,11 +37,14 @@ interface TourAttributes {
   updatedAt?: Date;
 }
 
-interface TourCreationAttributes extends Optional<TourAttributes, 'id' | 'rating' | 'reviews'> {}
+interface TourCreationAttributes
+  extends Optional<TourAttributes, 'id' | 'rating' | 'reviews' | 'slug' | 'locationId'> {}
 
 class Tour extends Model<TourAttributes, TourCreationAttributes> implements TourAttributes {
   declare id: number;
   declare title: string;
+  declare slug: string | null;
+  declare locationId: number | null;
   declare location: string;
   declare price: number;
   declare duration: string;
@@ -67,6 +75,21 @@ Tour.init(
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    slug: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      unique: true,
+    },
+    locationId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+      references: {
+        model: Location,
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
     },
     location: {
       type: DataTypes.STRING,
@@ -145,5 +168,8 @@ Tour.init(
     timestamps: true,
   }
 );
+
+Tour.belongsTo(Location, { foreignKey: 'locationId', as: 'Location' });
+Location.hasMany(Tour, { foreignKey: 'locationId' });
 
 export default Tour;
