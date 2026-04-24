@@ -12,6 +12,8 @@ class HomePage extends Model {
   declare booking_process: any;
   declare why_choose_us: any;
   declare sailor_moon_cta: any;
+  declare about_page: any;
+  declare about_teams_page: any;
   declare footer: any;
 }
 
@@ -119,6 +121,28 @@ HomePage.init(
       },
       set(value: any) {
         this.setDataValue('sailor_moon_cta', value);
+      },
+    },
+    about_page: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      get() {
+        const rawValue = this.getDataValue('about_page');
+        return typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
+      },
+      set(value: any) {
+        this.setDataValue('about_page', value);
+      },
+    },
+    about_teams_page: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      get() {
+        const rawValue = this.getDataValue('about_teams_page');
+        return typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
+      },
+      set(value: any) {
+        this.setDataValue('about_teams_page', value);
       },
     },
     footer: {

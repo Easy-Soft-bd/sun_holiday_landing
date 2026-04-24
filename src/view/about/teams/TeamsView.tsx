@@ -1,87 +1,167 @@
-import DirectorCard from "./components/DirectorCard";
+import LeadersRow from "./components/LeadersRow";
 import TeamList from "./components/TeamList";
+import ClientOnly from "@/src/components/common/ClientOnly";
+import type { TeamsPageData } from "./teams-page-data";
+import { defaultTeamsPageData } from "./teams-page-data";
+import { Users2, Sparkles, Crown } from "lucide-react";
 
-const directors = [
-    {
-        name: "Md. Ferdous",
-        title: "Chairman",
-        image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop", // Placeholder
-        message: `I hope this message finds you in good health and high spirits. As the Director of Sun Tourism Ltd, I want to express my sincere appreciation for your trust and loyalty as one of our valued travelers. Your continued support means a great deal to us. In the ever-changing landscape of the travel industry, we understand the importance of ensuring your safety, comfort, and satisfaction throughout your journey. Rest assured that our team is working tirelessly to meet these expectations and provide you with the best possible experience. 
-        
-        We recognize that traveling in today's world requires extra caution and adaptability. That's why we have implemented robust health and safety measures to prioritize your well-being. Our staff is trained to adhere to these protocols diligently, ensuring a secure environment for all travelers. If you have any questions, concerns, or special requests, our dedicated customer service team is available around the clock to assist you. Please don't hesitate to reach out to them, as they are here to address any queries you may have and provide the necessary support. Once again, thank you for choosing Sun Tourism Ltd as your travel partner. We eagerly look forward to welcoming you on board and providing you with an exceptional travel experience that will create cherished memories for a lifetime.`
-    },
-    {
-        name: "Sayed Zillur Rahman",
-        title: "Vice Chairman",
-        image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop", // Placeholder
-        message: `As the Vice Chairman of Sun Tourism Ltd, I take great pride in extending a warm welcome to you. We understand that travel is not just about reaching a destination; it's about embarking on a journey that leaves an indelible mark on your soul.
-        
-        Our dedicated team is committed to crafting extraordinary experiences that cater to your every desire and ensure your travel dreams come to life. At Sun Holidays, we believe that travel should be a seamless and enriching experience. From the moment you embark on your journey until your return, our team works tirelessly to provide impeccable service, exceptional accommodations, and immersive activities that showcase the beauty and culture of each destination.`
-    },
-    {
-        name: "Md. Asaduzzaman",
-        title: "Managing Director",
-        image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format&fit=crop", // Placeholder
-        message: `I hope this message finds you in good health and high spirits. As the Managing Director of our Sun Tourism Ltd, I wanted to take a moment to reach out and express my gratitude for your trust and loyalty as one of our valued travelers.
-        
-        In light of recent developments and changes in the travel industry, I wanted to assure you that our team is working tirelessly to ensure your safety, comfort, and satisfaction throughout your journey with us. We understand that traveling in today's world requires extra caution and adaptability, and we are committed to providing you with the best possible experience while prioritizing your well-being. Should you have any questions, concerns, or special requests, please do not hesitate to reach out to our dedicated customer service team. They are available around the clock to assist you and address any queries you may have. Once again, thank you for choosing us as your travel partner. We look forward to welcoming you on board and providing you with an exceptional travel experience that will leave you with cherished memories for a lifetime.`
-    }
-];
+type Props = {
+    data?: Partial<TeamsPageData>;
+    admin?: boolean;
+};
 
-export default function TeamsView() {
+async function TeamsAdminSlot({ data }: { data: TeamsPageData }) {
+    const TeamsAdminControl = (await import("./TeamsAdminControl")).default;
     return (
-        <main className="min-h-screen bg-base-50 pb-20">
+        <ClientOnly>
+            <div className="absolute right-3 top-3 z-50 sm:right-4 sm:top-4">
+                <TeamsAdminControl data={data} />
+            </div>
+        </ClientOnly>
+    );
+}
+
+export default async function TeamsView({ data, admin = false }: Props) {
+    const teamsData = { ...defaultTeamsPageData, ...data };
+    const directorCount = teamsData.directors.length;
+    const teamCount = teamsData.teams.length;
+
+    return (
+        <main className="group/about-teams min-h-screen bg-gradient-to-b from-base-50 via-base-100 to-base-50 pb-16 sm:pb-20">
             {/* Hero Section */}
-            <div className="relative bg-base-100 border-b border-base-200 overflow-hidden">
-                {/* Background Pattern/Image */}
-                <div className="absolute inset-0 bg-primary/5">
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20" />
-                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-50" />
-                    <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-secondary/20 rounded-full blur-3xl opacity-50" />
+            <section className="relative overflow-hidden border-b border-base-200/80 bg-base-100">
+                {admin ? <TeamsAdminSlot data={teamsData} /> : null}
+
+                {/* Decorative background */}
+                <div className="pointer-events-none absolute inset-0">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,theme(colors.primary/8%),transparent_60%)]" />
+                    <div className="absolute -top-32 -right-20 h-72 w-72 rounded-full bg-primary/20 blur-3xl opacity-60 sm:h-96 sm:w-96" />
+                    <div className="absolute -bottom-32 -left-20 h-64 w-64 rounded-full bg-secondary/20 blur-3xl opacity-50 sm:h-80 sm:w-80" />
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.04]" />
                 </div>
 
-                <div className="container mx-auto px-4 pt-32 pb-20 lg:pt-40 lg:pb-28 text-center relative z-10">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-base-100/50 backdrop-blur-sm border border-base-200 text-primary text-sm font-bold uppercase tracking-widest mb-8 shadow-sm">
-                            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                            Excellence in Leadership
+                <div className="relative z-10 container mx-auto px-4 pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-36 lg:pb-24">
+                    <div className="mx-auto max-w-4xl text-center">
+                        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-base-200 bg-base-100/70 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-primary shadow-sm backdrop-blur-sm sm:mb-7 sm:px-4 sm:py-2 sm:text-sm">
+                            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary sm:h-2 sm:w-2" />
+                            {teamsData.heroBadgeText}
                         </div>
-                        
-                        <h1 className="font-magmawave text-5xl md:text-7xl  mb-6 tracking-tighter leading-tight">
-                            Meet The <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Visionaries</span> <br />
-                            <span className="font-gilliequest text-4xl md:text-6xl text-base-content/80 italic uppercase">Behind Your Journey</span>
+
+                        <h1 className="font-magmawave mb-4 text-4xl leading-[1.05] tracking-tighter sm:mb-5 sm:text-5xl md:text-6xl lg:text-7xl">
+                            {teamsData.heroTitleMain}{" "}
+                            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                                {teamsData.heroTitleAccent}
+                            </span>
+                            <br />
+                            <span className="font-gilliequest text-2xl italic uppercase text-base-content/80 sm:text-3xl md:text-5xl lg:text-6xl">
+                                {teamsData.heroTitleSub}
+                            </span>
                         </h1>
-                        
-                        <p className="text-xl md:text-2xl text-base-content/60 max-w-2xl mx-auto font-light leading-relaxed">
-                            The dedicated professionals working tirelessly to craft unforgettable travel experiences just for you.
+
+                        <p className="mx-auto max-w-2xl text-base font-light leading-relaxed text-base-content/65 sm:text-lg md:text-xl">
+                            {teamsData.heroDescription}
                         </p>
+
+                        {/* Stats / quick indicator */}
+                        <div className="mx-auto mt-8 flex max-w-md flex-wrap items-center justify-center gap-3 sm:mt-10 sm:gap-4">
+                            <div className="flex items-center gap-2 rounded-full border border-base-200 bg-base-100/80 px-4 py-2 text-xs font-semibold shadow-sm backdrop-blur-sm sm:text-sm">
+                                <Crown className="h-4 w-4 text-primary" />
+                                <span>{directorCount} Leaders</span>
+                            </div>
+                            <div className="flex items-center gap-2 rounded-full border border-base-200 bg-base-100/80 px-4 py-2 text-xs font-semibold shadow-sm backdrop-blur-sm sm:text-sm">
+                                <Users2 className="h-4 w-4 text-secondary" />
+                                <span>{teamCount}+ Team Members</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div className="container mx-auto px-4 py-12 space-y-12">
-                {/* Board of Directors */}
-                <section className="space-y-8">
-                    {directors.map((director, index) => (
-                        <DirectorCard 
-                            key={index}
-                            {...director}
-                            reverse={index % 2 !== 0}
-                        />
-                    ))}
-                </section>
+            {/* Leadership Section */}
+            <section
+                id="leadership"
+                className="relative border-b border-base-200/60"
+            >
+                <div className="container mx-auto px-3 py-10 sm:px-4 sm:py-16 lg:py-20">
+                    <LeadersRow
+                        directors={teamsData.directors}
+                        eyebrow="Leadership"
+                        title="Our Top Leaders"
+                        description="Meet the visionaries steering Sun Holidays Ltd. — hover any portrait to read their message."
+                    />
+                </div>
+            </section>
 
-                {/* Team Departments */}
-                <section className="pt-12">
-                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold mb-4">Our Valuable Team</h2>
-                        <p className="text-base-content/70 max-w-2xl mx-auto">
-                            Professionals in various designations, each playing a crucial role in ensuring exceptional service.
-                        </p>
+            {/* Our Team Section */}
+            <section id="team" className="relative">
+                {/* subtle background accent */}
+                <div className="pointer-events-none absolute inset-0 -z-0">
+                    <div className="absolute left-1/2 top-0 h-64 w-[90%] -translate-x-1/2 rounded-full bg-secondary/10 blur-3xl opacity-40" />
+                </div>
+
+                <div className="relative z-10 container mx-auto px-4 py-12 sm:py-16 lg:py-20">
+                    <SectionHeader
+                        eyebrow="Our Team"
+                        title={teamsData.teamSectionTitle}
+                        description={teamsData.teamSectionDescription}
+                        icon={<Users2 className="h-4 w-4" />}
+                        accent="secondary"
+                    />
+
+                    <div className="mt-8 sm:mt-12">
+                        <TeamList teams={teamsData.teams} />
                     </div>
-                    <TeamList />
-                </section>
-            </div>
+                </div>
+            </section>
         </main>
+    );
+}
+
+function SectionHeader({
+    eyebrow,
+    title,
+    description,
+    icon,
+    accent = "primary",
+}: {
+    eyebrow: string;
+    title: string;
+    description?: string;
+    icon?: React.ReactNode;
+    accent?: "primary" | "secondary";
+}) {
+    const accentClasses =
+        accent === "primary"
+            ? "text-primary border-primary/20 bg-primary/5"
+            : "text-secondary border-secondary/20 bg-secondary/5";
+    const lineClasses =
+        accent === "primary" ? "bg-primary/30" : "bg-secondary/30";
+
+    return (
+        <div className="mx-auto max-w-3xl text-center">
+            <div
+                className={`mx-auto mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] shadow-sm sm:text-xs ${accentClasses}`}
+            >
+                {icon ?? <Sparkles className="h-3.5 w-3.5" />}
+                {eyebrow}
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight text-base-content sm:text-3xl md:text-4xl">
+                {title}
+            </h2>
+            <div className="mx-auto mt-3 flex items-center justify-center gap-2 sm:mt-4">
+                <span className={`h-px w-8 ${lineClasses}`} />
+                <span
+                    className={`h-1.5 w-1.5 rounded-full ${
+                        accent === "primary" ? "bg-primary" : "bg-secondary"
+                    }`}
+                />
+                <span className={`h-px w-8 ${lineClasses}`} />
+            </div>
+            {description ? (
+                <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-base-content/65 sm:mt-5 sm:text-base">
+                    {description}
+                </p>
+            ) : null}
+        </div>
     );
 }
