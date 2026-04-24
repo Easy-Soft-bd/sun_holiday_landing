@@ -27,10 +27,10 @@ export default function TourGallery({ tour }: { tour: TourPackage }) {
   }
 
   return (
-    <section className="mt-12">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+    <section className="mt-8 md:mt-12">
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3 md:mb-6">
         <div>
-          <h3 className="font-magmawave text-3xl">Photo gallery</h3>
+          <h3 className="font-magmawave text-2xl md:text-3xl">Photo gallery</h3>
           <p className="mt-1 text-sm text-base-content/60">{images.length} photo{images.length !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex items-center gap-2 text-sm text-base-content/50">
@@ -39,7 +39,7 @@ export default function TourGallery({ tour }: { tour: TourPackage }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 auto-rows-[minmax(120px,1fr)] md:auto-rows-[minmax(160px,200px)]">
+      <div className="grid auto-rows-[minmax(110px,1fr)] grid-cols-2 gap-2 sm:gap-4 md:auto-rows-[minmax(160px,200px)] md:grid-cols-4">
         {images.map((img, idx) => {
           const isFeatured = idx === 0;
           const optimized = canUseNextImage(img);

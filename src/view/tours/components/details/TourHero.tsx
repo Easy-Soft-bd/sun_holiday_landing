@@ -11,7 +11,7 @@ const currencyFormatter = new Intl.NumberFormat('en-BD', {
 
 export default function TourHero({ tour }: { tour: TourPackage }) {
     return (
-        <section className="relative h-[60vh] min-h-[500px] flex items-end pb-20 overflow-hidden">
+        <section className="relative flex min-h-[300px] items-end overflow-hidden pb-6 sm:h-[56vh] sm:min-h-[420px] sm:pb-14 md:min-h-[500px] md:pb-20">
              <div className="absolute inset-0 z-0">
                 <img 
                     src={tour.image} 
@@ -21,29 +21,29 @@ export default function TourHero({ tour }: { tour: TourPackage }) {
                  <div className="absolute inset-0 bg-gradient-to-t from-[#001030] via-[#001030]/40 to-transparent" />
              </div>
 
-             <div className="container mx-auto px-4 relative z-10 text-white">
+             <div className="container relative z-10 mx-auto px-4 text-white">
                 <div className="max-w-4xl">
-                    <div className="flex items-center gap-2 mb-4">
-                        <span className="px-3 py-1 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full">
+                    <div className="mb-3 flex flex-wrap items-center gap-2 py-1 sm:mb-4 sm:py-0">
+                        <span className="rounded-full bg-primary px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white sm:text-xs">
                             {tour.category}
                         </span>
-                        <div className="flex items-center gap-1 bg-white/10 backdrop-blur-md px-2 py-1 rounded-full text-xs font-bold">
+                        <div className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 text-[11px] font-bold backdrop-blur-md sm:text-xs">
                              <Star size={12} className="fill-orange-400 text-orange-400" />
                              {tour.rating} ({tour.reviews} Reviews)
                         </div>
                     </div>
 
-                    <h1 className="font-magmawave text-5xl md:text-7xl mb-6 leading-none">
+                    <h1 className="mb-3 font-magmawave text-2xl leading-tight sm:mb-5 sm:text-4xl md:mb-6 md:text-7xl md:leading-none">
                         {tour.title}
                     </h1>
 
-                    <div className="flex flex-wrap items-center gap-6 text-lg text-white/80">
+                    <div className="flex flex-wrap items-center gap-2.5 py-1 text-xs text-white/85 sm:gap-6 sm:py-0 sm:text-lg sm:text-white/80">
                          <div className="flex items-center gap-2">
-                             <MapPin size={20} className="text-primary" />
+                             <MapPin size={18} className="text-primary sm:size-5" />
                              {tour.location}
                          </div>
                          <div className="flex items-center gap-2">
-                             <Clock size={20} className="text-primary" />
+                             <Clock size={18} className="text-primary sm:size-5" />
                              {tour.duration}
                          </div>
                     </div>

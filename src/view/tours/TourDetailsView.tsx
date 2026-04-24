@@ -11,22 +11,22 @@ type TourDetailsProps = TourPackage;
 
 export default function TourDetailsView({ tour }: { tour: TourDetailsProps }) {
   return (
-    <main className="min-h-screen bg-base-50 pb-24">
+    <main className="min-h-screen bg-base-50 pb-10 md:pb-24">
       <TourHero tour={tour} />
 
-      <div className="container relative z-20 mx-auto -mt-12 px-4 md:-mt-16">
+      <div className="container relative z-20 mx-auto -mt-6 px-3 sm:-mt-10 sm:px-4 md:-mt-16">
         <TourQuickFacts tour={tour} />
 
-        <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:gap-12">
+        <div className="mt-4 flex flex-col gap-4 sm:mt-8 sm:gap-6 md:mt-10 md:gap-10 lg:flex-row lg:gap-12">
           <div className="min-w-0 flex-1">
-            <div className="space-y-0 rounded-[2.5rem] border border-base-200 bg-base-100 p-8 shadow-xl md:p-10">
+            <div className="space-y-0 rounded-2xl border border-base-200 bg-base-100 p-3 shadow-xl sm:rounded-3xl sm:p-6 md:rounded-[2.5rem] md:p-10">
               <TourOverview tour={tour} />
 
-              <div className="my-12 w-full h-px bg-base-200" />
+              <div className="my-6 h-px w-full bg-base-200 md:my-12" />
 
               <TourItinerary itinerary={tour.itinerary} />
 
-              <div className="my-12 w-full h-px bg-base-200" />
+              <div className="my-6 h-px w-full bg-base-200 md:my-12" />
 
               <TourGallery tour={tour} />
 

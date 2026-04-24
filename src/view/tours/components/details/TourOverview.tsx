@@ -9,20 +9,20 @@ export default function TourOverview({ tour }: { tour: TourPackage }) {
     const excludes = parseJsonArray<string>(tour.excludes);
 
     return (
-        <div className="space-y-12">
+        <div className="space-y-6 md:space-y-12">
             {/* Description */}
             <div className="max-w-none">
-                <h3 className="font-magmawave text-3xl mb-4">Overview</h3>
+                <h3 className="mb-3 font-magmawave text-2xl md:mb-4 md:text-3xl">Overview</h3>
                 <RichTextHtml html={tour.description} className="leading-relaxed" />
             </div>
 
             {/* Highlights */}
             {highlights.length > 0 ? (
                 <div>
-                    <h3 className="font-magmawave text-3xl mb-6">Highlights</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <h3 className="mb-4 font-magmawave text-2xl md:mb-6 md:text-3xl">Highlights</h3>
+                    <div className="grid gap-2.5 md:grid-cols-2 md:gap-4">
                         {highlights.map((highlight, idx) => (
-                             <div key={idx} className="flex items-start gap-3 p-4 bg-base-100 rounded-xl border border-base-200 shadow-sm">
+                             <div key={idx} className="flex items-start gap-2.5 rounded-xl border border-base-200 bg-base-100 p-3 shadow-sm md:gap-3 md:p-4">
                                 <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
                                     <CheckCircle2 size={14} />
                                 </span>
@@ -35,9 +35,9 @@ export default function TourOverview({ tour }: { tour: TourPackage }) {
 
             {/* Inclusions & Exclusions */}
              {(includes.length > 0 || excludes.length > 0) ? (
-             <div className="grid md:grid-cols-2 gap-8">
+             <div className="grid gap-3 md:grid-cols-2 md:gap-8">
                  {includes.length > 0 ? (
-                 <div className="bg-green-50 p-6 rounded-3xl border border-green-100">
+                <div className="rounded-2xl border border-green-100 bg-green-50 p-4 md:rounded-3xl md:p-6">
                      <h4 className="font-bold text-lg mb-4 text-green-800 flex items-center gap-2">
                          Included
                      </h4>
@@ -51,13 +51,13 @@ export default function TourOverview({ tour }: { tour: TourPackage }) {
                      </ul>
                  </div>
                  ) : (
-                    <div className="rounded-3xl border border-dashed border-base-300 bg-base-200/20 p-8 text-center text-sm text-base-content/50">
+                   <div className="rounded-2xl border border-dashed border-base-300 bg-base-200/20 p-5 text-center text-sm text-base-content/50 md:rounded-3xl md:p-8">
                         No inclusion list provided for this tour.
                     </div>
                  )}
 
                  {excludes.length > 0 ? (
-                 <div className="bg-red-50 p-6 rounded-3xl border border-red-100">
+                <div className="rounded-2xl border border-red-100 bg-red-50 p-4 md:rounded-3xl md:p-6">
                      <h4 className="font-bold text-lg mb-4 text-red-800 flex items-center gap-2">
                          Not included
                      </h4>
@@ -71,7 +71,7 @@ export default function TourOverview({ tour }: { tour: TourPackage }) {
                      </ul>
                  </div>
                  ) : (
-                    <div className="rounded-3xl border border-dashed border-base-300 bg-base-200/20 p-8 text-center text-sm text-base-content/50">
+                   <div className="rounded-2xl border border-dashed border-base-300 bg-base-200/20 p-5 text-center text-sm text-base-content/50 md:rounded-3xl md:p-8">
                         No exclusion list provided for this tour.
                     </div>
                  )}

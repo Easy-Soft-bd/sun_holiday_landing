@@ -22,16 +22,16 @@ export default function TourVideo({ tour }: { tour: TourPackage }) {
   const vimeoId = getVimeoId(url);
 
   return (
-    <section className="mt-16 mb-8">
-      <div className="relative overflow-hidden rounded-[2.5rem] border border-base-200 bg-base-100 shadow-2xl">
+    <section className="mb-4 mt-8 md:mb-8 md:mt-16">
+      <div className="relative overflow-hidden rounded-3xl border border-base-200 bg-base-100 shadow-2xl md:rounded-[2.5rem]">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
 
-        <div className="relative p-8 md:p-12">
-          <div className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-center">
+        <div className="relative p-0 sm:p-6 md:p-12">
+          <div className="mb-4 flex flex-col justify-between gap-3 md:mb-10 md:flex-row md:items-center md:gap-6">
             <div>
               <span className="mb-2 block text-sm font-semibold uppercase tracking-wider text-primary">Video</span>
-              <h3 className="font-magmawave text-3xl text-base-content md:text-4xl">See the experience</h3>
-              <p className="mt-2 max-w-xl text-base-content/60">
+              <h3 className="font-magmawave text-xl text-base-content sm:text-3xl md:text-4xl">See the experience</h3>
+              <p className="mt-1.5 max-w-xl text-sm text-base-content/60 md:text-base">
                 Watch a preview of this tour, or open the link in a new tab.
               </p>
             </div>
@@ -39,7 +39,7 @@ export default function TourVideo({ tour }: { tour: TourPackage }) {
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-outline btn-primary shrink-0 gap-2 rounded-xl"
+              className="btn btn-outline btn-primary btn-sm shrink-0 gap-2 rounded-xl sm:btn-md"
             >
               <ExternalLink size={18} />
               Open video link
