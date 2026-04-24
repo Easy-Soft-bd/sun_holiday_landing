@@ -13,7 +13,7 @@ export default function HeroSection({ data, admin = false }: HeroSectionProps) {
   return (
     <section className="relative h-[75vh] md:h-[85vh] overflow-hidden bg-emerald-950">
       {admin ? (
-        <div className="absolute right-4 top-4 z-30">
+        <div className="absolute bottom-6 right-4 z-30 md:right-6">
           <SectionAdminControl section="hero" title="Edit Hero" data={data} />
         </div>
       ) : null}
