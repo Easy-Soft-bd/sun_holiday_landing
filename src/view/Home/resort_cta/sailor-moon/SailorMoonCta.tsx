@@ -52,7 +52,7 @@ const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
   const ctaData = { ...defaultData, ...data } as Required<SailorMoonCtaData>;
 
   return (
-    <section className="py-4 md:py-6 px-4 w-full relative">
+    <section className="group/sailor-moon relative w-full px-4 py-4 md:py-6">
       {/* Admin Edit Controls */}
       {admin && (
           <SailorMoonCtaAdminSlot data={ctaData} />
