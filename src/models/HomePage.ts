@@ -16,6 +16,7 @@ class HomePage extends Model {
   declare resorts_listing_page: any;
   declare about_page: any;
   declare about_teams_page: any;
+  declare award_certificate_page: any;
   declare footer: any;
 }
 
@@ -167,6 +168,17 @@ HomePage.init(
       },
       set(value: any) {
         this.setDataValue('about_teams_page', value);
+      },
+    },
+    award_certificate_page: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      get() {
+        const rawValue = this.getDataValue('award_certificate_page');
+        return typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
+      },
+      set(value: any) {
+        this.setDataValue('award_certificate_page', value);
       },
     },
     footer: {

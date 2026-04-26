@@ -26,6 +26,7 @@ async function syncModels() {
     const { ensurePageHomeJsonColumn } = await import('./ensure-page-home-json-column');
     await ensurePageHomeJsonColumn(sequelize, 'sailor_moon_resorts_page');
     await ensurePageHomeJsonColumn(sequelize, 'resorts_listing_page');
+    await ensurePageHomeJsonColumn(sequelize, 'award_certificate_page');
 
     console.log('All models synchronized successfully.');
     process.exit(0);

@@ -26,6 +26,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             submenu: [
                 { name: "Our Story", href: "/about" },
                 { name: "Team", href: "/about/teams" },
+                { name: "Award & Certificate", href: "/about/award_certificate" },
             ]
         },
         {

@@ -37,6 +37,9 @@ export async function POST(request: Request) {
     if (section === 'resorts_listing_page') {
       revalidatePath('/resorts');
     }
+    if (section === 'award_certificate_page') {
+      revalidatePath('/about/award_certificate');
+    }
 
     return NextResponse.json({ success: true, data: homePage });
   } catch (error) {
