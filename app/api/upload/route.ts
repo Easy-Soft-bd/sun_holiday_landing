@@ -53,6 +53,9 @@ export async function POST(request: NextRequest) {
     } else if (type === 'tour') {
       uploadSubDir = 'uploads/tours';
       urlPrefix = '/uploads/tours';
+    } else if (type === 'sailor') {
+      uploadSubDir = 'uploads/sailor';
+      urlPrefix = '/uploads/sailor';
     }
 
     // Ensure upload directory exists

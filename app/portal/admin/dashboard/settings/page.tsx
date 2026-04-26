@@ -127,7 +127,7 @@ export default function SettingsPage() {
         </span>
       ),
       children: (
-        <Card bordered={false} className="shadow-sm">
+        <Card variant="borderless" className="shadow-sm">
           <Space orientation="vertical" size="large" className="w-full">
             <Form.Item
               label="Site Name"
@@ -138,7 +138,7 @@ export default function SettingsPage() {
             </Form.Item>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Form.Item label="Main Logo" name="siteLogo" extra="Recommended size: 200x50px. Max 2MB.">
+              <Form.Item label="Main Logo" extra="Recommended size: 200x50px. Max 2MB.">
                 <Upload
                   name="siteLogo"
                   listType="picture-card"
@@ -152,15 +152,16 @@ export default function SettingsPage() {
                 >
                   {logoUrl ? <img src={logoUrl} alt="logo" style={{ width: '100%' }} /> : uploadButton(logoLoading)}
                 </Upload>
-                <Input value={logoUrl} onChange={(e) => {
-                    setLogoUrl(e.target.value);
-                    form.setFieldValue('siteLogo', e.target.value);
-                }} placeholder="Or enter URL manually" className="mt-2" />
+                <Form.Item name="siteLogo" noStyle rules={[{ required: true, message: 'Please provide a logo' }]}>
+                  <Input value={logoUrl} onChange={(e) => {
+                      setLogoUrl(e.target.value);
+                      form.setFieldValue('siteLogo', e.target.value);
+                  }} placeholder="Or enter URL manually" className="mt-2" />
+                </Form.Item>
               </Form.Item>
 
               <Form.Item
                 label="Meta Image (SEO)"
-                name="metaImage"
                 extra="Shared on social media. 1200x630px recommended."
               >
                 <Upload
@@ -176,10 +177,12 @@ export default function SettingsPage() {
                 >
                   {metaUrl ? <img src={metaUrl} alt="meta" style={{ width: '100%' }} /> : uploadButton(metaLoading)}
                 </Upload>
-                <Input value={metaUrl} onChange={(e) => {
-                    setMetaUrl(e.target.value);
-                    form.setFieldValue('metaImage', e.target.value);
-                }} placeholder="Or enter URL manually" className="mt-2" />
+                <Form.Item name="metaImage" noStyle rules={[{ required: true, message: 'Please provide a meta image URL' }]}>
+                  <Input value={metaUrl} onChange={(e) => {
+                      setMetaUrl(e.target.value);
+                      form.setFieldValue('metaImage', e.target.value);
+                  }} placeholder="Or enter URL manually" className="mt-2" />
+                </Form.Item>
               </Form.Item>
             </div>
           </Space>
@@ -194,7 +197,7 @@ export default function SettingsPage() {
         </span>
       ),
       children: (
-        <Card bordered={false} className="shadow-sm">
+        <Card variant="borderless" className="shadow-sm">
           <Space orientation="vertical" size="large" className="w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Form.Item label="Contact Email" name="contactEmail">
@@ -220,7 +223,7 @@ export default function SettingsPage() {
         </span>
       ),
       children: (
-        <Card bordered={false} className="shadow-sm">
+        <Card variant="borderless" className="shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Form.Item label="Facebook URL" name="facebookUrl">
               <Input placeholder="https://facebook.com/sunholidays" />
@@ -246,7 +249,7 @@ export default function SettingsPage() {
         </span>
       ),
       children: (
-        <Card bordered={false} className="shadow-sm">
+        <Card variant="borderless" className="shadow-sm">
           <Space orientation="vertical" size="large" className="w-full">
             <Form.Item
               label="Meta Title"

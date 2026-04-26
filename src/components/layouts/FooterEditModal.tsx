@@ -31,8 +31,8 @@ interface FooterData {
     servicesLinks: QuickLink[];
     contactTitle: string;
     contactAddress: string;
-    contactPhone: string;
-    contactEmail: string;
+    contactPhones: string[];
+    contactEmails: string[];
     newsletterTitle: string;
     newsletterDescription: string;
     certificationsTitle: string;
@@ -59,8 +59,8 @@ const defaultData: FooterData = {
     ],
     contactTitle: "Get In Touch",
     contactAddress: "123 Travel Plaza, Suite 456\nDhaka, Bangladesh",
-    contactPhone: "+880 1234 567 890",
-    contactEmail: "support@sunholidays.com",
+    contactPhones: ["+880 1234 567 890"],
+    contactEmails: ["support@sunholidays.com"],
     newsletterTitle: "Newsletter",
     newsletterDescription: "Subscribe for exclusive travel deals and updates.",
     certificationsTitle: "Authorized By & Certified Member",
@@ -74,7 +74,23 @@ const defaultData: FooterData = {
     copyrightText: "Sun Tourism Ltd. All Rights Reserved.",
 };
 
-
+function normalizeContactFormList(
+    fromArray: unknown,
+    legacySingle: unknown,
+    fallback: string[]
+): string[] {
+    const arr = Array.isArray(fromArray)
+        ? fromArray.map((s) => String(s).trim()).filter(Boolean)
+        : [];
+    if (arr.length > 0) {
+        return arr;
+    }
+    const one = legacySingle != null ? String(legacySingle).trim() : "";
+    if (one) {
+        return [one];
+    }
+    return [...fallback];
+}
 
 interface FooterEditModalProps {
     isOpen: boolean;
@@ -98,22 +114,49 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
                 };
             });
 
-            const mergedData = { 
-                ...defaultData, 
+            const mergedData: FooterData = {
+                ...defaultData,
                 ...initialData,
-                certifications: mergedCertifications
+                certifications: mergedCertifications,
+                contactPhones: normalizeContactFormList(
+                    initialData?.contactPhones,
+                    initialData?.contactPhone,
+                    defaultData.contactPhones
+                ),
+                contactEmails: normalizeContactFormList(
+                    initialData?.contactEmails,
+                    initialData?.contactEmail,
+                    defaultData.contactEmails
+                ),
             };
             form.setFieldsValue(mergedData);
         }
     }, [isOpen, initialData, form]);
 
     const handleSave = async (values: FooterData) => {
+        const contactPhones = (values.contactPhones ?? []).map((s) => String(s).trim()).filter(Boolean);
+        const contactEmails = (values.contactEmails ?? []).map((s) => String(s).trim()).filter(Boolean);
+        if (!contactPhones.length) {
+            message.error("Add at least one phone number");
+            return;
+        }
+        if (!contactEmails.length) {
+            message.error("Add at least one email address");
+            return;
+        }
+
         setIsSaving(true);
         try {
+            const payload = {
+                ...values,
+                contactPhones,
+                contactEmails,
+            };
+
             const response = await fetch('/api/home-page', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ section: 'footer', data: values }),
+                body: JSON.stringify({ section: 'footer', data: payload }),
             });
 
             if (response.ok) {
@@ -221,12 +264,57 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
                         <Form.Item label="Address" name="contactAddress" rules={[{ required: true }]}>
                             <TextArea rows={2} />
                         </Form.Item>
-                        <Form.Item label="Phone" name="contactPhone" rules={[{ required: true }]}>
-                            <Input />
-                        </Form.Item>
-                        <Form.Item label="Email" name="contactEmail" rules={[{ required: true }]}>
-                            <Input />
-                        </Form.Item>
+
+                        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-base-content/50">Phone numbers</div>
+                        <Form.List name="contactPhones">
+                            {(fields, { add, remove }) => (
+                                <>
+                                    {fields.map(({ key, name, ...restField }) => (
+                                        <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline" className="w-full max-w-full">
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name]}
+                                                className="mb-0 flex-1 min-w-0"
+                                                rules={[{ required: true, message: "Phone number" }]}
+                                            >
+                                                <Input placeholder="+880 1234 567 890" />
+                                            </Form.Item>
+                                            <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
+                                        </Space>
+                                    ))}
+                                    <Button type="dashed" onClick={() => add("")} block icon={<PlusOutlined />}>
+                                        Add phone number
+                                    </Button>
+                                </>
+                            )}
+                        </Form.List>
+
+                        <div className="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-base-content/50">Email addresses</div>
+                        <Form.List name="contactEmails">
+                            {(fields, { add, remove }) => (
+                                <>
+                                    {fields.map(({ key, name, ...restField }) => (
+                                        <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline" className="w-full max-w-full">
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name]}
+                                                className="mb-0 flex-1 min-w-0"
+                                                rules={[
+                                                    { required: true, message: "Email" },
+                                                    { type: "email", message: "Enter a valid email" },
+                                                ]}
+                                            >
+                                                <Input placeholder="support@example.com" />
+                                            </Form.Item>
+                                            <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
+                                        </Space>
+                                    ))}
+                                    <Button type="dashed" onClick={() => add("")} block icon={<PlusOutlined />}>
+                                        Add email address
+                                    </Button>
+                                </>
+                            )}
+                        </Form.List>
 
                         <Divider titlePlacement="left">Newsletter</Divider>
                         <Form.Item label="Newsletter Title" name="newsletterTitle" rules={[{ required: true }]}>

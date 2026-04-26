@@ -22,7 +22,11 @@ async function syncModels() {
 
     console.log('Synchronizing models: User, HomePage, GeneralSettings, Location, Tour, SunviaEcoResortPage...');
     await sequelize.sync({ alter: true });
-    
+
+    const { ensurePageHomeJsonColumn } = await import('./ensure-page-home-json-column');
+    await ensurePageHomeJsonColumn(sequelize, 'sailor_moon_resorts_page');
+    await ensurePageHomeJsonColumn(sequelize, 'resorts_listing_page');
+
     console.log('All models synchronized successfully.');
     process.exit(0);
   } catch (error) {

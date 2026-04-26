@@ -31,6 +31,12 @@ export async function POST(request: Request) {
     await homePage.save();
     revalidateTag(TAG_HOME_PAGE, 'max');
     revalidatePath('/');
+    if (section === 'sailor_moon_resorts_page') {
+      revalidatePath('/sailor-moon-resorts');
+    }
+    if (section === 'resorts_listing_page') {
+      revalidatePath('/resorts');
+    }
 
     return NextResponse.json({ success: true, data: homePage });
   } catch (error) {

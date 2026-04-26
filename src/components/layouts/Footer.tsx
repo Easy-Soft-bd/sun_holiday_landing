@@ -27,7 +27,13 @@ interface FooterData {
     servicesLinks?: QuickLink[];
     contactTitle?: string;
     contactAddress?: string;
+    /** Preferred: one or more numbers shown in the footer */
+    contactPhones?: string[];
+    /** Preferred: one or more addresses shown in the footer */
+    contactEmails?: string[];
+    /** @deprecated use contactPhones */
     contactPhone?: string;
+    /** @deprecated use contactEmails */
     contactEmail?: string;
     newsletterTitle?: string;
     newsletterDescription?: string;
@@ -55,8 +61,8 @@ const defaultData: FooterData = {
     ],
     contactTitle: "Get In Touch",
     contactAddress: "123 Travel Plaza, Suite 456\nDhaka, Bangladesh",
-    contactPhone: "+880 1234 567 890",
-    contactEmail: "support@sunholidays.com",
+    contactPhones: ["+880 1234 567 890"],
+    contactEmails: ["support@sunholidays.com"],
     newsletterTitle: "Newsletter",
     newsletterDescription: "Subscribe for exclusive travel deals and updates.",
     certificationsTitle: "Authorized By & Certified Member",
@@ -70,7 +76,38 @@ const defaultData: FooterData = {
     copyrightText: "Sun Tourism Ltd. All Rights Reserved.",
 };
 
+function normalizeContactList(
+    fromArray: string[] | undefined,
+    legacySingle: string | undefined,
+    fallback: string[]
+): string[] {
+    const trimmed = (fromArray ?? [])
+        .map((s) => String(s).trim())
+        .filter(Boolean);
+    if (trimmed.length > 0) {
+        return trimmed;
+    }
+    const one = legacySingle?.trim();
+    if (one) {
+        return [one];
+    }
+    return [...fallback];
+}
 
+function mergeFooterData(data?: FooterData): FooterData {
+    const merged: FooterData = { ...defaultData, ...data };
+    merged.contactPhones = normalizeContactList(
+        merged.contactPhones,
+        merged.contactPhone,
+        defaultData.contactPhones ?? []
+    );
+    merged.contactEmails = normalizeContactList(
+        merged.contactEmails,
+        merged.contactEmail,
+        defaultData.contactEmails ?? []
+    );
+    return merged;
+}
 
 interface FooterProps {
     data?: FooterData;
@@ -100,12 +137,25 @@ async function FooterAdminSlot({ data }: { data: FooterData }) {
 }
 
 const Footer = async ({ data, admin = false, settings, branding }: FooterProps) => {
-    const footerData = { ...defaultData, ...data };
+    const footerData = mergeFooterData(data);
     const currentYear = new Date().getFullYear();
 
-    // Use settings as fallback if available
-    const contactEmail = footerData.contactEmail || settings?.contactEmail || "support@sunholidays.com";
-    const contactPhone = footerData.contactPhone || settings?.contactPhone || "+880 1234 567 890";
+    let contactPhones = footerData.contactPhones ?? [];
+    if (!contactPhones.length && settings?.contactPhone?.trim()) {
+        contactPhones = [settings.contactPhone.trim()];
+    }
+    if (!contactPhones.length) {
+        contactPhones = defaultData.contactPhones ?? [];
+    }
+
+    let contactEmails = footerData.contactEmails ?? [];
+    if (!contactEmails.length && settings?.contactEmail?.trim()) {
+        contactEmails = [settings.contactEmail.trim()];
+    }
+    if (!contactEmails.length) {
+        contactEmails = defaultData.contactEmails ?? [];
+    }
+
     const address = footerData.contactAddress || settings?.address || "123 Travel Plaza, Suite 456\nDhaka, Bangladesh";
     const bio = footerData.bio || settings?.metaDescription || defaultData.bio;
 
@@ -166,14 +216,28 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
                                 <MapPin size={18} className="text-primary shrink-0" />
                                 <span className="text-base-content/70 whitespace-pre-line">{address}</span>
                             </li>
-                            <li className="flex items-center gap-3">
-                                <Phone size={18} className="text-primary shrink-0" />
-                                <span className="text-base-content/70">{contactPhone}</span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <Mail size={18} className="text-primary shrink-0" />
-                                <span className="text-base-content/70">{contactEmail}</span>
-                            </li>
+                            {contactPhones.map((phone, i) => (
+                                <li key={`phone-${i}`} className="flex items-center gap-3">
+                                    <Phone size={18} className="text-primary shrink-0" />
+                                    <a
+                                        href={`tel:${phone.replace(/\s/g, "")}`}
+                                        className="text-base-content/70 hover:text-primary transition-colors"
+                                    >
+                                        {phone}
+                                    </a>
+                                </li>
+                            ))}
+                            {contactEmails.map((email, i) => (
+                                <li key={`email-${i}`} className="flex items-center gap-3">
+                                    <Mail size={18} className="text-primary shrink-0" />
+                                    <a
+                                        href={`mailto:${email}`}
+                                        className="text-base-content/70 hover:text-primary transition-colors break-all"
+                                    >
+                                        {email}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 

@@ -84,7 +84,7 @@ export default function LocationSelectField() {
           placeholder="Search or select location"
           optionFilterProp="label"
           options={options.map((o) => ({ value: o.id, label: o.name }))}
-          dropdownRender={(menu) => (
+          popupRender={(menu) => (
             <>
               {menu}
               <Divider className="my-1 border-slate-100" />
