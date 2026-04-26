@@ -91,9 +91,6 @@ export default function TourManagementPage() {
           {text}
         </Link>
       ),
-      filteredValue: searchText ? [searchText] : null,
-      onFilter: (value, record) =>
-        record.title.toLowerCase().includes((value as string).toLowerCase()),
     },
     {
       title: 'Image',
@@ -207,6 +204,12 @@ export default function TourManagementPage() {
     return { total, active, draft, inactive };
   }, [tours]);
 
+  const filteredTours = useMemo(() => {
+    const q = searchText.trim().toLowerCase();
+    if (!q) return tours;
+    return tours.filter((t) => t.title.toLowerCase().includes(q));
+  }, [tours, searchText]);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -275,7 +278,7 @@ export default function TourManagementPage() {
 
         <Table
           columns={columns}
-          dataSource={tours}
+          dataSource={filteredTours}
           pagination={{ pageSize: 10, showSizeChanger: true }}
           loading={loading}
         />
