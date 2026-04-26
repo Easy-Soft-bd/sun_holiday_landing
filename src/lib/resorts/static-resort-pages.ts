@@ -15,20 +15,20 @@ export const staticResortPages: Record<string, StaticResortPage> = {
     keywords: ['Grandeur Bliss', 'Coxs Bazar Resort', 'Luxury Resort Bangladesh', 'Sun Tourism Ltd'],
   },
   'city-dhaka': {
-    title: 'Sun Holidays City Hotel',
+    title: 'Sun Tourism City Hotel',
     intro:
       'A Dhaka city property concept created for business travelers and guests who want a comfortable base close to the capital’s commercial rhythm.',
     description:
-      'Sun Holidays City Hotel is a coming-soon hospitality concept focused on practical comfort, central access, and dependable service for urban stays.',
-    keywords: ['City Hotel Dhaka', 'Business Hotel Dhaka', 'Sun Holidays City Hotel', 'Sun Tourism Ltd'],
+      'Sun Tourism City Hotel is a coming-soon hospitality concept focused on practical comfort, central access, and dependable service for urban stays.',
+    keywords: ['City Hotel Dhaka', 'Business Hotel Dhaka', 'Sun Tourism City Hotel', 'Sun Tourism Ltd'],
   },
   city: {
-    title: 'Sun Holidays City Hotel',
+    title: 'Sun Tourism City Hotel',
     intro:
       'A Dhaka city property concept created for business travelers and guests who want a comfortable base close to the capital’s commercial rhythm.',
     description:
-      'Sun Holidays City Hotel is a coming-soon hospitality concept focused on practical comfort, central access, and dependable service for urban stays.',
-    keywords: ['City Hotel Dhaka', 'Business Hotel Dhaka', 'Sun Holidays City Hotel', 'Sun Tourism Ltd'],
+      'Sun Tourism City Hotel is a coming-soon hospitality concept focused on practical comfort, central access, and dependable service for urban stays.',
+    keywords: ['City Hotel Dhaka', 'Business Hotel Dhaka', 'Sun Tourism City Hotel', 'Sun Tourism Ltd'],
   },
 };
 

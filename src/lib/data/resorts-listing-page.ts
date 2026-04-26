@@ -56,7 +56,7 @@ export const defaultResortsListingPageData: ResortsListingPageData = {
   metaDescription:
     "Discover our collection of premium resorts and hotels across Bangladesh. From beachfront paradises to luxury city hotels, find your perfect stay with Sun Tourism Ltd.",
   metaKeywords: [
-    "Sun Holidays Resorts",
+    "Sun Tourism Resorts",
     "Bangladesh Hotels",
     "Beach Resorts",
     "City Hotels",

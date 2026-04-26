@@ -87,7 +87,7 @@ export default async function TeamsView({ data, admin = false }: Props) {
                         directors={teamsData.directors}
                         eyebrow="Leadership"
                         title="Our Top Leaders"
-                        description="Meet the visionaries steering Sun Holidays Ltd. — hover any portrait to read their message."
+                        description="Meet the visionaries steering Sun Tourism Ltd. — hover any portrait to read their message."
                     />
                 </div>
             </section>

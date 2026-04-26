@@ -1,8 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Input, Tag, message, Popconfirm } from 'antd';
-import { PlusOutlined, SearchOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Table, Button, Space, Input, Tag, message, Popconfirm, Card, Row, Col, Statistic } from 'antd';
+import {
+  PlusOutlined,
+  SearchOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  AppstoreOutlined,
+  CheckCircleTwoTone,
+  FileSearchOutlined,
+  PauseCircleTwoTone,
+} from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import Link from 'next/link';
 
@@ -108,6 +118,12 @@ export default function TourManagementPage() {
       title: 'Category',
       dataIndex: 'category',
       key: 'category',
+      filters: [
+        { text: 'International', value: 'International' },
+        { text: 'Domestic', value: 'Domestic' },
+        { text: 'Hajj & Umrah', value: 'Hajj & Umrah' },
+      ],
+      onFilter: (value, record) => record.category === value,
       render: (category) => {
         let color = 'geekblue';
         if (category === 'Domestic') {
@@ -117,7 +133,7 @@ export default function TourManagementPage() {
         }
         return (
           <Tag color={color} key={category}>
-            {category.toUpperCase()}
+            {category?.toUpperCase()}
           </Tag>
         );
       },
@@ -126,6 +142,12 @@ export default function TourManagementPage() {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      filters: [
+        { text: 'Active', value: 'Active' },
+        { text: 'Draft', value: 'Draft' },
+        { text: 'Inactive', value: 'Inactive' },
+      ],
+      onFilter: (value, record) => record.status === value,
       render: (status) => {
         let color = 'default';
         if (status === 'Active') {
@@ -135,7 +157,7 @@ export default function TourManagementPage() {
         }
         return (
           <Tag color={color} key={status}>
-            {status.toUpperCase()}
+            {status?.toUpperCase()}
           </Tag>
         );
       },
@@ -172,23 +194,81 @@ export default function TourManagementPage() {
     },
   ];
 
+  const summary = useMemo(() => {
+    const total = tours.length;
+    let active = 0;
+    let draft = 0;
+    let inactive = 0;
+    for (const t of tours) {
+      if (t.status === 'Active') active += 1;
+      else if (t.status === 'Draft') draft += 1;
+      else if (t.status === 'Inactive') inactive += 1;
+    }
+    return { total, active, draft, inactive };
+  }, [tours]);
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Tour Management</h1>
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Tour Management</h1>
+          <p className="text-sm text-gray-500">Create, edit, and publish tours.</p>
+        </div>
         <Link href="/portal/admin/dashboard/tours/add">
-            <Button type="primary" icon={<PlusOutlined />} size="large" className="bg-primary">
+          <Button type="primary" icon={<PlusOutlined />} size="large" className="bg-primary">
             Add New Tour
-            </Button>
+          </Button>
         </Link>
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow-sm">
+      <Row gutter={[16, 16]}>
+        <Col xs={12} md={6}>
+          <Card variant="borderless" className="shadow-sm">
+            <Statistic title="Total" value={summary.total} prefix={<AppstoreOutlined />} loading={loading} />
+          </Card>
+        </Col>
+        <Col xs={12} md={6}>
+          <Card variant="borderless" className="shadow-sm">
+            <Statistic
+              title="Active"
+              value={summary.active}
+              styles={{ content: { color: '#16a34a' } }}
+              prefix={<CheckCircleTwoTone twoToneColor="#16a34a" />}
+              loading={loading}
+            />
+          </Card>
+        </Col>
+        <Col xs={12} md={6}>
+          <Card variant="borderless" className="shadow-sm">
+            <Statistic
+              title="Drafts"
+              value={summary.draft}
+              styles={{ content: { color: '#6b7280' } }}
+              prefix={<FileSearchOutlined />}
+              loading={loading}
+            />
+          </Card>
+        </Col>
+        <Col xs={12} md={6}>
+          <Card variant="borderless" className="shadow-sm">
+            <Statistic
+              title="Inactive"
+              value={summary.inactive}
+              styles={{ content: { color: '#dc2626' } }}
+              prefix={<PauseCircleTwoTone twoToneColor="#dc2626" />}
+              loading={loading}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <div className="rounded-lg bg-white p-4 shadow-sm">
         <div className="mb-4">
           <Input
-            placeholder="Search tours..."
+            placeholder="Search tours by title…"
             prefix={<SearchOutlined className="text-gray-400" />}
             className="max-w-md"
+            allowClear
             onChange={(e) => setSearchText(e.target.value)}
           />
         </div>
@@ -196,7 +276,7 @@ export default function TourManagementPage() {
         <Table
           columns={columns}
           dataSource={tours}
-          pagination={{ pageSize: 10 }}
+          pagination={{ pageSize: 10, showSizeChanger: true }}
           loading={loading}
         />
       </div>

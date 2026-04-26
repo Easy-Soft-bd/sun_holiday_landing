@@ -28,7 +28,7 @@ const WhyChooseUs = () => {
                     <div className="shrink-0 text-center lg:text-left border-b lg:border-b-0 lg:border-r border-base-300 pb-6 lg:pb-0 lg:pr-12">
                         <h2 className="font-gilliequest text-3xl md:text-4xl uppercase tracking-tighter leading-none">
                             Why Choose <br />
-                            <span className="text-primary italic">Sun Holidays</span>
+                            <span className="text-primary italic">Sun Tourism</span>
                         </h2>
                     </div>
 

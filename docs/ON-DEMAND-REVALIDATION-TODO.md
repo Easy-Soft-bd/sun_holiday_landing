@@ -42,7 +42,7 @@
 
   **AI prompt:**
 
-  > Create `src/lib/revalidate-tags.ts` in the Sun Holidays Next.js app. Export readonly string constants for: home page CMS row, general settings row, tours list, and a function `tourDetailTag(id: string)` that returns a deterministic tag for one tour. Add a short comment block at the top explaining these tags are used with `unstable_cache` and `revalidateTag`. Do not import this file from client components.
+  > Create `src/lib/revalidate-tags.ts` in the Sun Tourism Next.js app. Export readonly string constants for: home page CMS row, general settings row, tours list, and a function `tourDetailTag(id: string)` that returns a deterministic tag for one tour. Add a short comment block at the top explaining these tags are used with `unstable_cache` and `revalidateTag`. Do not import this file from client components.
 
 - [ ] **1.2 — Document tag → route mapping (comment only)**
 

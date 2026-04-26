@@ -241,7 +241,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
       "Manikganj Resort",
       "Luxury Eco Resort",
       "Nature Resort Bangladesh",
-      "Sun Holidays Resort",
+      "Sun Tourism Resort",
       "Sustainable Tourism Bangladesh",
     ],
     metaImage:

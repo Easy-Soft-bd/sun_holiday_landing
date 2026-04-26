@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import NotFoundClient from "./not-found-client";
 
 export const metadata: Metadata = {
-    title: "404 - Page Not Found | Sun Holidays",
+    title: "404 - Page Not Found | Sun Tourism",
     description: "Sorry, the holiday destination you are looking for doesn't exist.",
 };
 

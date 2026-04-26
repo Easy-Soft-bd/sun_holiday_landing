@@ -113,10 +113,15 @@ interface FooterProps {
     data?: FooterData;
     admin?: boolean;
     settings?: {
+        contactEmails?: string[] | null;
+        contactPhones?: string[] | null;
         contactEmail?: string | null;
         contactPhone?: string | null;
         address?: string | null;
-        metaDescription?: string | null;
+        facebookUrl?: string | null;
+        twitterUrl?: string | null;
+        instagramUrl?: string | null;
+        linkedinUrl?: string | null;
     };
     branding?: {
         siteName?: string | null;
@@ -140,24 +145,43 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
     const footerData = mergeFooterData(data);
     const currentYear = new Date().getFullYear();
 
-    let contactPhones = footerData.contactPhones ?? [];
+    let contactPhones = Array.isArray(settings?.contactPhones)
+        ? settings.contactPhones.map((v) => String(v).trim()).filter(Boolean)
+        : [];
     if (!contactPhones.length && settings?.contactPhone?.trim()) {
         contactPhones = [settings.contactPhone.trim()];
+    }
+    if (!contactPhones.length) {
+        contactPhones = footerData.contactPhones ?? [];
     }
     if (!contactPhones.length) {
         contactPhones = defaultData.contactPhones ?? [];
     }
 
-    let contactEmails = footerData.contactEmails ?? [];
+    let contactEmails = Array.isArray(settings?.contactEmails)
+        ? settings.contactEmails.map((v) => String(v).trim()).filter(Boolean)
+        : [];
     if (!contactEmails.length && settings?.contactEmail?.trim()) {
         contactEmails = [settings.contactEmail.trim()];
+    }
+    if (!contactEmails.length) {
+        contactEmails = footerData.contactEmails ?? [];
     }
     if (!contactEmails.length) {
         contactEmails = defaultData.contactEmails ?? [];
     }
 
-    const address = footerData.contactAddress || settings?.address || "123 Travel Plaza, Suite 456\nDhaka, Bangladesh";
-    const bio = footerData.bio || settings?.metaDescription || defaultData.bio;
+    const address = settings?.address || footerData.contactAddress || "123 Travel Plaza, Suite 456\nDhaka, Bangladesh";
+    const bio = footerData.bio || defaultData.bio;
+
+    const globalSocialLinks: SocialLink[] = [
+        { icon: "LuFacebook", url: settings?.facebookUrl || "" },
+        { icon: "LuInstagram", url: settings?.instagramUrl || "" },
+        { icon: "LuTwitter", url: settings?.twitterUrl || "" },
+        { icon: "LuLinkedin", url: settings?.linkedinUrl || "" },
+    ].filter((s) => s.url.trim().length > 0);
+
+    const socialLinks = globalSocialLinks.length > 0 ? globalSocialLinks : (footerData.socialLinks || defaultData.socialLinks || []);
 
     return (
         <footer className="relative bg-base-200 text-base-content border-t border-base-300 group/footer">
@@ -186,7 +210,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
                             {bio}
                         </p>
                         <div className="flex gap-4">
-                            {footerData.socialLinks?.map((social, i) => (
+                            {socialLinks.map((social, i) => (
                                 <Link key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm btn-circle hover:bg-primary hover:text-white transition-all">
                                     <PublicIconRenderer iconName={social.icon} />
                                 </Link>

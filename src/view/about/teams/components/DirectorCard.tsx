@@ -19,7 +19,7 @@ export default function DirectorCard({
     const safeTitle = (title || "").trim() || "Director";
     const safeMessage =
         (message || "").trim() ||
-        "Thank you for trusting Sun Holidays Ltd.";
+        "Thank you for trusting Sun Tourism Ltd.";
     const safeImage =
         (image || "").trim() ||
         "https://placehold.co/900x1200?text=Leadership";
@@ -145,7 +145,7 @@ export default function DirectorCard({
                                     {safeName}
                                 </p>
                                 <p className="truncate text-xs text-base-content/55 sm:text-sm">
-                                    {safeTitle} — Sun Holidays Ltd.
+                                    {safeTitle} — Sun Tourism Ltd.
                                 </p>
                             </div>
                         </div>

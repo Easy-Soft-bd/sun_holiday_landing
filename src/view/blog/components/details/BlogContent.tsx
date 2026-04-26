@@ -31,7 +31,7 @@ export default function BlogContent({ post }: { post: BlogPost }) {
                                 <span className="font-bold">SH</span>
                             </div>
                             <div>
-                                <h4 className="font-bold text-base-content">Sun Holidays Editorial</h4>
+                                <h4 className="font-bold text-base-content">Sun Tourism Editorial</h4>
                                 <p className="text-xs text-base-content/40 tracking-widest uppercase font-bold">Official Travel Guides</p>
                             </div>
                         </div>

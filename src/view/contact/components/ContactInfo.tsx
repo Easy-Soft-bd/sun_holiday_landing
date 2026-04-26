@@ -1,17 +1,45 @@
 
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
-export default function ContactInfo() {
+type ContactInfoProps = {
+    settings?: {
+        contactEmail?: string | null;
+        contactPhone?: string | null;
+        contactEmails?: string[] | null;
+        contactPhones?: string[] | null;
+        address?: string | null;
+    } | null;
+};
+
+function normalizeList(arr?: string[] | null, one?: string | null): string[] {
+    const fromArray = Array.isArray(arr)
+        ? arr.map((v) => String(v).trim()).filter(Boolean)
+        : [];
+    if (fromArray.length > 0) return fromArray;
+    const fromSingle = String(one || "")
+        .split(/[\n,;]+/)
+        .map((v) => v.trim())
+        .filter(Boolean);
+    return fromSingle;
+}
+
+export default function ContactInfo({ settings }: ContactInfoProps) {
+    const phoneNumbers = normalizeList(settings?.contactPhones, settings?.contactPhone);
+    const emails = normalizeList(settings?.contactEmails, settings?.contactEmail);
+    const officeAddress = settings?.address?.trim() || [
+        "362/1, Holding 13/1 (2nd Floor)",
+        "Old-27 New-16 Dhanmondi",
+        "Dhaka-1209, Bangladesh",
+    ].join("\n");
+    const primaryPhone = phoneNumbers[0] || "+8801873838301";
+    const primaryEmail = emails[0] || "info@sunholidaysltd.com";
+
     const contactDetails = [
         {
             icon: MapPin,
             title: "Visit Our Office",
             content: (
-                <>
-                    362/1, Holding 13/1 (2nd Floor)<br />
-                    Old-27 New-16 Dhanmondi<br />
-                    Dhaka-1209, Bangladesh
-                </>
+                <span className="whitespace-pre-line">{officeAddress}</span>
             ),
             action: { label: "Get Directions", href: "#map" }
         },
@@ -20,23 +48,30 @@ export default function ContactInfo() {
             title: "Call Us Anytime",
             content: (
                 <div className="space-y-1">
-                    <a href="tel:+8801873838301" className="block hover:text-primary transition-colors">+88 018 73 83 83 01</a>
-                    <a href="tel:+8802222243452" className="block hover:text-primary transition-colors">+88 02 2222 43452</a>
-                    <a href="tel:+8801873838302" className="block hover:text-primary transition-colors">+88 018 73 83 83 02</a>
+                    {(phoneNumbers.length > 0 ? phoneNumbers : ["+88 018 73 83 83 01"]).map((phone, idx) => (
+                        <a
+                            key={`${phone}-${idx}`}
+                            href={`tel:${phone.replace(/\s/g, "")}`}
+                            className="block hover:text-primary transition-colors"
+                        >
+                            {phone}
+                        </a>
+                    ))}
                 </div>
             ),
-            action: { label: "Call Now", href: "tel:+8801873838301" }
+            action: { label: "Call Now", href: `tel:${primaryPhone.replace(/\s/g, "")}` }
         },
         {
             icon: Mail,
             title: "Email Support",
             content: (
                 <div className="space-y-1">
-                    <a href="mailto:info@sunholidaysltd.com" className="block hover:text-primary transition-colors">info@sunholidaysltd.com</a>
-                    <a href="mailto:sunholidays07@gmail.com" className="block hover:text-primary transition-colors">sunholidays07@gmail.com</a>
+                    {(emails.length > 0 ? emails : ["info@sunholidaysltd.com"]).map((email, idx) => (
+                        <a key={`${email}-${idx}`} href={`mailto:${email}`} className="block hover:text-primary transition-colors">{email}</a>
+                    ))}
                 </div>
             ),
-            action: { label: "Send Email", href: "mailto:info@sunholidaysltd.com" }
+            action: { label: "Send Email", href: `mailto:${primaryEmail}` }
         },
         {
             icon: Clock,
@@ -48,7 +83,7 @@ export default function ContactInfo() {
                     Always ready to help.
                 </>
             ),
-             action: { label: "Contact Support", href: "tel:+8801873838301" }
+             action: { label: "Contact Support", href: `tel:${primaryPhone.replace(/\s/g, "")}` }
         }
     ];
 

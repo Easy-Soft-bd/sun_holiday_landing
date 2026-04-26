@@ -52,7 +52,7 @@ export default function TeamList({ teams }: { teams: TeamItem[] }) {
                                 <div className="mt-auto hidden items-center gap-2 border-t border-base-200/70 pt-2 text-[11px] text-base-content/55 sm:flex sm:pt-3 sm:text-xs">
                                     <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                                     <span className="font-semibold uppercase tracking-wider">
-                                        Sun Holidays Team
+                                        Sun Tourism Team
                                     </span>
                                 </div>
                             </div>
@@ -61,7 +61,7 @@ export default function TeamList({ teams }: { teams: TeamItem[] }) {
                                 <div className="flex items-center gap-2 text-[11px] text-base-content/55 sm:text-xs">
                                     <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                                     <span className="font-semibold uppercase tracking-wider">
-                                        Sun Holidays Team
+                                        Sun Tourism Team
                                     </span>
                                 </div>
                             </div>

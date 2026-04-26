@@ -25,7 +25,7 @@ export type AboutPageData = {
 
 export const defaultAboutPageData: AboutPageData = {
   heroBadgeText: "Est. Nov 8, 2021",
-  heroTitleMain: "About Sun Holidays",
+  heroTitleMain: "About Sun Tourism",
   heroTitleSub: "Crafting Unforgettable Journeys",
   heroDescription:
     "Your trusted partner in exploring the world, committed to excellence and care in every trip.",

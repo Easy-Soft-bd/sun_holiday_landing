@@ -1,99 +1,95 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Card, Typography, Space, Divider, message, Tabs, Skeleton, Upload, GetProp, UploadProps } from 'antd';
+import { Form, Input, Button, Card, Typography, Space, message, Tabs, Skeleton, Upload } from 'antd';
+import type { GetProp, UploadProps } from 'antd';
 import {
   GlobalOutlined,
   ContactsOutlined,
   ShareAltOutlined,
-  SearchOutlined,
   SaveOutlined,
-  UploadOutlined,
-  LoadingOutlined,
   PlusOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons';
 import { useGetSettingsQuery, useUpdateSettingsMutation } from '@/src/lib/redux/api/settingsApi';
 import { useUploadFileMutation } from '@/src/lib/redux/api/uploadApi';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
-
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-const getBase64 = (img: FileType, callback: (url: string) => void) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result as string));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file: FileType) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/svg+xml';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG/SVG files!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
-};
 
 export default function SettingsPage() {
   const [form] = Form.useForm();
   const { data: settingsData, isLoading, isError } = useGetSettingsQuery({});
   const [updateSettings, { isLoading: isUpdating }] = useUpdateSettingsMutation();
-  const [uploadFile, { isLoading: isUploadingFile }] = useUploadFileMutation();
-
+  const [uploadFile] = useUploadFileMutation();
   const [logoLoading, setLogoLoading] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string>();
-  const [metaLoading, setMetaLoading] = useState(false);
-  const [metaUrl, setMetaUrl] = useState<string>();
 
   useEffect(() => {
     if (settingsData?.data) {
-      form.setFieldsValue(settingsData.data);
-      setLogoUrl(settingsData.data.siteLogo);
-      setMetaUrl(settingsData.data.metaImage);
+      const d = settingsData.data;
+      const contactEmails =
+        Array.isArray(d.contactEmails) && d.contactEmails.length > 0
+          ? d.contactEmails
+          : String(d.contactEmail || '')
+              .split(/[\n,;]+/)
+              .map((v: string) => v.trim())
+              .filter(Boolean);
+      const contactPhones =
+        Array.isArray(d.contactPhones) && d.contactPhones.length > 0
+          ? d.contactPhones
+          : String(d.contactPhone || '')
+              .split(/[\n,;]+/)
+              .map((v: string) => v.trim())
+              .filter(Boolean);
+      form.setFieldsValue({
+        ...d,
+        contactEmails,
+        contactPhones,
+      });
+      setLogoUrl(d.siteLogo || '');
     }
   }, [settingsData, form]);
 
-  const handleUpload = async (file: FileType, type: 'logo' | 'meta') => {
-    const setLoader = type === 'logo' ? setLogoLoading : setMetaLoading;
-    const setUrl = type === 'logo' ? setLogoUrl : setMetaUrl;
-    const fieldName = type === 'logo' ? 'siteLogo' : 'metaImage';
-
-    setLoader(true);
+  const handleLogoUpload = async (file: FileType) => {
+    setLogoLoading(true);
     const formData = new FormData();
     formData.append('file', file);
-    if (type === 'logo') {
-      formData.append('type', 'logo');
-    }
-
+    formData.append('type', 'logo');
     try {
       const response = await uploadFile(formData).unwrap();
-      if (response.success) {
-        setUrl(response.url);
-        form.setFieldValue(fieldName, response.url);
-        message.success(`${type === 'logo' ? 'Logo' : 'Meta image'} uploaded successfully`);
+      if (response?.success && response?.url) {
+        setLogoUrl(response.url);
+        form.setFieldValue('siteLogo', response.url);
+        message.success('Logo uploaded successfully');
+      } else {
+        message.error('Upload failed');
       }
-    } catch (error) {
-      console.error('Upload failed:', error);
+    } catch {
       message.error('Upload failed');
     } finally {
-      setLoader(false);
+      setLogoLoading(false);
     }
+    return false;
   };
 
-  const uploadButton = (loading: boolean) => (
-    <button style={{ border: 0, background: 'none' }} type="button">
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </button>
-  );
-
   const onFinish = async (values: any) => {
+    const contactEmails = (values.contactEmails || []).map((v: string) => String(v).trim()).filter(Boolean);
+    const contactPhones = (values.contactPhones || []).map((v: string) => String(v).trim()).filter(Boolean);
+    const payload = {
+      ...values,
+      siteLogo: String(values.siteLogo || '').trim(),
+      contactEmails,
+      contactPhones,
+      // keep single-value compatibility for consumers still using legacy fields
+      contactEmail: contactEmails[0] || '',
+      contactPhone: contactPhones[0] || '',
+    };
+
     try {
-      await updateSettings(values).unwrap();
+      await updateSettings(payload).unwrap();
       message.success('Settings updated successfully');
     } catch (error) {
       console.error('Failed to update settings:', error);
@@ -123,7 +119,7 @@ export default function SettingsPage() {
       key: '1',
       label: (
         <span>
-          <GlobalOutlined /> General Info
+          <GlobalOutlined /> Global Basic
         </span>
       ),
       children: (
@@ -134,57 +130,41 @@ export default function SettingsPage() {
               name="siteName"
               rules={[{ required: true, message: 'Please enter site name' }]}
             >
-              <Input placeholder="Sun Holidays" />
+              <Input placeholder="Sun Tourism" />
             </Form.Item>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Form.Item label="Main Logo" extra="Recommended size: 200x50px. Max 2MB.">
-                <Upload
-                  name="siteLogo"
-                  listType="picture-card"
-                  className="logo-upload"
-                  showUploadList={false}
-                  action=""
-                  beforeUpload={(file) => {
-                    handleUpload(file, 'logo');
-                    return false; // Prevent auto-upload
-                  }}
-                >
-                  {logoUrl ? <img src={logoUrl} alt="logo" style={{ width: '100%' }} /> : uploadButton(logoLoading)}
-                </Upload>
-                <Form.Item name="siteLogo" noStyle rules={[{ required: true, message: 'Please provide a logo' }]}>
-                  <Input value={logoUrl} onChange={(e) => {
-                      setLogoUrl(e.target.value);
-                      form.setFieldValue('siteLogo', e.target.value);
-                  }} placeholder="Or enter URL manually" className="mt-2" />
-                </Form.Item>
-              </Form.Item>
-
-              <Form.Item
-                label="Meta Image (SEO)"
-                extra="Shared on social media. 1200x630px recommended."
+            <Form.Item label="Main Website Logo" extra="Used by navbar and footer brand logo.">
+              <Upload
+                name="siteLogo"
+                listType="picture-card"
+                showUploadList={false}
+                action=""
+                beforeUpload={handleLogoUpload}
               >
-                <Upload
-                  name="metaImage"
-                  listType="picture-card"
-                  className="meta-upload"
-                  showUploadList={false}
-                  action=""
-                  beforeUpload={(file) => {
-                    handleUpload(file, 'meta');
-                    return false;
+                {logoUrl ? (
+                  <img src={logoUrl} alt="logo" style={{ width: '100%' }} />
+                ) : (
+                  <button style={{ border: 0, background: 'none' }} type="button">
+                    {logoLoading ? <LoadingOutlined /> : <PlusOutlined />}
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </button>
+                )}
+              </Upload>
+              <Form.Item name="siteLogo" noStyle>
+                <Input
+                  value={logoUrl}
+                  onChange={(e) => {
+                    setLogoUrl(e.target.value);
+                    form.setFieldValue('siteLogo', e.target.value);
                   }}
-                >
-                  {metaUrl ? <img src={metaUrl} alt="meta" style={{ width: '100%' }} /> : uploadButton(metaLoading)}
-                </Upload>
-                <Form.Item name="metaImage" noStyle rules={[{ required: true, message: 'Please provide a meta image URL' }]}>
-                  <Input value={metaUrl} onChange={(e) => {
-                      setMetaUrl(e.target.value);
-                      form.setFieldValue('metaImage', e.target.value);
-                  }} placeholder="Or enter URL manually" className="mt-2" />
-                </Form.Item>
+                  placeholder="Or paste logo URL"
+                  className="mt-2"
+                />
               </Form.Item>
-            </div>
+            </Form.Item>
+            <Text type="secondary">
+              This page is global source for shared branding, contact, and social data.
+              SEO stays page-specific.
+            </Text>
           </Space>
         </Card>
       ),
@@ -199,14 +179,53 @@ export default function SettingsPage() {
       children: (
         <Card variant="borderless" className="shadow-sm">
           <Space orientation="vertical" size="large" className="w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Form.Item label="Contact Email" name="contactEmail">
-                <Input placeholder="info@sunholidaysltd.com" />
-              </Form.Item>
-              <Form.Item label="Contact Phone" name="contactPhone">
-                <Input placeholder="+880 1234 567890" />
-              </Form.Item>
-            </div>
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-base-content/50">Email addresses</div>
+            <Form.List name="contactEmails">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline" className="w-full max-w-full">
+                      <Form.Item
+                        {...restField}
+                        name={[name]}
+                        className="mb-0 flex-1 min-w-0"
+                        rules={[{ required: true, message: 'Email required' }, { type: 'email', message: 'Invalid email' }]}
+                      >
+                        <Input placeholder="info@sunholidaysltd.com" />
+                      </Form.Item>
+                      <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
+                    </Space>
+                  ))}
+                  <Button type="dashed" onClick={() => add('')} block icon={<PlusOutlined />}>
+                    Add email
+                  </Button>
+                </>
+              )}
+            </Form.List>
+
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-base-content/50">Phone numbers</div>
+            <Form.List name="contactPhones">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline" className="w-full max-w-full">
+                      <Form.Item
+                        {...restField}
+                        name={[name]}
+                        className="mb-0 flex-1 min-w-0"
+                        rules={[{ required: true, message: 'Phone required' }]}
+                      >
+                        <Input placeholder="+880 1234 567890" />
+                      </Form.Item>
+                      <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
+                    </Space>
+                  ))}
+                  <Button type="dashed" onClick={() => add('')} block icon={<PlusOutlined />}>
+                    Add phone
+                  </Button>
+                </>
+              )}
+            </Form.List>
 
             <Form.Item label="Office Address" name="address">
               <TextArea rows={4} placeholder="Enter full office address" />
@@ -241,35 +260,6 @@ export default function SettingsPage() {
         </Card>
       ),
     },
-    {
-      key: '4',
-      label: (
-        <span>
-          <SearchOutlined /> SEO Settings
-        </span>
-      ),
-      children: (
-        <Card variant="borderless" className="shadow-sm">
-          <Space orientation="vertical" size="large" className="w-full">
-            <Form.Item
-              label="Meta Title"
-              name="metaTitle"
-              extra="The title displayed in browser tabs and search results"
-            >
-              <Input placeholder="Sun Holidays - Your Gateway to the World" />
-            </Form.Item>
-
-            <Form.Item label="Meta Description" name="metaDescription">
-              <TextArea rows={4} placeholder="Enter a brief description of your website for search engines" />
-            </Form.Item>
-
-            <Form.Item label="Meta Keywords" name="metaKeywords" extra="Separate keywords with commas">
-              <Input placeholder="travel, holidays, flights, visa" />
-            </Form.Item>
-          </Space>
-        </Card>
-      ),
-    },
   ];
 
   return (
@@ -277,9 +267,9 @@ export default function SettingsPage() {
       <div className="mb-8 flex justify-between items-center">
         <div>
           <Title level={2} style={{ margin: 0 }}>
-            General Settings
+            Global Data Source
           </Title>
-          <Text type="secondary">Manage your website's global information and configuration</Text>
+          <Text type="secondary">Shared contact/social data used across page sections and public layouts.</Text>
         </div>
         <Button
           type="primary"

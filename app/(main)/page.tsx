@@ -53,14 +53,21 @@ export default async function Home() {
     getCachedSettings(),
     getCachedSunviaEcoResortPageData(),
   ]);
+  const primaryEmail = Array.isArray(settings?.contactEmails) && settings.contactEmails.length > 0
+    ? settings.contactEmails[0]
+    : settings?.contactEmail;
+  const primaryPhone = Array.isArray(settings?.contactPhones) && settings.contactPhones.length > 0
+    ? settings.contactPhones[0]
+    : settings?.contactPhone;
+
   const organizationJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: settings?.siteName || 'Sun Tourism Ltd',
     url: absoluteUrl('/'),
     logo: absoluteUrl(settings?.siteLogo || '/logo/logo.png'),
-    email: settings?.contactEmail || undefined,
-    telephone: settings?.contactPhone || undefined,
+    email: primaryEmail || undefined,
+    telephone: primaryPhone || undefined,
     address: settings?.address
       ? {
           '@type': 'PostalAddress',

@@ -127,7 +127,7 @@ export default async function ResortsListingView({ data, admin = false }: Props)
         <div className="absolute inset-0">
           <Image
             src={page.heroBackgroundImage}
-            alt="Sun Holidays Resorts"
+            alt="Sun Tourism Resorts"
             fill
             className="object-cover"
             priority

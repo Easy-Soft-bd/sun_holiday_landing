@@ -97,7 +97,7 @@ export const defaultSailorMoonResortsPageData: SailorMoonResortsPageData = {
     "Saint Martin Resort",
     "Cox's Bazar Beach Resort",
     "Bangladesh Beach Hotel",
-    "Sun Holidays Resort",
+    "Sun Tourism Resort",
     "Saint Martin Island Accommodation",
   ],
   metaOgImage: "/sailor/SHA_6244 copy.jpg",

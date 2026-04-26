@@ -15,7 +15,7 @@ export default function LeadersRow({
     directors,
     eyebrow = "Leadership",
     title = "Our Top Leaders",
-    description = "Meet the visionaries steering Sun Holidays Ltd.",
+    description = "Meet the visionaries steering Sun Tourism Ltd.",
 }: Props) {
     const [activeIndex, setActiveIndex] = useState<number>(0);
     const safeDirectors = (directors || []).filter(Boolean);
@@ -37,7 +37,7 @@ export default function LeadersRow({
         title: (active?.title || "").trim() || "Director",
         message:
             (active?.message || "").trim() ||
-            "Thank you for trusting Sun Holidays Ltd.",
+            "Thank you for trusting Sun Tourism Ltd.",
         image:
             (active?.image || "").trim() ||
             "https://placehold.co/1600x1000?text=Leader",
@@ -176,7 +176,7 @@ export default function LeadersRow({
                         const title = (d.title || "").trim() || "Director";
                         const message =
                             (d.message || "").trim() ||
-                            "Thank you for trusting Sun Holidays Ltd.";
+                            "Thank you for trusting Sun Tourism Ltd.";
                         return (
                             <article
                                 key={`m-${name}-${i}`}
