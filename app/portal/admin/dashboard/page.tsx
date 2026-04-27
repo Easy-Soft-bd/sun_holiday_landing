@@ -10,6 +10,7 @@ import {
     ExportOutlined,
     EyeOutlined,
     FileSearchOutlined,
+    InboxOutlined,
     PauseCircleTwoTone,
     PlusOutlined,
     SettingOutlined,
@@ -224,6 +225,9 @@ export default function AdminDashboardPage() {
                     <Link href={`${ROOT}/tours`}>
                         <Button icon={<EnvironmentOutlined />}>Manage Tours</Button>
                     </Link>
+                    <Link href={`${ROOT}/leads`}>
+                        <Button icon={<InboxOutlined />}>Leads</Button>
+                    </Link>
                     <Link href={`${ROOT}/settings`}>
                         <Button icon={<SettingOutlined />}>Settings</Button>
                     </Link>
@@ -234,7 +238,7 @@ export default function AdminDashboardPage() {
                 <Alert
                     type="error"
                     showIcon
-                    message="Could not load tour data"
+                    title="Could not load tour data"
                     description={error}
                 />
             ) : null}

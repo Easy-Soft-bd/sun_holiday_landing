@@ -5,6 +5,7 @@ import { MapPin, Star, Clock, Phone, Mail, ChevronRight, Calendar } from "lucide
 import type { SailorMoonResortsPageData } from "@/src/lib/data/sailor-moon-resorts-page";
 import { mergeSailorMoonResortsPageData } from "@/src/lib/data/sailor-moon-resorts-page";
 import SailorMoonFeatureIcon from "@/src/view/sailor-moon-resorts/SailorMoonFeatureIcon";
+import SailorMoonBookingCTA from "@/src/view/sailor-moon-resorts/SailorMoonBookingCTA";
 
 type Props = {
   data?: Partial<SailorMoonResortsPageData> | null;
@@ -253,16 +254,14 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
                 </div>
               </div>
 
-              <div className="text-center">
-                <Link
-                  href={resortData.bookingCtaHref}
-                  className="btn btn-primary btn-lg group rounded-full px-12 text-white shadow-xl shadow-primary/20"
-                >
-                  {resortData.bookingCtaText}
-                  <ChevronRight className="size-5 transition-transform group-hover:translate-x-1" />
-                </Link>
-                <p className="mt-4 text-xs text-base-content/50">{resortData.bookingDisclaimer}</p>
-              </div>
+              <SailorMoonBookingCTA
+                label={resortData.bookingCtaText}
+                resortName={resortData.name}
+                location={resortData.location}
+                checkIn={resortData.checkIn}
+                checkOut={resortData.checkOut}
+                disclaimer={resortData.bookingDisclaimer}
+              />
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
-
-import { PhoneCall, CalendarCheck } from "lucide-react";
+import { PhoneCall } from "lucide-react";
 import { TourPackage } from "@/src/view/tours/data/mockTours";
+import TourBookingCTA from "./TourBookingCTA";
 
 const currencyFormatter = new Intl.NumberFormat('en-BD', {
     style: 'currency',
@@ -21,16 +21,13 @@ export default function TourBookingCard({ tour }: { tour: TourPackage }) {
             </div>
 
             <div className="space-y-2.5 sm:space-y-4">
-                 <button className="btn btn-primary btn-md w-full gap-2 rounded-xl shadow-lg shadow-primary/30 sm:btn-lg sm:gap-3">
-                     <CalendarCheck size={20} />
-                     Book Now
-                 </button>
-                 {tour.inquiryPhone && (
-                     <a href={`tel:${tour.inquiryPhone}`} className="btn btn-outline btn-ghost btn-md w-full gap-2 rounded-xl sm:btn-lg sm:gap-3">
-                         <PhoneCall size={20} />
-                         Call for Inquiry
-                     </a>
-                 )}
+                <TourBookingCTA tour={tour} />
+                {tour.inquiryPhone && (
+                    <a href={`tel:${tour.inquiryPhone}`} className="btn btn-outline btn-ghost btn-md w-full gap-2 rounded-xl sm:btn-lg sm:gap-3">
+                        <PhoneCall size={20} />
+                        Call for Inquiry
+                    </a>
+                )}
             </div>
 
             <p className="mt-4 text-center text-[11px] leading-relaxed text-base-content/50 sm:mt-6 sm:text-xs">

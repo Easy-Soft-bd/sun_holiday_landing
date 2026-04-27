@@ -25,6 +25,7 @@ import {
     EnvironmentOutlined,
     ExportOutlined,
     HomeOutlined,
+    InboxOutlined,
     LogoutOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -64,6 +65,11 @@ function buildMenuItems(): SidebarItem[] {
             label: <Link href={`${ROOT}/tours`}>Tours</Link>,
         },
         {
+            key: `${ROOT}/leads`,
+            icon: <InboxOutlined />,
+            label: <Link href={`${ROOT}/leads`}>Leads</Link>,
+        },
+        {
             type: "divider",
         },
         {
@@ -94,15 +100,15 @@ function buildMenuItems(): SidebarItem[] {
             label: "Coming soon",
             children: [
                 {
-                    key: "bookings",
-                    icon: <BarChartOutlined />,
-                    label: <Tooltip title="Module not built yet"><span className="text-base-content/60">Bookings</span></Tooltip>,
-                    disabled: true,
-                },
-                {
                     key: "users",
                     icon: <UserOutlined />,
                     label: <Tooltip title="Module not built yet"><span className="text-base-content/60">Users</span></Tooltip>,
+                    disabled: true,
+                },
+                {
+                    key: "analytics",
+                    icon: <BarChartOutlined />,
+                    label: <Tooltip title="Module not built yet"><span className="text-base-content/60">Analytics</span></Tooltip>,
                     disabled: true,
                 },
             ],
@@ -115,6 +121,8 @@ const breadcrumbLabels: Record<string, string> = {
     admin: "Admin",
     dashboard: "Dashboard",
     tours: "Tours",
+    leads: "Leads",
+    bookings: "Booking",
     add: "Add",
     edit: "Edit",
     settings: "Settings",
@@ -143,6 +151,9 @@ function selectedKeyForPath(pathname: string): string {
     }
     if (pathname.startsWith(`${ROOT}/tours`)) {
         return `${ROOT}/tours`;
+    }
+    if (pathname.startsWith(`${ROOT}/leads`)) {
+        return `${ROOT}/leads`;
     }
     if (pathname.startsWith(`${ROOT}/settings`)) {
         return `${ROOT}/settings`;

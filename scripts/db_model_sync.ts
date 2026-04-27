@@ -15,12 +15,15 @@ async function syncModels() {
     await import('../src/models/Location');
     await import('../src/models/Tour');
     await import('../src/models/SunviaEcoResortPage');
+    await import('../src/models/Booking');
+    await import('../src/models/BookingActivity');
+    await import('../src/models/Lead');
 
     console.log('Starting database synchronization...');
     await sequelize.authenticate();
     console.log('Connection to database established.');
 
-    console.log('Synchronizing models: User, HomePage, GeneralSettings, Location, Tour, SunviaEcoResortPage...');
+    console.log('Synchronizing models: User, HomePage, GeneralSettings, Location, Tour, SunviaEcoResortPage, Booking, BookingActivity, Lead...');
     await sequelize.sync({ alter: true });
 
     const { ensurePageHomeJsonColumn } = await import('./ensure-page-home-json-column');
