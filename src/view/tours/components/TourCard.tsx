@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { MapPin, Clock, Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import type { TourRecord } from "@/src/lib/data/tours";
 import { canUseNextImage } from "@/src/lib/media";
 import { getTourPublicPath } from "@/src/lib/tours/public-path";
 
@@ -12,22 +13,15 @@ const currencyFormatter = new Intl.NumberFormat('en-BD', {
     maximumFractionDigits: 0
 });
 
-interface TourProps {
-    id: string | number;
-    slug?: string | null;
-    title: string;
-    image: string;
-    category: string;
-    rating: number;
-    reviews: number;
-    location: string;
-    duration: string;
-    price: number;
-}
+/** Fields needed for the grid card; `id` + `slug` drive the public detail URL (`/tours/[slug]`). */
+type TourCardTour = Pick<
+    TourRecord,
+    "id" | "slug" | "title" | "image" | "category" | "rating" | "reviews" | "location" | "duration" | "price"
+>;
 
-export default function TourCard({ tour }: { tour: TourProps }) {
+export default function TourCard({ tour }: { tour: TourCardTour }) {
     const supportsImageOptimization = canUseNextImage(tour.image);
-    const detailHref = getTourPublicPath({ id: Number(tour.id), slug: tour.slug ?? null });
+    const detailHref = getTourPublicPath(tour);
 
     return (
         <div className="group bg-base-100 rounded-3xl overflow-hidden shadow-sm border border-base-200 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full hover:-translate-y-1">
