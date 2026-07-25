@@ -34,6 +34,9 @@ DB_PASS=your_password
 
 # JWT Secret (for auth)
 JWT_SECRET=your_jwt_secret
+
+# Public "Development Mode" top banner (true/false)
+DEVELOPMENT_MODE=true
 ```
 
 ### 4. Database Synchronization

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { TourRecord } from '@/src/lib/data/tours';
+import type { BlogPostRecord } from '@/src/lib/data/blog';
 import { stripHtml } from '@/src/lib/html';
 
 const DEFAULT_SITE_URL = 'https://sunholidaysltd.com';
@@ -157,5 +158,86 @@ export function buildTourDetailMetadata(tour: TourRecord, pathname: string): Met
       images: [socialImage],
     },
     category: tour.category,
+  };
+}
+
+/** Article metadata for public blog post pages (canonical, OG article, robots). */
+export function buildBlogPostMetadata(post: BlogPostRecord, pathname: string): Metadata {
+  const path = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  const plainExcerpt = stripHtml(post.excerpt || '');
+  const plainContent = stripHtml(post.content || '');
+  const fallbackDesc =
+    plainExcerpt ||
+    (plainContent.length > 160 ? `${plainContent.slice(0, 157).trim()}…` : plainContent) ||
+    DEFAULT_DESCRIPTION;
+  const metaDesc =
+    typeof post.metaDescription === 'string' && post.metaDescription.trim()
+      ? post.metaDescription.trim()
+      : fallbackDesc.length > 160
+        ? `${fallbackDesc.slice(0, 157).trim()}…`
+        : fallbackDesc;
+
+  const pageTitle =
+    typeof post.metaTitle === 'string' && post.metaTitle.trim()
+      ? post.metaTitle.trim()
+      : post.title;
+  const title = pageTitle.includes(DEFAULT_SITE_NAME)
+    ? pageTitle
+    : `${pageTitle} | ${DEFAULT_SITE_NAME}`;
+
+  const canonical = absoluteUrl(path);
+  const socialImage = absoluteUrl(post.image);
+  const publishedTime = post.publishedAt
+    ? new Date(post.publishedAt).toISOString()
+    : post.createdAt
+      ? new Date(post.createdAt).toISOString()
+      : undefined;
+  const modifiedTime = post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined;
+
+  return {
+    title,
+    description: metaDesc,
+    keywords: [
+      post.title,
+      post.category,
+      'travel blog',
+      'travel tips',
+      'Bangladesh travel',
+      DEFAULT_SITE_NAME,
+    ],
+    alternates: {
+      canonical,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true },
+    },
+    openGraph: {
+      title,
+      description: metaDesc,
+      url: canonical,
+      siteName: DEFAULT_SITE_NAME,
+      locale: 'en_BD',
+      type: 'article',
+      publishedTime,
+      modifiedTime,
+      authors: [DEFAULT_SITE_NAME],
+      images: [
+        {
+          url: socialImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: metaDesc,
+      images: [socialImage],
+    },
+    category: post.category,
   };
 }

@@ -3,37 +3,8 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 import GeneralSettings from '@/src/models/GeneralSettings';
 import { isAdmin } from '@/src/lib/auth';
 import { TAG_GENERAL_SETTINGS } from '@/src/lib/revalidate-tags';
-import { normalizeSocialLinks, resolveSocialLinks } from '@/src/lib/social-links';
-
-function parseMultiValue(value: unknown): string[] {
-  return String(value ?? '')
-    .split(/[\n,;]+/)
-    .map((v) => v.trim())
-    .filter(Boolean);
-}
-
-function normalizeSettingsPlain(settings: Record<string, unknown>) {
-  const contactEmails =
-    Array.isArray(settings.contactEmails) && settings.contactEmails.length > 0
-      ? (settings.contactEmails as string[]).map((v) => String(v).trim()).filter(Boolean)
-      : parseMultiValue(settings.contactEmail);
-
-  const contactPhones =
-    Array.isArray(settings.contactPhones) && settings.contactPhones.length > 0
-      ? (settings.contactPhones as string[]).map((v) => String(v).trim()).filter(Boolean)
-      : parseMultiValue(settings.contactPhone);
-
-  return {
-    ...settings,
-    contactEmails,
-    contactPhones,
-    contactEmail: contactEmails[0] || '',
-    contactPhone: contactPhones[0] || '',
-    // Falls back to the legacy facebook/twitter/instagram/linkedin columns until
-    // the admin saves the configurable list for the first time.
-    socialLinks: resolveSocialLinks(settings),
-  };
-}
+import { normalizeSocialLinks } from '@/src/lib/social-links';
+import { normalizeSettingsPlain, parseMultiValue } from '@/src/lib/settings-normalize';
 
 export async function GET() {
   try {
@@ -71,7 +42,9 @@ export async function PUT(request: Request) {
       ...body,
       contactEmails,
       contactPhones,
-      // Persist compatibility in existing string columns (no DB migration required)
+      googleMapsUrl: String(body.googleMapsUrl ?? '').trim(),
+      address: String(body.address ?? '').trim(),
+      // Persist compatibility in existing string columns (no array columns required)
       contactEmail: contactEmails.join('\n'),
       contactPhone: contactPhones.join('\n'),
     };

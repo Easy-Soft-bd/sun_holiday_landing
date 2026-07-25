@@ -4,7 +4,7 @@ import path from 'path';
 import { existsSync } from 'fs';
 import { revalidateTag } from 'next/cache';
 import { verifyAuth } from '@/src/lib/auth';
-import { TAG_GENERAL_SETTINGS, TAG_HOME_PAGE, TAG_SUNVIA_ECO_RESORT } from '@/src/lib/revalidate-tags';
+import { TAG_BLOG_LIST, TAG_GENERAL_SETTINGS, TAG_HOME_PAGE, TAG_SUNVIA_ECO_RESORT } from '@/src/lib/revalidate-tags';
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,6 +56,9 @@ export async function POST(request: NextRequest) {
     } else if (type === 'sailor') {
       uploadSubDir = 'uploads/sailor';
       urlPrefix = '/uploads/sailor';
+    } else if (type === 'blog') {
+      uploadSubDir = 'uploads/blog';
+      urlPrefix = '/uploads/blog';
     }
 
     // Ensure upload directory exists
@@ -74,6 +77,7 @@ export async function POST(request: NextRequest) {
     revalidateTag(TAG_HOME_PAGE, { expire: 0 });
     revalidateTag(TAG_GENERAL_SETTINGS, { expire: 0 });
     revalidateTag(TAG_SUNVIA_ECO_RESORT, { expire: 0 });
+    revalidateTag(TAG_BLOG_LIST, { expire: 0 });
     
     // Return the public URL
     const fileUrl = `${urlPrefix}/${filename}`;

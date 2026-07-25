@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import sequelize from '@/src/lib/db';
 import { verifyAuth } from '@/src/lib/auth';
 import Tour from '@/src/models/Tour';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { getCachedTours } from '@/src/lib/data/tours';
 import { TAG_TOURS_LIST } from '@/src/lib/revalidate-tags';
 import { allocateUniqueTourSlug } from '@/src/lib/tours/slug';
@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
     // Sequelize JSON fields + dynamic admin payload; validated at runtime
     const tour = await Tour.create({ ...rest, ...resolvedLoc, slug } as never);
     revalidateTag(TAG_TOURS_LIST, 'max');
+    revalidatePath('/sitemap.xml');
 
     return NextResponse.json(tour, { status: 201 });
   } catch (error) {

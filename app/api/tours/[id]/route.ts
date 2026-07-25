@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Tour from '@/src/models/Tour';
 import sequelize from '@/src/lib/db';
 import { verifyAuth } from '@/src/lib/auth';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { getCachedTourById } from '@/src/lib/data/tours';
 import { TAG_TOURS_LIST, tourDetailTag, tourRouteTag } from '@/src/lib/revalidate-tags';
 import type { TourRecord } from '@/src/lib/data/tours';
@@ -111,6 +111,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     for (const s of segments) {
       revalidateTag(tourRouteTag(s), 'max');
     }
+    revalidatePath('/sitemap.xml');
 
     return NextResponse.json(tour);
   } catch (error) {
@@ -153,6 +154,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     if (prev.slug?.trim()) {
       revalidateTag(tourRouteTag(prev.slug.trim()), 'max');
     }
+    revalidatePath('/sitemap.xml');
 
     return NextResponse.json({ message: 'Tour deleted successfully' });
   } catch (error) {

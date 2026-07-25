@@ -97,8 +97,24 @@ function matchesIconSearch(name: string, term: string) {
 }
 
 function filterIconNames(names: readonly string[], term: string) {
+  const seen = new Set<string>();
+  const pushUnique = (target: string[], name: string) => {
+    if (seen.has(name)) {
+      return;
+    }
+
+    seen.add(name);
+    target.push(name);
+  };
+
   if (!term) {
-    return [...names];
+    const unique: string[] = [];
+
+    for (const name of names) {
+      pushUnique(unique, name);
+    }
+
+    return unique;
   }
 
   const startsWith: string[] = [];
@@ -108,9 +124,9 @@ function filterIconNames(names: readonly string[], term: string) {
     const match = matchesIconSearch(name, term);
 
     if (match.startsWith) {
-      startsWith.push(name);
+      pushUnique(startsWith, name);
     } else if (match.contains && contains.length < MAX_RESULTS) {
-      contains.push(name);
+      pushUnique(contains, name);
     }
 
     if (startsWith.length >= MAX_RESULTS) {

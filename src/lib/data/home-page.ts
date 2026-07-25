@@ -4,6 +4,7 @@ import HomePage from '@/src/models/HomePage';
 import GeneralSettings from '@/src/models/GeneralSettings';
 import { TAG_GENERAL_SETTINGS, TAG_HOME_PAGE } from '@/src/lib/revalidate-tags';
 import { resolvePublicAssetPath } from '@/src/lib/public-assets';
+import { normalizeSettingsPlain } from '@/src/lib/settings-normalize';
 
 const getHomePageDataFromDb = unstable_cache(
   async () => {
@@ -23,12 +24,14 @@ const getSettingsFromDb = unstable_cache(
       return null;
     }
 
-    const settings = settingsRaw.get({ plain: true });
+    const settings = normalizeSettingsPlain(
+      settingsRaw.get({ plain: true }) as Record<string, unknown>,
+    );
     if (settings.siteLogo) {
-      settings.siteLogo = resolvePublicAssetPath(settings.siteLogo);
+      settings.siteLogo = resolvePublicAssetPath(String(settings.siteLogo));
     }
     if (settings.metaImage) {
-      settings.metaImage = resolvePublicAssetPath(settings.metaImage, '/hero/hero.jpg');
+      settings.metaImage = resolvePublicAssetPath(String(settings.metaImage), '/hero/hero.jpg');
     }
 
     return settings;

@@ -30,6 +30,7 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     PlusOutlined,
+    ReadOutlined,
     SettingOutlined,
     StarOutlined,
     UserOutlined,
@@ -51,6 +52,7 @@ const cmsPages: { key: string; label: string; href: string }[] = [
     { key: "cms-sunvia-eco", label: "Sunvia Eco Resort", href: "/sunvia-eco-resort" },
     { key: "cms-about", label: "About", href: "/about" },
     { key: "cms-tours", label: "Tours", href: "/tours" },
+    { key: "cms-blog", label: "Blog", href: "/blog" },
 ];
 
 function buildMenuItems(): SidebarItem[] {
@@ -64,6 +66,11 @@ function buildMenuItems(): SidebarItem[] {
             key: `${ROOT}/tours`,
             icon: <EnvironmentOutlined />,
             label: <Link href={`${ROOT}/tours`}>Tours</Link>,
+        },
+        {
+            key: `${ROOT}/blog`,
+            icon: <ReadOutlined />,
+            label: <Link href={`${ROOT}/blog`}>Blog</Link>,
         },
         {
             key: `${ROOT}/leads`,
@@ -127,6 +134,7 @@ const breadcrumbLabels: Record<string, string> = {
     admin: "Admin",
     dashboard: "Dashboard",
     tours: "Tours",
+    blog: "Blog",
     leads: "Leads",
     bookings: "Booking",
     add: "Add",
@@ -158,6 +166,9 @@ function selectedKeyForPath(pathname: string): string {
     }
     if (pathname.startsWith(`${ROOT}/tours`)) {
         return `${ROOT}/tours`;
+    }
+    if (pathname.startsWith(`${ROOT}/blog`)) {
+        return `${ROOT}/blog`;
     }
     if (pathname.startsWith(`${ROOT}/leads`)) {
         return `${ROOT}/leads`;

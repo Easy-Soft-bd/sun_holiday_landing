@@ -5,6 +5,7 @@ import { Mail, Phone, MapPin, Send } from "lucide-react";
 import ClientOnly from "../common/ClientOnly";
 import PublicIconRenderer from "../common/PublicIconRenderer";
 import { resolveSocialLinks, type SocialLink } from "@/src/lib/social-links";
+import { parseMultiValue } from "@/src/lib/settings-normalize";
 
 /** Footer CMS entries predate the settings editor and may not carry a label. */
 interface CmsSocialLink {
@@ -90,11 +91,21 @@ function normalizeContactList(
     if (trimmed.length > 0) {
         return trimmed;
     }
-    const one = legacySingle?.trim();
-    if (one) {
-        return [one];
+    const fromLegacy = parseMultiValue(legacySingle);
+    if (fromLegacy.length > 0) {
+        return fromLegacy;
     }
     return [...fallback];
+}
+
+function resolveSettingsContactList(
+    fromArray: string[] | null | undefined,
+    legacySingle: string | null | undefined,
+): string[] {
+    if (Array.isArray(fromArray) && fromArray.length > 0) {
+        return fromArray.map((v) => String(v).trim()).filter(Boolean);
+    }
+    return parseMultiValue(legacySingle);
 }
 
 function mergeFooterData(data?: FooterData): FooterData {
@@ -121,6 +132,7 @@ interface FooterProps {
         contactEmail?: string | null;
         contactPhone?: string | null;
         address?: string | null;
+        googleMapsUrl?: string | null;
         facebookUrl?: string | null;
         twitterUrl?: string | null;
         instagramUrl?: string | null;
@@ -149,12 +161,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
     const footerData = mergeFooterData(data);
     const currentYear = new Date().getFullYear();
 
-    let contactPhones = Array.isArray(settings?.contactPhones)
-        ? settings.contactPhones.map((v) => String(v).trim()).filter(Boolean)
-        : [];
-    if (!contactPhones.length && settings?.contactPhone?.trim()) {
-        contactPhones = [settings.contactPhone.trim()];
-    }
+    let contactPhones = resolveSettingsContactList(settings?.contactPhones, settings?.contactPhone);
     if (!contactPhones.length) {
         contactPhones = footerData.contactPhones ?? [];
     }
@@ -162,12 +169,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
         contactPhones = defaultData.contactPhones ?? [];
     }
 
-    let contactEmails = Array.isArray(settings?.contactEmails)
-        ? settings.contactEmails.map((v) => String(v).trim()).filter(Boolean)
-        : [];
-    if (!contactEmails.length && settings?.contactEmail?.trim()) {
-        contactEmails = [settings.contactEmail.trim()];
-    }
+    let contactEmails = resolveSettingsContactList(settings?.contactEmails, settings?.contactEmail);
     if (!contactEmails.length) {
         contactEmails = footerData.contactEmails ?? [];
     }
@@ -176,6 +178,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
     }
 
     const address = settings?.address || footerData.contactAddress || "123 Travel Plaza, Suite 456\nDhaka, Bangladesh";
+    const mapsHref = settings?.googleMapsUrl?.trim() || null;
     const bio = footerData.bio || defaultData.bio;
 
     const socialLinks = resolveSocialLinks(
@@ -254,7 +257,18 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
                         <ul className="space-y-4 text-sm font-medium">
                             <li className="flex items-start gap-3">
                                 <MapPin size={18} className="text-primary shrink-0" />
-                                <span className="text-base-content/70 whitespace-pre-line">{address}</span>
+                                {mapsHref ? (
+                                    <a
+                                        href={mapsHref}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-base-content/70 whitespace-pre-line hover:text-primary transition-colors"
+                                    >
+                                        {address}
+                                    </a>
+                                ) : (
+                                    <span className="text-base-content/70 whitespace-pre-line">{address}</span>
+                                )}
                             </li>
                             {contactPhones.map((phone, i) => (
                                 <li key={`phone-${i}`} className="flex items-center gap-3">

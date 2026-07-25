@@ -93,6 +93,8 @@ export default function SettingsPage() {
     const payload = {
       ...values,
       siteLogo: String(values.siteLogo || '').trim(),
+      address: String(values.address || '').trim(),
+      googleMapsUrl: String(values.googleMapsUrl || '').trim(),
       contactEmails,
       contactPhones,
       socialLinks,
@@ -240,8 +242,34 @@ export default function SettingsPage() {
               )}
             </Form.List>
 
-            <Form.Item label="Office Address" name="address">
-              <TextArea rows={4} placeholder="Enter full office address" />
+            <Form.Item
+              label="Office Address"
+              name="address"
+              extra="Shown in the footer and on the contact page. Use line breaks for multi-line addresses."
+            >
+              <TextArea rows={4} placeholder={"362/1, Holding 13/1 (2nd Floor)\nOld-27 New-16 Dhanmondi\nDhaka-1209, Bangladesh"} />
+            </Form.Item>
+
+            <Form.Item
+              label="Google Location Link"
+              name="googleMapsUrl"
+              extra="Paste a Google Maps share link or an embed URL. Used for Get Directions and the contact page map."
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    const v = String(value || '').trim();
+                    if (!v) return;
+                    try {
+                      // eslint-disable-next-line no-new
+                      new URL(v);
+                    } catch {
+                      throw new Error('Enter a valid URL');
+                    }
+                  },
+                },
+              ]}
+            >
+              <Input placeholder="https://maps.app.goo.gl/... or https://www.google.com/maps/embed?..." />
             </Form.Item>
           </Space>
         </Card>

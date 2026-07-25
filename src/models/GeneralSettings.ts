@@ -10,6 +10,8 @@ class GeneralSettings extends Model {
   declare contactEmail: string;
   declare contactPhone: string;
   declare address: string;
+  /** Google Maps share or embed URL for contact page map / directions. */
+  declare googleMapsUrl: string;
   declare facebookUrl: string;
   declare twitterUrl: string;
   declare instagramUrl: string;
@@ -40,14 +42,20 @@ GeneralSettings.init(
       allowNull: true,
     },
     contactEmail: {
-      type: DataTypes.STRING,
+      // TEXT so multiple emails can be stored newline-joined
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     contactPhone: {
-      type: DataTypes.STRING,
+      // TEXT so multiple phones can be stored newline-joined
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     address: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    googleMapsUrl: {
       type: DataTypes.TEXT,
       allowNull: true,
     },

@@ -104,10 +104,14 @@ export async function getIconTree(name: string): Promise<IconTree | null> {
   return null;
 }
 
-/** Every available icon name, sorted. Backs the picker's search. */
+/** Every available icon name, sorted and unique. Backs the picker's search. */
 export async function getIconNames(): Promise<string[]> {
   namesCache ??= readFile(path.join(DATA_DIR, "names.json"), "utf8")
-    .then((raw) => JSON.parse(raw) as string[])
+    .then((raw) => {
+      const parsed = JSON.parse(raw) as string[];
+      // Older generated manifests listed fa + fa6 names twice; keep React keys unique.
+      return [...new Set(parsed)].sort();
+    })
     .catch(() => {
       namesCache = undefined;
       return [];

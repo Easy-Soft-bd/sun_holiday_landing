@@ -20,7 +20,7 @@ export default function BlogContent({ post }: { post: BlogPost }) {
 
                     {/* Article Content */}
                     <article 
-                        className="prose prose-lg max-w-none prose-headings:font-magmawave prose-headings:text-base-content prose-p:text-base-content/70 prose-p:leading-relaxed prose-strong:text-base-content prose-img:rounded-[2rem] prose-a:text-primary hover:prose-a:text-secondary transition-colors"
+                        className="prose prose-lg max-w-none prose-headings:font-magmawave prose-headings:text-base-content prose-p:text-base-content/70 prose-p:leading-relaxed prose-strong:text-base-content prose-img:rounded-[2rem] prose-a:text-primary prose-a:underline prose-a:underline-offset-2 hover:prose-a:text-secondary transition-colors"
                         dangerouslySetInnerHTML={{ __html: post.content }}
                     />
                     

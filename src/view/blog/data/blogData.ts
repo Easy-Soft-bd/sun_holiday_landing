@@ -1,23 +1,43 @@
-
-export interface BlogPost {
-    id: string;
-    title: string;
-    excerpt: string;
-    date: string;
-    category: string;
-    image: string;
-    content: string;
+/**
+ * Seed / legacy blog post shape.
+ * Live posts are stored in MySQL (`blog_posts`) and loaded via `src/lib/data/blog.ts`.
+ */
+export interface SeedBlogPost {
+  title: string;
+  excerpt: string;
+  /** Display date used only when seeding (`publishedAt`). */
+  date: string;
+  category: string;
+  image: string;
+  content: string;
 }
 
-export const blogPosts: BlogPost[] = [
-    {
-        id: '1',
-        title: "Top 10 Hidden Gems in Bangladesh You Must Visit",
-        excerpt: "Discover the untouched beauty of Bangladesh beyond the popular tourist spots. From silent forests to ancient ruins, explore these hidden treasures.",
-        date: "Jan 12, 2024",
-        category: "Travel Tips",
-        image: "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=2070&auto=format&fit=crop",
-        content: `
+/** @deprecated Prefer `BlogPostView` from `@/src/lib/data/blog` for UI. Kept for component typing. */
+export interface BlogPost {
+  id: string;
+  slug?: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  category: string;
+  image: string;
+  content: string;
+  publishedAt?: string;
+  updatedAt?: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+}
+
+export const SEED_BLOG_POSTS: SeedBlogPost[] = [
+  {
+    title: 'Top 10 Hidden Gems in Bangladesh You Must Visit',
+    excerpt:
+      "Discover the untouched beauty of Bangladesh beyond the popular tourist spots. From silent forests to ancient ruins, explore these hidden treasures.",
+    date: 'Jan 12, 2024',
+    category: 'Travel Tips',
+    image:
+      'https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=2070&auto=format&fit=crop',
+    content: `
             <p>Bangladesh, a land of sprawling greenery and winding rivers, holds secrets that even the most seasoned travelers might overlook. Beyond the bustling streets of Dhaka and the sandy shores of Cox's Bazar lie hidden gems waiting to be discovered.</p>
             
             <h3>1. The Silent Stone Forest of Birishiri</h3>
@@ -30,16 +50,17 @@ export const blogPosts: BlogPost[] = [
             <p>A small island in the mouth of the Meghna river, known for its serene environment and the large population of spotted deer. It's the perfect escape for nature lovers.</p>
             
             <p>These destinations offer a glimpse into the diverse and rich cultural tapestry of Bangladesh. Whether you're seeking adventure or tranquility, these hidden gems promise an unforgettable journey.</p>
-        `
-    },
-    {
-        id: '2',
-        title: "The Ultimate Umrah Guide: Preparation & Tips",
-        excerpt: "Planning your first Umrah journey? Our comprehensive guide covers everything from documentation to spiritual preparation for a meaningful experience.",
-        date: "Jan 08, 2024",
-        category: "Hajj & Umrah",
-        image: "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=2070&auto=format&fit=crop",
-        content: `
+        `,
+  },
+  {
+    title: 'The Ultimate Umrah Guide: Preparation & Tips',
+    excerpt:
+      'Planning your first Umrah journey? Our comprehensive guide covers everything from documentation to spiritual preparation for a meaningful experience.',
+    date: 'Jan 08, 2024',
+    category: 'Hajj & Umrah',
+    image:
+      'https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=2070&auto=format&fit=crop',
+    content: `
             <p>Embarking on the journey of Umrah is a significant spiritual milestone for any Muslim. Proper preparation ensures that you can focus entirely on your worship and the spiritual significance of the pilgrimage.</p>
             
             <h3>Step 1: Essential Documentation</h3>
@@ -52,16 +73,17 @@ export const blogPosts: BlogPost[] = [
             <p>Pack comfortable Ihram clothing, unscented toiletries, and a good pair of walking shoes. Don't forget your prayer mat and a small waist bag for essentials.</p>
             
             <p>May your journey be blessed and your Umrah accepted. We are here to assist you with every step of your travel arrangements.</p>
-        `
-    },
-    {
-        id: '3',
-        title: "Exotic Maldives: Why It's the Perfect Honeymoon Destination",
-        excerpt: "With its crystal clear waters and private overwater villas, find out why the Maldives remains the top choice for couples and honeymooners.",
-        date: "Jan 05, 2024",
-        category: "International",
-        image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=2070&auto=format&fit=crop",
-        content: `
+        `,
+  },
+  {
+    title: "Exotic Maldives: Why It's the Perfect Honeymoon Destination",
+    excerpt:
+      "With its crystal clear waters and private overwater villas, find out why the Maldives remains the top choice for couples and honeymooners.",
+    date: 'Jan 05, 2024',
+    category: 'International',
+    image:
+      'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=2070&auto=format&fit=crop',
+    content: `
             <p>If there's one place on Earth that defines paradise, it's the Maldives. This archipelago of islands in the Indian Ocean offers an unparalleled romantic experience for newly married couples.</p>
             
             <h3>Private Overwater Villas</h3>
@@ -74,16 +96,17 @@ export const blogPosts: BlogPost[] = [
             <p>There's nothing quite like a Maldivian sunset. Enjoy a private dinner on the beach or a sunset cruise to witness the sky turn into a canvas of pink, orange, and purple hues.</p>
             
             <p>The Maldives isn't just a destination; it's a dream come true for every couple seeking a romantic escape.</p>
-        `
-    },
-    {
-        id: '4',
-        title: "How to Secure Your Visa: A Stress-Free Approach",
-        excerpt: "Visa applications can be overwhelming. Learn our expert tips on how to organize your documents and increase your chances of a successful approval.",
-        date: "Dec 28, 2023",
-        category: "Visa Guide",
-        image: "https://images.unsplash.com/photo-1619467416348-6a782839e95f?q=80&w=2070&auto=format&fit=crop",
-        content: `
+        `,
+  },
+  {
+    title: 'How to Secure Your Visa: A Stress-Free Approach',
+    excerpt:
+      'Visa applications can be overwhelming. Learn our expert tips on how to organize your documents and increase your chances of a successful approval.',
+    date: 'Dec 28, 2023',
+    category: 'Visa Guide',
+    image:
+      'https://images.unsplash.com/photo-1619467416348-6a782839e95f?q=80&w=2070&auto=format&fit=crop',
+    content: `
             <p>Navigating the visa application process can often feel like a daunting task. However, with the right approach and careful planning, you can significantly reduce stress and increase your success rate.</p>
             
             <h3>Understand the Requirements</h3>
@@ -96,16 +119,17 @@ export const blogPosts: BlogPost[] = [
             <p>If you're unsure about any part of the process, don't hesitate to consult with visa experts. They can provide valuable insights and ensure your application is as strong as possible.</p>
             
             <p>At Sun Tourism Ltd, we specialize in making the visa process seamless for you. Contact us today for expert assistance.</p>
-        `
-    },
-    {
-        id: '5',
-        title: "Luxury Resorts: Redefining Comfort in Bali",
-        excerpt: "Experience the pinnacle of luxury as we review some of the most stunning resorts in Bali that offer breathtaking views and world-class service.",
-        date: "Dec 20, 2023",
-        category: "Resorts",
-        image: "https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=2070&auto=format&fit=crop",
-        content: `
+        `,
+  },
+  {
+    title: 'Luxury Resorts: Redefining Comfort in Bali',
+    excerpt:
+      'Experience the pinnacle of luxury as we review some of the most stunning resorts in Bali that offer breathtaking views and world-class service.',
+    date: 'Dec 20, 2023',
+    category: 'Resorts',
+    image:
+      'https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=2070&auto=format&fit=crop',
+    content: `
             <p>Bali, often called the Island of the Gods, is not just a destination for spiritual seekers and surfers. It's also a haven for luxury travelers looking for world-class resorts and unmatched hospitality.</p>
             
             <h3>The Jungle Retreats of Ubud</h3>
@@ -118,16 +142,17 @@ export const blogPosts: BlogPost[] = [
             <p>Many luxury resorts in Bali seamlessly blend modern comforts with traditional Balinese architecture, creating a unique and authentic atmosphere that reflects the island's rich heritage.</p>
             
             <p>Bali's luxury resorts are more than just places to stay; they are destinations in themselves that offer a truly rejuvenating experience.</p>
-        `
-    },
-    {
-        id: '6',
-        title: "Budget Travel: Exploring Turkey Under $500",
-        excerpt: "Think Turkey is expensive? Our detailed budget itinerary shows you how to enjoy the rich culture and history of Istanbul on a modest budget.",
-        date: "Dec 15, 2023",
-        category: "International",
-        image: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=2070&auto=format&fit=crop",
-        content: `
+        `,
+  },
+  {
+    title: 'Budget Travel: Exploring Turkey Under $500',
+    excerpt:
+      'Think Turkey is expensive? Our detailed budget itinerary shows you how to enjoy the rich culture and history of Istanbul on a modest budget.',
+    date: 'Dec 15, 2023',
+    category: 'International',
+    image:
+      'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=2070&auto=format&fit=crop',
+    content: `
             <p>Turkey is a land where East meets West, offering a rich tapestry of history, culture, and stunning landscapes. And the best part? It can be surprisingly affordable if you know how to plan.</p>
             
             <h3>Affordable Accommodation in Istanbul</h3>
@@ -140,6 +165,9 @@ export const blogPosts: BlogPost[] = [
             <p>Many of Istanbul's most famous sites, like the Blue Mosque, are free to enter. Take advantage of public ferries for a scenic Bosphorus cruise at a fraction of the cost of a private tour.</p>
             
             <p>Traveling on a budget doesn't mean you have to miss out on the magic of Turkey. With a little planning, you can have a world-class experience without breaking the bank.</p>
-        `
-    }
+        `,
+  },
 ];
+
+/** @deprecated Use DB-backed posts via `getCachedActiveBlogPosts`. Kept for any leftover imports. */
+export const blogPosts: BlogPost[] = [];

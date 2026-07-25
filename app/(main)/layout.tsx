@@ -5,6 +5,7 @@ import Footer from "@/src/components/layouts/Footer";
 import TopBanner from "@/src/components/common/TopBanner";
 import { getCachedAdminSession, getCachedAdminStatus, getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
 import { resolvePublicAssetPath } from "@/src/lib/public-assets";
+import { isDevelopmentModeBannerEnabled } from "@/src/lib/env";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getCachedSettings();
@@ -33,10 +34,17 @@ export default async function MainLayout({
       siteName: settings?.siteName,
       siteLogo: settings?.siteLogo,
     };
+    const showDevelopmentBanner = isDevelopmentModeBannerEnabled();
+    const showTopBanner = Boolean(adminSession.user) || showDevelopmentBanner;
 
   return (
     <>
-      <TopBanner adminUser={adminSession.user} />
+      {showTopBanner ? (
+        <TopBanner
+          adminUser={adminSession.user}
+          showDevelopmentBanner={showDevelopmentBanner}
+        />
+      ) : null}
       <div className="relative">
         <Nav branding={branding} admin={admin} />
         {children}

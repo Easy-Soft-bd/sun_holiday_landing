@@ -1,5 +1,5 @@
-
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { parseMultiValue, resolveMapsDirectionsHref } from "@/src/lib/settings-normalize";
 
 type ContactInfoProps = {
     settings?: {
@@ -8,6 +8,7 @@ type ContactInfoProps = {
         contactEmails?: string[] | null;
         contactPhones?: string[] | null;
         address?: string | null;
+        googleMapsUrl?: string | null;
     } | null;
 };
 
@@ -16,11 +17,7 @@ function normalizeList(arr?: string[] | null, one?: string | null): string[] {
         ? arr.map((v) => String(v).trim()).filter(Boolean)
         : [];
     if (fromArray.length > 0) return fromArray;
-    const fromSingle = String(one || "")
-        .split(/[\n,;]+/)
-        .map((v) => v.trim())
-        .filter(Boolean);
-    return fromSingle;
+    return parseMultiValue(one);
 }
 
 export default function ContactInfo({ settings }: ContactInfoProps) {
@@ -33,6 +30,7 @@ export default function ContactInfo({ settings }: ContactInfoProps) {
     ].join("\n");
     const primaryPhone = phoneNumbers[0] || "+8801873838301";
     const primaryEmail = emails[0] || "info@sunholidaysltd.com";
+    const directionsHref = resolveMapsDirectionsHref(settings?.googleMapsUrl) || "#map";
 
     const contactDetails = [
         {
@@ -41,7 +39,7 @@ export default function ContactInfo({ settings }: ContactInfoProps) {
             content: (
                 <span className="whitespace-pre-line">{officeAddress}</span>
             ),
-            action: { label: "Get Directions", href: "#map" }
+            action: { label: "Get Directions", href: directionsHref, external: directionsHref.startsWith("http") },
         },
         {
             icon: Phone,
@@ -59,7 +57,7 @@ export default function ContactInfo({ settings }: ContactInfoProps) {
                     ))}
                 </div>
             ),
-            action: { label: "Call Now", href: `tel:${primaryPhone.replace(/\s/g, "")}` }
+            action: { label: "Call Now", href: `tel:${primaryPhone.replace(/\s/g, "")}`, external: false },
         },
         {
             icon: Mail,
@@ -71,7 +69,7 @@ export default function ContactInfo({ settings }: ContactInfoProps) {
                     ))}
                 </div>
             ),
-            action: { label: "Send Email", href: `mailto:${primaryEmail}` }
+            action: { label: "Send Email", href: `mailto:${primaryEmail}`, external: false },
         },
         {
             icon: Clock,
@@ -83,8 +81,8 @@ export default function ContactInfo({ settings }: ContactInfoProps) {
                     Always ready to help.
                 </>
             ),
-             action: { label: "Contact Support", href: `tel:${primaryPhone.replace(/\s/g, "")}` }
-        }
+            action: { label: "Contact Support", href: `tel:${primaryPhone.replace(/\s/g, "")}`, external: false },
+        },
     ];
 
     return (
@@ -100,8 +98,11 @@ export default function ContactInfo({ settings }: ContactInfoProps) {
                             <div className="text-base-content/70 leading-relaxed mb-6 min-h-[4.5rem]">
                                 {item.content}
                             </div>
-                            <a 
+                            <a
                                 href={item.action.href}
+                                {...(item.action.external
+                                    ? { target: "_blank", rel: "noopener noreferrer" }
+                                    : {})}
                                 className="inline-flex items-center text-sm font-bold text-primary hover:text-primary/80 uppercase tracking-widest group/link"
                             >
                                 {item.action.label}

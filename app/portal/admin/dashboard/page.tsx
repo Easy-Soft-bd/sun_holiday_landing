@@ -65,6 +65,7 @@ const cmsLinks: { title: string; href: string; description: string }[] = [
     { title: "Sunvia Eco Resort", href: "/sunvia-eco-resort", description: "Sections, gallery, amenities." },
     { title: "About", href: "/about", description: "Story, teams, milestones." },
     { title: "Tours", href: "/tours", description: "Active tour catalog." },
+    { title: "Blog", href: "/blog", description: "Published travel stories and guides." },
 ];
 
 function emptyStats(): Stats {
@@ -222,8 +223,14 @@ export default function AdminDashboardPage() {
                     <Link href={`${ROOT}/tours/add`}>
                         <Button type="primary" icon={<PlusOutlined />}>New Tour</Button>
                     </Link>
+                    <Link href={`${ROOT}/blog/add`}>
+                        <Button type="primary" icon={<PlusOutlined />}>New Post</Button>
+                    </Link>
                     <Link href={`${ROOT}/tours`}>
                         <Button icon={<EnvironmentOutlined />}>Manage Tours</Button>
+                    </Link>
+                    <Link href={`${ROOT}/blog`}>
+                        <Button icon={<EditOutlined />}>Manage Blog</Button>
                     </Link>
                     <Link href={`${ROOT}/leads`}>
                         <Button icon={<InboxOutlined />}>Leads</Button>

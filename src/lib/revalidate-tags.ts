@@ -6,6 +6,7 @@
 export const TAG_HOME_PAGE = 'home-page';
 export const TAG_GENERAL_SETTINGS = 'general-settings';
 export const TAG_TOURS_LIST = 'tours-list';
+export const TAG_BLOG_LIST = 'blog-list';
 export const TAG_SUNVIA_ECO_RESORT = 'sunvia-eco-resort';
 export const TAG_CUSTOM_ICONS = 'custom-icons';
 
@@ -18,9 +19,21 @@ export function tourRouteTag(param: string) {
   return `tour-url-${param}`;
 }
 
+export function blogDetailTag(id: string | number) {
+  return `blog-${id}`;
+}
+
+/** Invalidate cached HTML/data for a public blog URL segment (slug or legacy numeric id). */
+export function blogRouteTag(param: string) {
+  return `blog-url-${param}`;
+}
+
 /*
 Tag to route mapping:
 - TAG_TOURS_LIST -> `/tours`, sitemap, list consumers
 - tourDetailTag(id) -> legacy admin/API cache keys by primary key
 - tourRouteTag(param) -> `/tours/[slug]` where param is the URL segment used in fetch
+- TAG_BLOG_LIST -> `/blog`, sitemap, list consumers
+- blogDetailTag(id) -> admin/API cache keys by primary key
+- blogRouteTag(param) -> `/blog/[slug]` where param is the URL segment used in fetch
 */

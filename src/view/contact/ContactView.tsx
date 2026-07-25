@@ -9,6 +9,7 @@ type ContactViewProps = {
         contactEmails?: string[] | null;
         contactPhones?: string[] | null;
         address?: string | null;
+        googleMapsUrl?: string | null;
     } | null;
 };
 
@@ -17,7 +18,10 @@ export default function ContactView({ settings }: ContactViewProps) {
         <main className="min-h-screen bg-base-50">
             <ContactHero />
             <ContactInfo settings={settings} />
-            <MapSection />
+            <MapSection
+                googleMapsUrl={settings?.googleMapsUrl}
+                address={settings?.address}
+            />
         </main>
     );
 }

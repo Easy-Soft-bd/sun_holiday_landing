@@ -74,17 +74,20 @@ async function main() {
 
   const results = await Promise.all(PACKS.map(buildPack));
 
-  // One flat, sorted list backs the picker's search box.
-  const names: string[] = [];
+  // One flat, sorted, unique list backs the picker's search box.
+  // fa + fa6 (and similar) share many export names; duplicates break React keys.
+  const names = new Set<string>();
   for (const { pack } of results) {
     const raw = await readFile(path.join(OUT_DIR, `${pack}.json`), "utf8");
-    names.push(...Object.keys(JSON.parse(raw) as Record<string, unknown>));
+    for (const name of Object.keys(JSON.parse(raw) as Record<string, unknown>)) {
+      names.add(name);
+    }
   }
-  names.sort();
+  const sortedNames = [...names].sort();
 
   await writeFile(
     path.join(OUT_DIR, "names.json"),
-    JSON.stringify(names),
+    JSON.stringify(sortedNames),
     "utf8",
   );
 
@@ -95,7 +98,7 @@ async function main() {
 
   console.log(
     `icons: ${totalIcons} across ${results.length} packs ` +
-      `(${(totalBytes / 1024 / 1024).toFixed(1)}MB) -> .icon-data/`,
+      `(${sortedNames.length} unique names, ${(totalBytes / 1024 / 1024).toFixed(1)}MB) -> .icon-data/`,
   );
 
   if (skipped.length > 0) {
