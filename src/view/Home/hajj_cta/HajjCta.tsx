@@ -96,6 +96,7 @@ const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
                                 src={hajjData.imageUrl}
                                 alt="Umrah Hajj Package Bangladesh - Sun Tourism Ltd"
                                 fill
+                                sizes="(max-width: 1024px) 100vw, 50vw"
                                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
                             />
                             {/* Soft Gradient Overlay */}

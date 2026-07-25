@@ -95,6 +95,7 @@ const FeatureTour = () => {
                       src={tour.image}
                       alt={tour.title}
                       fill
+                      sizes="(max-width: 640px) 85vw, (max-width: 1024px) 60vw, 32vw"
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />

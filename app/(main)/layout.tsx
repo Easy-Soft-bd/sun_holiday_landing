@@ -1,10 +1,24 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Nav from "@/src/components/layouts/Nav";
 import Footer from "@/src/components/layouts/Footer";
 import TopBanner from "@/src/components/common/TopBanner";
 import { getCachedAdminSession, getCachedAdminStatus, getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
+import { resolvePublicAssetPath } from "@/src/lib/public-assets";
 
-export default async function MainLayout({    
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getCachedSettings();
+  const icon = resolvePublicAssetPath(settings?.siteLogo);
+
+  return {
+    icons: {
+      icon,
+      apple: icon,
+    },
+  };
+}
+
+export default async function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

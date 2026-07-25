@@ -4,10 +4,13 @@ import Logo from "../common/Logo";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import ClientOnly from "../common/ClientOnly";
 import PublicIconRenderer from "../common/PublicIconRenderer";
+import { resolveSocialLinks, type SocialLink } from "@/src/lib/social-links";
 
-interface SocialLink {
+/** Footer CMS entries predate the settings editor and may not carry a label. */
+interface CmsSocialLink {
     icon: string;
     url: string;
+    label?: string;
 }
 
 interface QuickLink {
@@ -22,7 +25,7 @@ interface Certification {
 
 interface FooterData {
     bio?: string;
-    socialLinks?: SocialLink[];
+    socialLinks?: CmsSocialLink[];
     servicesTitle?: string;
     servicesLinks?: QuickLink[];
     contactTitle?: string;
@@ -46,10 +49,10 @@ interface FooterData {
 const defaultData: FooterData = {
     bio: "Sun Tourism Ltd is your premier gateway to world-class travel experiences. We specialize in curated holidays, seamless visa processing, and luxury resort bookings.",
     socialLinks: [
-        { icon: "LuFacebook", url: "#" },
-        { icon: "LuInstagram", url: "#" },
-        { icon: "LuTwitter", url: "#" },
-        { icon: "LuLinkedin", url: "#" },
+        { icon: "SiFacebook", url: "#", label: "Facebook" },
+        { icon: "SiInstagram", url: "#", label: "Instagram" },
+        { icon: "SiX", url: "#", label: "X" },
+        { icon: "SiLinkedin", url: "#", label: "LinkedIn" },
     ],
     servicesTitle: "Services",
     servicesLinks: [
@@ -122,6 +125,7 @@ interface FooterProps {
         twitterUrl?: string | null;
         instagramUrl?: string | null;
         linkedinUrl?: string | null;
+        socialLinks?: SocialLink[] | string | null;
     };
     branding?: {
         siteName?: string | null;
@@ -174,14 +178,10 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
     const address = settings?.address || footerData.contactAddress || "123 Travel Plaza, Suite 456\nDhaka, Bangladesh";
     const bio = footerData.bio || defaultData.bio;
 
-    const globalSocialLinks: SocialLink[] = [
-        { icon: "LuFacebook", url: settings?.facebookUrl || "" },
-        { icon: "LuInstagram", url: settings?.instagramUrl || "" },
-        { icon: "LuTwitter", url: settings?.twitterUrl || "" },
-        { icon: "LuLinkedin", url: settings?.linkedinUrl || "" },
-    ].filter((s) => s.url.trim().length > 0);
-
-    const socialLinks = globalSocialLinks.length > 0 ? globalSocialLinks : (footerData.socialLinks || defaultData.socialLinks || []);
+    const socialLinks = resolveSocialLinks(
+        settings,
+        footerData.socialLinks ?? defaultData.socialLinks,
+    );
 
     return (
         <footer className="relative bg-base-200 text-base-content border-t border-base-300 group/footer">
@@ -209,10 +209,26 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
                         <p className="text-base-content/70 leading-relaxed text-sm">
                             {bio}
                         </p>
-                        <div className="flex gap-4">
+                        <div className="flex flex-wrap gap-3">
                             {socialLinks.map((social, i) => (
-                                <Link key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm btn-circle hover:bg-primary hover:text-white transition-all">
-                                    <PublicIconRenderer iconName={social.icon} />
+                                <Link
+                                    key={`${social.icon}-${social.url}-${i}`}
+                                    href={social.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={social.label || undefined}
+                                    title={social.label || undefined}
+                                    className="group/social relative grid size-11 place-items-center overflow-hidden rounded-full bg-base-content/6 text-base-content/65 transition-[transform,background-color,color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:bg-primary hover:text-white hover:shadow-[0_14px_28px_-12px] hover:shadow-primary/45 focus-visible:-translate-y-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:translate-y-0 active:scale-[0.96] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                                >
+                                    <span
+                                        aria-hidden
+                                        className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-b from-white/25 to-transparent opacity-0 transition-opacity duration-300 group-hover/social:opacity-100"
+                                    />
+                                    <PublicIconRenderer
+                                        iconName={social.icon}
+                                        size={20}
+                                        className="relative fill-current stroke-current transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/social:scale-110 group-hover/social:text-white motion-reduce:transition-none motion-reduce:group-hover/social:scale-100"
+                                    />
                                 </Link>
                             ))}
                         </div>

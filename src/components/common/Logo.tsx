@@ -33,12 +33,12 @@ const Logo = ({
             aria-label="Home"
         >
             {/* Logo Image */}
-            <div className="relative">
+            <div className="relative shrink-0" style={{ width, height }}>
                 <Image
                     src={resolvedLogoUrl}
                     alt="Company Logo"
-                    width={width}
-                    height={height}
+                    fill
+                    sizes={`${width}px`}
                     unoptimized={!supportsImageOptimization}
                     className="object-contain"
                 />

@@ -91,11 +91,15 @@
 
 ## P2 — Bundles, images, structured data
 
-- [ ] **P2.1 — Slim `IconRenderer`**
+- [x] **P2.1 — Slim `IconRenderer`**
 
-  **AI prompt:**
-
-  > `src/components/common/IconRenderer.tsx` imports many `react-icons` namespaces. Replace with explicit per-icon imports from `lucide-react` or only the `react-icons` subpackages actually used in CMS data. Keep the same visual icons for current content.
+  Done. `react-icons` is no longer imported anywhere. `scripts/generate-icon-data.ts`
+  extracts the packs into `.icon-data/` JSON, which the server reads with `fs`
+  (`src/lib/icons/icon-data.ts`); client components fetch the icons they need from
+  `/api/icons`. Because the icon name is only known at runtime, no bundler could
+  narrow the namespace imports down, so all 31 packs were duplicated into every
+  chunk that used a picker — six chunks of ~145MB each, plus a 270MB server
+  vendor chunk. Largest chunk is now under 0.5MB.
 
 - [ ] **P2.2 — `priority` on `next/image` audit**
 

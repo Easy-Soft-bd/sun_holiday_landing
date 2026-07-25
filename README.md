@@ -61,6 +61,27 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### 6. Admin Login (Development)
+
+Seed the default admin user (first time):
+
+```text
+http://localhost:3000/api/test-db?seed=true
+```
+
+Reset the admin password if login fails:
+
+```text
+http://localhost:3000/api/test-db?seed=true&reset=true
+```
+
+Default credentials:
+
+- Email: `admin@sunholidays.com`
+- Password: `adminpassword123`
+
+Admin portal: [http://localhost:3000/portal/admin/login](http://localhost:3000/portal/admin/login)
+
 ## Project Structure
 
 - `app/`: Next.js App Router pages and layouts.
@@ -69,6 +90,3 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - `src/lib/`: Utilities, database connection (`db.ts`), authentication (`auth.ts`), and seed scripts.
 - `src/view/`: View-specific components (e.g., Home page sections).
 - `scripts/`: Maintenance scripts (e.g., `db_model_sync.ts`).
-
-
-http://localhost:3000/api/test-db?seed=true

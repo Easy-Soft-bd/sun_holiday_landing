@@ -1,13 +1,28 @@
 import { NextResponse } from 'next/server';
 import User, { UserRole } from '@/src/models/User';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import { parseJsonBody } from '@/src/lib/api-request';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_here';
 
+type LoginBody = {
+  email?: string;
+  password?: string;
+};
+
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { data, error } = await parseJsonBody<LoginBody>(request);
+
+    if (error || !data) {
+      return NextResponse.json(
+        { message: error ?? 'Invalid request body' },
+        { status: 400 }
+      );
+    }
+
+    const email = String(data.email ?? '').trim();
+    const password = String(data.password ?? '');
 
     if (!email || !password) {
       return NextResponse.json(
@@ -26,18 +41,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check password
-    const storedHash = user.getDataValue('password');
-    console.log('Login attempt:', { email, hasStoredHash: !!storedHash });
-
-    if (!storedHash) {
-      return NextResponse.json(
-        { message: 'Internal error: Account misconfigured' },
-        { status: 500 }
-      );
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, storedHash);
+    const isPasswordValid = user.comparePassword(password);
 
     if (!isPasswordValid) {
       return NextResponse.json(

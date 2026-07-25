@@ -6,14 +6,23 @@ import { UserOutlined, LockOutlined, ArrowRightOutlined } from "@ant-design/icon
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Logo from "@/src/components/common/Logo";
+import { parseJsonResponse } from "@/src/lib/api-request";
 
 const { Title, Text } = Typography;
+
+type LoginResponse = {
+    message?: string;
+};
 
 export default function AdminLoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const onFinish = async (values: any) => {
+    const onFinish = async (values: { email: string; password: string }) => {
+        if (isLoading) {
+            return;
+        }
+
         setIsLoading(true);
         try {
             const response = await fetch('/api/auth/login', {
@@ -25,7 +34,12 @@ export default function AdminLoginPage() {
                 }),
             });
 
-            const data = await response.json();
+            const data = await parseJsonResponse<LoginResponse>(response);
+
+            if (!data) {
+                message.error('Server returned an invalid response. Please try again.');
+                return;
+            }
 
             if (response.ok) {
                 message.success('Login successful!');

@@ -18,18 +18,21 @@ async function syncModels() {
     await import('../src/models/Booking');
     await import('../src/models/BookingActivity');
     await import('../src/models/Lead');
+    await import('../src/models/CustomIcon');
 
     console.log('Starting database synchronization...');
     await sequelize.authenticate();
     console.log('Connection to database established.');
 
-    console.log('Synchronizing models: User, HomePage, GeneralSettings, Location, Tour, SunviaEcoResortPage, Booking, BookingActivity, Lead...');
+    console.log('Synchronizing models: User, HomePage, GeneralSettings, Location, Tour, SunviaEcoResortPage, Booking, BookingActivity, Lead, CustomIcon...');
     await sequelize.sync({ alter: true });
 
-    const { ensurePageHomeJsonColumn } = await import('./ensure-page-home-json-column');
-    await ensurePageHomeJsonColumn(sequelize, 'sailor_moon_resorts_page');
-    await ensurePageHomeJsonColumn(sequelize, 'resorts_listing_page');
-    await ensurePageHomeJsonColumn(sequelize, 'award_certificate_page');
+    const { ensureJsonColumn } = await import('./ensure-json-column');
+    await ensureJsonColumn(sequelize, 'page_home', 'sailor_moon_resorts_page');
+    await ensureJsonColumn(sequelize, 'page_home', 'resorts_listing_page');
+    await ensureJsonColumn(sequelize, 'page_home', 'award_certificate_page');
+    await ensureJsonColumn(sequelize, 'general_settings', 'socialLinks');
+    await ensureJsonColumn(sequelize, 'custom_icons', 'content');
 
     console.log('All models synchronized successfully.');
     process.exit(0);

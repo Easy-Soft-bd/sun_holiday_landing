@@ -2,16 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
+import { DEFAULT_SITE_LOGO } from '@/src/lib/public-assets';
 
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ path: string[] }> }
 ) {
     const rawPath = (await params).path;
-    const filePath = join(process.cwd(), 'public', 'logo', ...rawPath);
+    let filePath = join(process.cwd(), 'public', 'logo', ...rawPath);
 
     if (!existsSync(filePath)) {
-        return new NextResponse('File not found', { status: 404 });
+        const fallbackPath = join(process.cwd(), 'public', DEFAULT_SITE_LOGO.replace(/^\//, ''));
+        if (existsSync(fallbackPath)) {
+            filePath = fallbackPath;
+        } else {
+            return new NextResponse('File not found', { status: 404 });
+        }
     }
 
     try {

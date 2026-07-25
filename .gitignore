@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# icon data generated from react-icons by `npm run icons`
+/.icon-data/
+
 # production
 /build
 

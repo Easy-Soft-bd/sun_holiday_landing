@@ -5,6 +5,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const seed = searchParams.get('seed');
+    const reset = searchParams.get('reset');
 
     await sequelize.authenticate();
     
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
     
     if (seed === 'true') {
       const { seedAdmin } = await import('@/src/lib/seed');
-      const seedResult = await seedAdmin();
+      const seedResult = await seedAdmin({ resetPassword: reset === 'true' });
       message += ` Seeding result: ${seedResult.message}`;
     }
 

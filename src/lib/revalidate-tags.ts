@@ -7,6 +7,7 @@ export const TAG_HOME_PAGE = 'home-page';
 export const TAG_GENERAL_SETTINGS = 'general-settings';
 export const TAG_TOURS_LIST = 'tours-list';
 export const TAG_SUNVIA_ECO_RESORT = 'sunvia-eco-resort';
+export const TAG_CUSTOM_ICONS = 'custom-icons';
 
 export function tourDetailTag(id: string | number) {
   return `tour-${id}`;

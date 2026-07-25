@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../lib/db';
+import type { SocialLink } from '../lib/social-links';
 
 class GeneralSettings extends Model {
   declare id: number;
@@ -13,6 +14,7 @@ class GeneralSettings extends Model {
   declare twitterUrl: string;
   declare instagramUrl: string;
   declare linkedinUrl: string;
+  declare socialLinks: SocialLink[] | null;
   declare metaTitle: string;
   declare metaDescription: string;
   declare metaKeywords: string;
@@ -64,6 +66,24 @@ GeneralSettings.init(
     linkedinUrl: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    socialLinks: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      get(): SocialLink[] | null {
+        const rawValue = this.getDataValue('socialLinks');
+
+        // MySQL returns JSON columns as strings through some driver versions.
+        if (typeof rawValue !== 'string') {
+          return rawValue ?? null;
+        }
+
+        try {
+          return JSON.parse(rawValue);
+        } catch {
+          return null;
+        }
+      },
     },
     metaTitle: {
       type: DataTypes.STRING,

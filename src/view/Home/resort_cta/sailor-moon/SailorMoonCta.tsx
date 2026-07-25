@@ -66,6 +66,7 @@ const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
             src={ctaData.bgImageUrl}
             alt="Sailor Moon Resort"
             fill
+            sizes="100vw"
             className="object-cover transition-transform duration-1000 group-hover:scale-105"
           />
           

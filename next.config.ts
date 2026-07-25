@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     ]
   },
   serverExternalPackages: ['sequelize'],
+  turbopack: {},
 };
 
 export default nextConfig;

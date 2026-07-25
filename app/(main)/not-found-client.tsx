@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Home, Search, LifeBuoy, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 export default function NotFoundClient() {
     return (

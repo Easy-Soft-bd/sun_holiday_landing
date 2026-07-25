@@ -1,6 +1,4 @@
-"use client";
-
-import IconRenderer from "@/src/components/common/IconRenderer";
+import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
 import { normalizeSailorMoonFeatureIcon } from "@/src/lib/data/sailor-moon-resorts-page";
 
 type Props = {
@@ -15,7 +13,7 @@ export default function SailorMoonFeatureIcon({ icon, size = 32, className }: Pr
 
   return (
     <span className={`inline-flex shrink-0 items-center justify-center text-primary ${className ?? ""}`}>
-      <IconRenderer iconName={iconName} size={size} className="text-primary" />
+      <PublicIconRenderer iconName={iconName} size={size} className="text-primary" />
     </span>
   );
 }

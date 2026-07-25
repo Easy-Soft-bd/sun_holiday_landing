@@ -31,6 +31,7 @@ import {
     MenuUnfoldOutlined,
     PlusOutlined,
     SettingOutlined,
+    StarOutlined,
     UserOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
@@ -95,6 +96,11 @@ function buildMenuItems(): SidebarItem[] {
             label: <Link href={`${ROOT}/settings`}>Settings</Link>,
         },
         {
+            key: `${ROOT}/icons`,
+            icon: <StarOutlined />,
+            label: <Link href={`${ROOT}/icons`}>Icon library</Link>,
+        },
+        {
             key: "coming-soon",
             icon: <AppstoreOutlined />,
             label: "Coming soon",
@@ -126,6 +132,7 @@ const breadcrumbLabels: Record<string, string> = {
     add: "Add",
     edit: "Edit",
     settings: "Settings",
+    icons: "Icon library",
 };
 
 function buildBreadcrumb(pathname: string) {
@@ -157,6 +164,9 @@ function selectedKeyForPath(pathname: string): string {
     }
     if (pathname.startsWith(`${ROOT}/settings`)) {
         return `${ROOT}/settings`;
+    }
+    if (pathname.startsWith(`${ROOT}/icons`)) {
+        return `${ROOT}/icons`;
     }
     return ROOT;
 }

@@ -61,14 +61,14 @@ async function AirLineMarqueeAdminSlot({ data }: { data: AirLineMarqueeData }) {
 const LogoCard = ({ url, name }: { url: string; name: string }) => {
     return (
         <div className="relative group flex items-center justify-center px-[5px] ml-10">
-            <div className="w-[150px]">
+            <div className="relative h-[60px] w-[150px]">
                 <Image
                     src={url}
                     alt={`${name} Partner Logo`}
-                    width={150}
-                    height={100}
+                    fill
+                    sizes="150px"
                     priority={false}
-                    className="w-[150px] h-auto object-contain grayscale opacity-40 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
+                    className="object-contain grayscale opacity-40 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
                 />
             </div>
         </div>

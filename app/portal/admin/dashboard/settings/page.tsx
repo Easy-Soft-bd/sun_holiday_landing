@@ -11,9 +11,13 @@ import {
   PlusOutlined,
   DeleteOutlined,
   LoadingOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
 } from '@ant-design/icons';
 import { useGetSettingsQuery, useUpdateSettingsMutation } from '@/src/lib/redux/api/settingsApi';
 import { useUploadFileMutation } from '@/src/lib/redux/api/uploadApi';
+import IconPicker from '@/src/components/common/IconPicker';
+import { DEFAULT_SOCIAL_ICON, SUGGESTED_SOCIAL_LINKS } from '@/src/lib/social-links';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -48,6 +52,7 @@ export default function SettingsPage() {
         ...d,
         contactEmails,
         contactPhones,
+        socialLinks: Array.isArray(d.socialLinks) ? d.socialLinks : [],
       });
       setLogoUrl(d.siteLogo || '');
     }
@@ -78,11 +83,19 @@ export default function SettingsPage() {
   const onFinish = async (values: any) => {
     const contactEmails = (values.contactEmails || []).map((v: string) => String(v).trim()).filter(Boolean);
     const contactPhones = (values.contactPhones || []).map((v: string) => String(v).trim()).filter(Boolean);
+    const socialLinks = (values.socialLinks || [])
+      .map((link: { label?: string; icon?: string; url?: string }) => ({
+        label: String(link?.label || '').trim(),
+        icon: String(link?.icon || '').trim() || DEFAULT_SOCIAL_ICON,
+        url: String(link?.url || '').trim(),
+      }))
+      .filter((link: { url: string }) => link.url.length > 0);
     const payload = {
       ...values,
       siteLogo: String(values.siteLogo || '').trim(),
       contactEmails,
       contactPhones,
+      socialLinks,
       // keep single-value compatibility for consumers still using legacy fields
       contactEmail: contactEmails[0] || '',
       contactPhone: contactPhones[0] || '',
@@ -243,20 +256,92 @@ export default function SettingsPage() {
       ),
       children: (
         <Card variant="borderless" className="shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Form.Item label="Facebook URL" name="facebookUrl">
-              <Input placeholder="https://facebook.com/sunholidays" />
-            </Form.Item>
-            <Form.Item label="Twitter URL" name="twitterUrl">
-              <Input placeholder="https://twitter.com/sunholidays" />
-            </Form.Item>
-            <Form.Item label="Instagram URL" name="instagramUrl">
-              <Input placeholder="https://instagram.com/sunholidays" />
-            </Form.Item>
-            <Form.Item label="LinkedIn URL" name="linkedinUrl">
-              <Input placeholder="https://linkedin.com/company/sunholidays" />
-            </Form.Item>
-          </div>
+          <Form.List name="socialLinks">
+            {(fields, { add, remove, move }) => (
+              <>
+                {fields.length === 0 && (
+                  <Text type="secondary" className="mb-4 block">
+                    No social links yet. Add one below or start from a preset.
+                  </Text>
+                )}
+
+                {fields.map(({ key, name, ...restField }, index) => (
+                  <div key={key} className="mb-3 flex flex-wrap items-start gap-2">
+                    <Form.Item {...restField} name={[name, 'icon']} className="mb-0 w-44">
+                      <IconPicker placeholder="Pick icon" />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'label']}
+                      className="mb-0 w-36"
+                      rules={[{ required: true, message: 'Name required' }]}
+                    >
+                      <Input placeholder="Facebook" />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'url']}
+                      className="mb-0 min-w-48 flex-1"
+                      rules={[{ required: true, message: 'URL required' }]}
+                    >
+                      <Input placeholder="https://facebook.com/sunholidays" />
+                    </Form.Item>
+                    <Space.Compact>
+                      <Button
+                        icon={<ArrowUpOutlined />}
+                        disabled={index === 0}
+                        onClick={() => move(index, index - 1)}
+                        title="Move up"
+                      />
+                      <Button
+                        icon={<ArrowDownOutlined />}
+                        disabled={index === fields.length - 1}
+                        onClick={() => move(index, index + 1)}
+                        title="Move down"
+                      />
+                    </Space.Compact>
+                    <Button
+                      type="text"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => remove(name)}
+                      title="Remove"
+                    />
+                  </div>
+                ))}
+
+                <Button
+                  type="dashed"
+                  onClick={() => add({ label: '', icon: DEFAULT_SOCIAL_ICON, url: '' })}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add social link
+                </Button>
+
+                <div className="mt-4">
+                  <Text type="secondary" className="mr-2 text-xs">
+                    Presets:
+                  </Text>
+                  {SUGGESTED_SOCIAL_LINKS.map((preset) => (
+                    <Button
+                      key={preset.label}
+                      size="small"
+                      className="mr-2 mb-2"
+                      onClick={() => add({ ...preset })}
+                    >
+                      {preset.label}
+                    </Button>
+                  ))}
+                </div>
+
+                <Text type="secondary" className="mt-4 block text-xs">
+                  Icons come from the full React Icons library, so any network can be
+                  represented. Links appear in the footer in the order listed here.
+                </Text>
+              </>
+            )}
+          </Form.List>
         </Card>
       ),
     },

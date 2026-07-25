@@ -10,10 +10,10 @@ dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
 async function main() {
   const { default: sequelize } = await import("../src/lib/db");
   await import("../src/models/HomePage");
-  const { ensurePageHomeJsonColumn } = await import("./ensure-page-home-json-column");
+  const { ensureJsonColumn } = await import("./ensure-json-column");
 
   await sequelize.authenticate();
-  await ensurePageHomeJsonColumn(sequelize, "sailor_moon_resorts_page");
+  await ensureJsonColumn(sequelize, "page_home", "sailor_moon_resorts_page");
   console.log("Done.");
   await sequelize.close();
   process.exit(0);

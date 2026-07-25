@@ -1,5 +1,4 @@
-import { Sparkles } from "lucide-react";
-import IconRenderer from "@/src/components/common/IconRenderer";
+import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
 import SectionAdminControl from "./SectionAdminControl";
 import type { ResortActivitiesData } from "@/src/lib/data/sunvia-eco-resort";
 
@@ -39,11 +38,10 @@ export default function ActivitiesSection({ data, admin = false }: ActivitiesSec
               className="flex flex-col items-center gap-3 bg-emerald-900/50 hover:bg-emerald-800/60 border border-emerald-800/50 hover:border-amber-500/30 rounded-2xl p-5 md:p-6 transition-all duration-300 group"
             >
               <div className="text-emerald-300 group-hover:text-amber-400 transition-colors duration-300">
-                <IconRenderer
+                <PublicIconRenderer
                   iconName={activity.icon}
                   className="size-7 md:size-8"
                 />
-                {!activity.icon ? <Sparkles className="size-7 md:size-8" /> : null}
               </div>
               <span className="text-xs md:text-sm font-bold text-center text-emerald-100/90 uppercase tracking-wider leading-tight">
                 {activity.name}

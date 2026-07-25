@@ -3,6 +3,7 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 import GeneralSettings from '@/src/models/GeneralSettings';
 import { isAdmin } from '@/src/lib/auth';
 import { TAG_GENERAL_SETTINGS } from '@/src/lib/revalidate-tags';
+import { normalizeSocialLinks, resolveSocialLinks } from '@/src/lib/social-links';
 
 function parseMultiValue(value: unknown): string[] {
   return String(value ?? '')
@@ -28,6 +29,9 @@ function normalizeSettingsPlain(settings: Record<string, unknown>) {
     contactPhones,
     contactEmail: contactEmails[0] || '',
     contactPhone: contactPhones[0] || '',
+    // Falls back to the legacy facebook/twitter/instagram/linkedin columns until
+    // the admin saves the configurable list for the first time.
+    socialLinks: resolveSocialLinks(settings),
   };
 }
 
@@ -74,6 +78,11 @@ export async function PUT(request: Request) {
 
     delete (payload as Record<string, unknown>).contactEmails;
     delete (payload as Record<string, unknown>).contactPhones;
+
+    if ('socialLinks' in body) {
+      payload.socialLinks = normalizeSocialLinks(body.socialLinks);
+    }
+
     let settings = await GeneralSettings.findOne();
 
     if (!settings) {
