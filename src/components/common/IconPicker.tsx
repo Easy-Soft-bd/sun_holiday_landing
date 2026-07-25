@@ -56,38 +56,86 @@ const ICON_PREFIX_PATTERN =
   /^(Lu|Fa6|Fa|Md|Hi2|Hi|Si|Tb|Ri|Pi|Bs|Bi|Ai|Io|Fi|Go|Gi|Wi|Di|Fc|Ti|Cg|Ci|Gr|Im|Lia|Rx|Sl|Tfi|Vsc)/;
 
 const GRID_BUTTON_STYLE: React.CSSProperties = {
-  width: '100%',
+  width: "100%",
   height: 50,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
   padding: 4,
 };
 
 const GRID_LABEL_STYLE: React.CSSProperties = {
   fontSize: 8,
   marginTop: 2,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  width: '100%',
-  whiteSpace: 'nowrap',
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  width: "100%",
+  whiteSpace: "nowrap",
 };
 
 const SECTION_LABEL_STYLE: React.CSSProperties = {
   fontSize: 10,
-  textTransform: 'uppercase',
-  letterSpacing: '0.08em',
-  margin: '4px 0 6px',
-  display: 'block',
+  textTransform: "uppercase",
+  letterSpacing: "0.08em",
+  margin: "4px 0 6px",
+  display: "block",
 };
 
-const IconPicker: React.FC<IconPickerProps> = ({ value, onChange, placeholder = "Select Icon" }) => {
+function stripIconPrefix(name: string) {
+  return name.replace(ICON_PREFIX_PATTERN, "");
+}
+
+function matchesIconSearch(name: string, term: string) {
+  const lowerName = name.toLowerCase();
+  const withoutPrefix = stripIconPrefix(name).toLowerCase();
+
+  return {
+    startsWith: lowerName.startsWith(term) || withoutPrefix.startsWith(term),
+    contains: lowerName.includes(term) || withoutPrefix.includes(term),
+  };
+}
+
+function filterIconNames(names: readonly string[], term: string) {
+  if (!term) {
+    return [...names];
+  }
+
+  const startsWith: string[] = [];
+  const contains: string[] = [];
+
+  for (const name of names) {
+    const match = matchesIconSearch(name, term);
+
+    if (match.startsWith) {
+      startsWith.push(name);
+    } else if (match.contains && contains.length < MAX_RESULTS) {
+      contains.push(name);
+    }
+
+    if (startsWith.length >= MAX_RESULTS) {
+      break;
+    }
+  }
+
+  return [...startsWith, ...contains].slice(0, MAX_RESULTS);
+}
+
+interface IconPickerPanelProps {
+  value?: string;
+  onSelect: (iconName: string) => void;
+  enabled: boolean;
+}
+
+/**
+ * Owns search state so keystrokes do not remount through the Popover `content`
+ * prop, and so the input keeps focus inside Ant Design Modals.
+ */
+function IconPickerPanel({ value, onSelect, enabled }: IconPickerPanelProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [visible, setVisible] = useState(false);
   const deferredSearchTerm = React.useDeferredValue(searchTerm);
   const customIcons = useCustomIcons();
-  const allIconNames = useIconNames(visible);
+  const allIconNames = useIconNames(enabled);
 
   const matchingCustomIcons = useMemo(() => {
     const term = deferredSearchTerm.trim().toLowerCase();
@@ -102,8 +150,6 @@ const IconPicker: React.FC<IconPickerProps> = ({ value, onChange, placeholder = 
     );
   }, [customIcons, deferredSearchTerm]);
 
-  const selectedCustomIcon = customIcons.find((icon) => icon.iconName === value);
-
   const filteredIcons = useMemo(() => {
     const term = deferredSearchTerm.trim().toLowerCase();
 
@@ -111,53 +157,44 @@ const IconPicker: React.FC<IconPickerProps> = ({ value, onChange, placeholder = 
       return ALL_DEFAULT_ICONS;
     }
 
-    // Names starting with the term are the likelier intent, so they lead; the
-    // loop stops early once there are plainly enough of them to fill the grid.
-    const startsWith: string[] = [];
-    const contains: string[] = [];
-
-    for (const name of allIconNames) {
-      const lowerName = name.toLowerCase();
-
-      if (
-        lowerName.startsWith(term) ||
-        name.replace(ICON_PREFIX_PATTERN, "").toLowerCase().startsWith(term)
-      ) {
-        startsWith.push(name);
-
-        if (startsWith.length >= MAX_RESULTS) {
-          break;
-        }
-      } else if (contains.length < MAX_RESULTS && lowerName.includes(term)) {
-        contains.push(name);
-      }
-    }
-
-    return [...startsWith, ...contains].slice(0, MAX_RESULTS);
+    // Prefer the full manifest once loaded; fall back to curated defaults so
+    // typing still filters something useful while the ~50k list is in flight.
+    const source = allIconNames.length > 0 ? allIconNames : ALL_DEFAULT_ICONS;
+    return filterIconNames(source, term);
   }, [deferredSearchTerm, allIconNames]);
 
-  // One batched request per set of results rather than one per rendered icon.
   useEffect(() => {
     prefetchIconTrees(filteredIcons);
   }, [filteredIcons]);
 
-  const handleSelect = (iconName: string) => {
-    onChange?.(iconName);
-    setVisible(false);
-  };
-
   const isSearching = Boolean(deferredSearchTerm.trim());
   const isManifestPending = isSearching && allIconNames.length === 0;
 
-  const content = (
-    <div style={{ width: 320 }}>
+  return (
+    <div
+      style={{ width: 320 }}
+      onMouseDown={(event) => {
+        // Keep focus inside the panel when used within Modal focus traps.
+        event.stopPropagation();
+      }}
+      onKeyDown={(event) => {
+        event.stopPropagation();
+      }}
+    >
       <Input
         prefix={<SearchOutlined />}
         placeholder="Search icons..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: 12 }}
+        onMouseDown={(event) => {
+          event.stopPropagation();
+        }}
+        onKeyDown={(event) => {
+          event.stopPropagation();
+        }}
+        autoFocus
         allowClear
+        style={{ marginBottom: 12 }}
       />
       <div style={{ maxHeight: 300, overflowY: "auto", padding: 4 }}>
         {matchingCustomIcons.length > 0 && (
@@ -170,7 +207,7 @@ const IconPicker: React.FC<IconPickerProps> = ({ value, onChange, placeholder = 
                 <Col span={6} key={icon.iconName}>
                   <Button
                     type={value === icon.iconName ? "primary" : "default"}
-                    onClick={() => handleSelect(icon.iconName)}
+                    onClick={() => onSelect(icon.iconName)}
                     style={GRID_BUTTON_STYLE}
                     title={`${icon.label} (${icon.iconName})`}
                   >
@@ -183,8 +220,8 @@ const IconPicker: React.FC<IconPickerProps> = ({ value, onChange, placeholder = 
           </>
         )}
 
-        {isManifestPending ? (
-          <div style={{ padding: '24px 0', textAlign: 'center' }}>
+        {isManifestPending && filteredIcons.length === 0 ? (
+          <div style={{ padding: "24px 0", textAlign: "center" }}>
             <Spin size="small" />
           </div>
         ) : filteredIcons.length > 0 ? (
@@ -194,19 +231,22 @@ const IconPicker: React.FC<IconPickerProps> = ({ value, onChange, placeholder = 
                 Icon library
               </Text>
             )}
+            {isManifestPending ? (
+              <Text type="secondary" style={{ fontSize: 11, display: "block", marginBottom: 8 }}>
+                Loading full icon list…
+              </Text>
+            ) : null}
             <Row gutter={[8, 8]}>
               {filteredIcons.map((iconName) => (
                 <Col span={6} key={iconName}>
                   <Button
                     type={value === iconName ? "primary" : "default"}
-                    onClick={() => handleSelect(iconName)}
+                    onClick={() => onSelect(iconName)}
                     style={GRID_BUTTON_STYLE}
                     title={iconName}
                   >
                     <IconRenderer iconName={iconName} size={20} />
-                    <div style={GRID_LABEL_STYLE}>
-                      {iconName.replace(ICON_PREFIX_PATTERN, '')}
-                    </div>
+                    <div style={GRID_LABEL_STYLE}>{stripIconPrefix(iconName)}</div>
                   </Button>
                 </Col>
               ))}
@@ -216,32 +256,64 @@ const IconPicker: React.FC<IconPickerProps> = ({ value, onChange, placeholder = 
           matchingCustomIcons.length === 0 && <Empty description="No icons found" />
         )}
       </div>
-      <div style={{ marginTop: 8, textAlign: 'right' }}>
+      <div style={{ marginTop: 8, textAlign: "right" }}>
         <Text type="secondary" style={{ fontSize: 11 }}>
           Powered by React Icons
         </Text>
       </div>
     </div>
   );
+}
+
+const IconPicker: React.FC<IconPickerProps> = ({ value, onChange, placeholder = "Select Icon" }) => {
+  const [visible, setVisible] = useState(false);
+  const customIcons = useCustomIcons();
+  const selectedCustomIcon = customIcons.find((icon) => icon.iconName === value);
+
+  const handleSelect = (iconName: string) => {
+    onChange?.(iconName);
+    setVisible(false);
+  };
 
   return (
     <Popover
-      content={content}
+      content={
+        visible ? (
+          <IconPickerPanel value={value} onSelect={handleSelect} enabled={visible} />
+        ) : null
+      }
       title="Select an Icon"
       trigger="click"
       open={visible}
       onOpenChange={setVisible}
       placement="bottomLeft"
+      // Keep the popup inside modal/dialog DOM so the search input can receive
+      // keystrokes (body portals get blocked by Ant Design focus traps).
+      getPopupContainer={(trigger) =>
+        (trigger.closest(".ant-modal-content") as HTMLElement | null) ??
+        (trigger.closest(".ant-drawer-body") as HTMLElement | null) ??
+        trigger.parentElement ??
+        document.body
+      }
+      destroyOnHidden
+      styles={{ container: { zIndex: 1100 } }}
     >
-      <Button style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <Button
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {value ? <IconRenderer iconName={value} size={18} /> : null}
           <span>
             {selectedCustomIcon?.label ??
               (value
                 ? isCustomIconName(value)
                   ? value
-                  : value.replace(ICON_PREFIX_PATTERN, '')
+                  : stripIconPrefix(value)
                 : placeholder)}
           </span>
         </div>

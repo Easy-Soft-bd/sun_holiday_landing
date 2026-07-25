@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Leaf, ChevronRight, Trees } from "lucide-react";
+import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
 import SectionAdminControl from "./SectionAdminControl";
 import type { ResortHeroData } from "@/src/lib/data/sunvia-eco-resort";
 
@@ -36,11 +36,11 @@ export default function HeroSection({ data, admin = false }: HeroSectionProps) {
         {/* Badges */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
           <span className="flex items-center gap-1.5 bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 px-4 py-2 rounded-full text-xs font-bold text-emerald-300 tracking-widest uppercase">
-            <Leaf className="size-3.5 text-emerald-400" />
+            <PublicIconRenderer iconName={data.badgeIcon} className="size-3.5 text-emerald-400" />
             {data.badgeText}
           </span>
           <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase">
-            <MapPin className="size-3.5 text-amber-400" />
+            <PublicIconRenderer iconName="LuMapPin" className="size-3.5 text-amber-400" />
             {data.locationText}
           </span>
         </div>
@@ -64,17 +64,26 @@ export default function HeroSection({ data, admin = false }: HeroSectionProps) {
         {/* Stats Row */}
         <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-10">
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-amber-400">{data.stat1Value}</div>
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <PublicIconRenderer iconName={data.stat1Icon} className="size-5 text-amber-400" />
+              <div className="text-2xl md:text-3xl font-bold text-amber-400">{data.stat1Value}</div>
+            </div>
             <div className="text-xs text-emerald-200/70 uppercase tracking-widest mt-1">{data.stat1Label}</div>
           </div>
           <div className="w-px h-10 bg-white/20 hidden md:block" />
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-amber-400">{data.stat2Value}</div>
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <PublicIconRenderer iconName={data.stat2Icon} className="size-5 text-amber-400" />
+              <div className="text-2xl md:text-3xl font-bold text-amber-400">{data.stat2Value}</div>
+            </div>
             <div className="text-xs text-emerald-200/70 uppercase tracking-widest mt-1">{data.stat2Label}</div>
           </div>
           <div className="w-px h-10 bg-white/20 hidden md:block" />
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-amber-400">{data.stat3Value}</div>
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <PublicIconRenderer iconName={data.stat3Icon} className="size-5 text-amber-400" />
+              <div className="text-2xl md:text-3xl font-bold text-amber-400">{data.stat3Value}</div>
+            </div>
             <div className="text-xs text-emerald-200/70 uppercase tracking-widest mt-1">{data.stat3Label}</div>
           </div>
         </div>
@@ -86,13 +95,13 @@ export default function HeroSection({ data, admin = false }: HeroSectionProps) {
             className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-emerald-950 font-bold rounded-full px-8 py-3.5 transition-all shadow-lg shadow-amber-500/20 group/btn w-full sm:w-auto"
           >
             {data.ctaPrimaryText}
-            <ChevronRight className="size-5 group-hover/btn:translate-x-1 transition-transform" />
+            <PublicIconRenderer iconName="LuChevronRight" className="size-5 group-hover/btn:translate-x-1 transition-transform" />
           </Link>
           <Link
             href={data.ctaSecondaryHref}
             className="flex items-center justify-center gap-2 border border-white/30 hover:bg-white/10 text-white font-bold rounded-full px-8 py-3.5 transition-all backdrop-blur-sm w-full sm:w-auto"
           >
-            <Trees className="size-4" />
+            <PublicIconRenderer iconName={data.ctaSecondaryIcon} className="size-4" />
             {data.ctaSecondaryText}
           </Link>
         </div>

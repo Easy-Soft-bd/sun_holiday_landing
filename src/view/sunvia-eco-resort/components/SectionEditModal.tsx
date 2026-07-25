@@ -438,12 +438,17 @@ export default function SectionEditModal({
         return (
           <>
             <Row gutter={16}>
-              <Col xs={24} md={12}>
+              <Col xs={24} md={10}>
                 <Form.Item label="Badge Text" name="badgeText" rules={[{ required: true }]}>
                   <Input placeholder="5-Star Eco-Luxury" />
                 </Form.Item>
               </Col>
-              <Col xs={24} md={12}>
+              <Col xs={24} md={6}>
+                <Form.Item label="Badge Icon" name="badgeIcon" rules={[{ required: true }]}>
+                  <IconPicker placeholder="Badge icon" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={8}>
                 <Form.Item label="Location Text" name="locationText" rules={[{ required: true }]}>
                   <Input placeholder="Manikganj, 1 Hour from Dhaka" />
                 </Form.Item>
@@ -476,6 +481,9 @@ export default function SectionEditModal({
                 <Form.Item label="Stat 1 Label" name="stat1Label" rules={[{ required: true }]}>
                   <Input />
                 </Form.Item>
+                <Form.Item label="Stat 1 Icon" name="stat1Icon" rules={[{ required: true }]}>
+                  <IconPicker placeholder="Stat 1 icon" />
+                </Form.Item>
               </Col>
               <Col xs={24} md={8}>
                 <Form.Item label="Stat 2 Value" name="stat2Value" rules={[{ required: true }]}>
@@ -484,6 +492,9 @@ export default function SectionEditModal({
                 <Form.Item label="Stat 2 Label" name="stat2Label" rules={[{ required: true }]}>
                   <Input />
                 </Form.Item>
+                <Form.Item label="Stat 2 Icon" name="stat2Icon" rules={[{ required: true }]}>
+                  <IconPicker placeholder="Stat 2 icon" />
+                </Form.Item>
               </Col>
               <Col xs={24} md={8}>
                 <Form.Item label="Stat 3 Value" name="stat3Value" rules={[{ required: true }]}>
@@ -491,6 +502,9 @@ export default function SectionEditModal({
                 </Form.Item>
                 <Form.Item label="Stat 3 Label" name="stat3Label" rules={[{ required: true }]}>
                   <Input />
+                </Form.Item>
+                <Form.Item label="Stat 3 Icon" name="stat3Icon" rules={[{ required: true }]}>
+                  <IconPicker placeholder="Stat 3 icon" />
                 </Form.Item>
               </Col>
             </Row>
@@ -508,14 +522,19 @@ export default function SectionEditModal({
               </Col>
             </Row>
             <Row gutter={16}>
-              <Col xs={24} md={12}>
+              <Col xs={24} md={8}>
                 <Form.Item label="Secondary CTA Text" name="ctaSecondaryText" rules={[{ required: true }]}>
                   <Input />
                 </Form.Item>
               </Col>
-              <Col xs={24} md={12}>
+              <Col xs={24} md={8}>
                 <Form.Item label="Secondary CTA Link" name="ctaSecondaryHref" rules={[{ required: true }]}>
                   <Input />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={8}>
+                <Form.Item label="Secondary CTA Icon" name="ctaSecondaryIcon" rules={[{ required: true }]}>
+                  <IconPicker placeholder="Secondary icon" />
                 </Form.Item>
               </Col>
             </Row>

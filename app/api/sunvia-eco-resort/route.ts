@@ -35,7 +35,10 @@ export async function POST(request: Request) {
     page.set(section, validation.data);
     await page.save();
 
-    revalidateTag(TAG_SUNVIA_ECO_RESORT, "max");
+    // expire: 0 = immediate cache miss so home + resort pages show edits after router.refresh().
+    // 'max' keeps serving stale data (stale-while-revalidate) on the first refresh.
+    revalidateTag(TAG_SUNVIA_ECO_RESORT, { expire: 0 });
+    revalidatePath("/");
     revalidatePath("/sunvia-eco-resort");
 
     return NextResponse.json({ success: true });

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, MapPin, ChevronRight, Navigation, Sunset, Waves, Palmtree } from "lucide-react";
 import ClientOnly from "@/src/components/common/ClientOnly";
+import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
 
 interface Amenity {
     icon: string;
@@ -10,6 +10,7 @@ interface Amenity {
 
 interface SailorMoonCtaData {
     bgImageUrl?: string;
+    promoImageUrl?: string;
     locationText?: string;
     subHeadline?: string;
     titlePart1?: string;
@@ -17,11 +18,20 @@ interface SailorMoonCtaData {
     description?: string;
     ctaButtonText?: string;
     ctaButtonLink?: string;
-    amenities?: Amenity[]; 
+    amenities?: Amenity[];
+    badgeText?: string;
+    badgeIcon?: string;
+    galleryButtonText?: string;
+    galleryButtonLink?: string;
+    galleryButtonIcon?: string;
+    floatingIcon?: string;
+    promoImageTitle?: string;
+    promoImageSubtitle?: string;
 }
 
-const defaultData: SailorMoonCtaData = {
+const defaultData: Required<SailorMoonCtaData> = {
     bgImageUrl: "/sailor/sailor_ (21).jpg",
+    promoImageUrl: "/sailor/Sailor_Room_1.jpg",
     locationText: "Inani Beach, Marine Drive Road",
     subHeadline: "Where The Sea Meets Celestial Splendor",
     titlePart1: "SAILOR",
@@ -29,11 +39,40 @@ const defaultData: SailorMoonCtaData = {
     description: "Discover a realm of magic at Sailor Moon Resort. A boutique luxury experience designed for those who seek tranquility under the moonlit waves of Cox's Bazar.",
     ctaButtonText: "Book Your Escape",
     ctaButtonLink: "/hotel/sailor-moon",
+    amenities: [
+        { icon: "LuSun", label: "Beach Front" },
+        { icon: "LuWaves", label: "Infinity Pool" },
+        { icon: "LuPalmtree", label: "Tropical Garden" },
+        { icon: "LuSparkles", label: "Star Gazing" },
+    ],
+    badgeText: "New Escape",
+    badgeIcon: "LuSparkles",
+    galleryButtonText: "Experience Gallery",
+    galleryButtonLink: "#view-gallery",
+    galleryButtonIcon: "LuNavigation",
+    floatingIcon: "LuStars",
+    promoImageTitle: "Ocean View Premier Room",
+    promoImageSubtitle: "Experience celestial luxury in every corner.",
 };
 
 interface SailorMoonCtaProps {
     data?: SailorMoonCtaData;
     admin?: boolean;
+}
+
+function mergeCtaData(data?: SailorMoonCtaData): Required<SailorMoonCtaData> {
+    const amenities =
+        Array.isArray(data?.amenities) && data.amenities.length > 0
+            ? data.amenities
+            : defaultData.amenities;
+
+    return {
+        ...defaultData,
+        ...Object.fromEntries(
+            Object.entries(data ?? {}).filter(([, value]) => value !== undefined && value !== null)
+        ),
+        amenities,
+    } as Required<SailorMoonCtaData>;
 }
 
 async function SailorMoonCtaAdminSlot({ data }: { data: Required<SailorMoonCtaData> }) {
@@ -49,7 +88,8 @@ async function SailorMoonCtaAdminSlot({ data }: { data: Required<SailorMoonCtaDa
 }
 
 const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
-  const ctaData = { ...defaultData, ...data } as Required<SailorMoonCtaData>;
+  const ctaData = mergeCtaData(data);
+  const visibleAmenities = ctaData.amenities.slice(0, 4);
 
   return (
     <section className="group/sailor-moon relative w-full px-4 py-4 md:py-6">
@@ -79,11 +119,11 @@ const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
             
             <div className="flex flex-wrap items-center justify-start md:justify-end gap-3 w-full">
               <span className="flex items-center gap-1.5 bg-primary/20 backdrop-blur-md border border-primary/40 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold text-primary tracking-widest uppercase">
-                <Sparkles className="size-3 text-primary animate-pulse" />
-                New Escape
+                <PublicIconRenderer iconName={ctaData.badgeIcon} className="size-3 text-primary animate-pulse" />
+                {ctaData.badgeText}
               </span>
               <span className="flex items-center gap-1.5 text-white/80 text-xs md:text-sm font-medium border border-white/20 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full">
-                <MapPin size={14} className="text-secondary" />
+                <PublicIconRenderer iconName="LuMapPin" className="size-3.5 text-secondary" />
                 {ctaData.locationText}
               </span>
             </div>
@@ -101,28 +141,22 @@ const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
               {ctaData.description}
             </p>
 
-            {/* Quick Amenities */}
+            {/* Quick Amenities — driven by CMS data */}
             <div className="flex flex-wrap items-center justify-start md:justify-end gap-4 md:gap-6 pt-2 w-full">
-              <div className="flex items-center gap-2 text-white/80" title="Beach Front">
-                 <Sunset className="size-4 md:size-5 text-primary" />
-                 <span className="text-xs font-bold uppercase tracking-widest text-white/90">Beach Front</span>
-              </div>
-              <div className="flex items-center gap-2 text-white/80" title="Infinity Pool">
-                 <Waves className="size-4 md:size-5 text-primary" />
-                 <span className="text-xs font-bold uppercase tracking-widest text-white/90">Infinity Pool</span>
-              </div>
-              <div className="flex items-center gap-2 text-white/80" title="Tropical Garden">
-                 <Palmtree className="size-4 md:size-5 text-primary" />
-                 <span className="text-xs font-bold uppercase tracking-widest text-white/90">Gardens</span>
-              </div>
+              {visibleAmenities.map((item) => (
+                <div key={`${item.icon}-${item.label}`} className="flex items-center gap-2 text-white/80" title={item.label}>
+                  <PublicIconRenderer iconName={item.icon} className="size-4 md:size-5 text-primary" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-white/90">{item.label}</span>
+                </div>
+              ))}
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end gap-4 pt-4 w-full">
-              <Link href="#view-gallery" className="flex items-center gap-2 text-white/70 hover:text-white transition-colors group/gallery order-2 sm:order-1">
+              <Link href={ctaData.galleryButtonLink} className="flex items-center gap-2 text-white/70 hover:text-white transition-colors group/gallery order-2 sm:order-1">
                   <div className="size-10 rounded-full border border-white/20 flex items-center justify-center bg-white/5 group-hover/gallery:border-primary transition-colors">
-                    <Navigation className="size-4" />
+                    <PublicIconRenderer iconName={ctaData.galleryButtonIcon} className="size-4" />
                   </div>
-                  <span className="text-xs md:text-sm font-bold uppercase tracking-widest">Experience Gallery</span>
+                  <span className="text-xs md:text-sm font-bold uppercase tracking-widest">{ctaData.galleryButtonText}</span>
               </Link>
 
               <Link 
@@ -130,7 +164,7 @@ const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
                 className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold w-full sm:w-auto rounded-full px-6 py-3 transition-all shadow-lg group/btn order-1 sm:order-2 border-none"
               >
                 {ctaData.ctaButtonText}
-                <ChevronRight className="size-4 md:size-5 group-hover/btn:translate-x-1 transition-transform" />
+                <PublicIconRenderer iconName="LuChevronRight" className="size-4 md:size-5 group-hover/btn:translate-x-1 transition-transform" />
               </Link>
             </div>
 

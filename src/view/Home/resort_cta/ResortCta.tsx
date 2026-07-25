@@ -80,7 +80,20 @@ async function ResortCtaAdminSlot({ data }: { data: ResortCtaData }) {
 }
 
 const ResortCta = async ({ data, admin = false }: ResortCtaProps) => {
-    const resortData = { ...defaultData, ...data };
+    const resortData = {
+        ...defaultData,
+        ...Object.fromEntries(
+            Object.entries(data ?? {}).filter(([, value]) => value !== undefined && value !== null)
+        ),
+        roomDetails:
+            Array.isArray(data?.roomDetails) && data.roomDetails.length > 0
+                ? data.roomDetails
+                : defaultData.roomDetails,
+        amenities:
+            Array.isArray(data?.amenities) && data.amenities.length > 0
+                ? data.amenities
+                : defaultData.amenities,
+    };
 
     return (
         <section className="relative bg-base-200 py-20 lg:py-28 overflow-hidden group/resort">

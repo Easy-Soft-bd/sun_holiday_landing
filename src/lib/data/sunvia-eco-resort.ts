@@ -58,6 +58,7 @@ export interface ResortSeoData {
 
 export interface ResortHeroData {
   badgeText: string;
+  badgeIcon: string;
   locationText: string;
   titlePart1: string;
   titlePart2: string;
@@ -65,15 +66,19 @@ export interface ResortHeroData {
   description: string;
   stat1Value: string;
   stat1Label: string;
+  stat1Icon: string;
   stat2Value: string;
   stat2Label: string;
+  stat2Icon: string;
   stat3Value: string;
   stat3Label: string;
+  stat3Icon: string;
   backgroundImage: string;
   ctaPrimaryText: string;
   ctaPrimaryHref: string;
   ctaSecondaryText: string;
   ctaSecondaryHref: string;
+  ctaSecondaryIcon: string;
 }
 
 export interface ResortAboutHighlight {
@@ -249,6 +254,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
   },
   hero: {
     badgeText: "5-Star Eco-Luxury",
+    badgeIcon: "LuLeaf",
     locationText: "Manikganj, 1 Hour from Dhaka",
     titlePart1: "SUNVIA",
     titlePart2: "ECO RESORT",
@@ -257,16 +263,20 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
       "A premier 12-acre nature-focused destination with 100 luxury accommodations, curated dining, and eco-friendly adventures in the heart of Bangladesh.",
     stat1Value: "12 Acres",
     stat1Label: "Lush Grounds",
+    stat1Icon: "LuBedDouble",
     stat2Value: "100+",
     stat2Label: "Luxury Units",
+    stat2Icon: "LuUtensils",
     stat3Value: "200-250",
     stat3Label: "Guest Capacity",
+    stat3Icon: "LuActivity",
     backgroundImage:
       "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2080&auto=format&fit=crop",
     ctaPrimaryText: "Plan Your Escape",
     ctaPrimaryHref: "#contact",
     ctaSecondaryText: "Explore Gallery",
     ctaSecondaryHref: "#gallery",
+    ctaSecondaryIcon: "LuPlay",
   },
   about: {
     badgeText: "About Our Resort",
@@ -764,13 +774,18 @@ export function validateSunviaEcoResortSection(
       const hero = data as ResortHeroData;
       const fields: Array<[string, string, number, number]> = [
         ["Badge text", hero.badgeText, 2, 40],
+        ["Badge icon", hero.badgeIcon, 2, 80],
         ["Location text", hero.locationText, 2, 80],
         ["Title part 1", hero.titlePart1, 2, 40],
         ["Title part 2", hero.titlePart2, 2, 60],
         ["Subtitle", hero.subtitle, 2, 80],
         ["Description", hero.description, 50, 220],
+        ["Stat 1 icon", hero.stat1Icon, 2, 80],
+        ["Stat 2 icon", hero.stat2Icon, 2, 80],
+        ["Stat 3 icon", hero.stat3Icon, 2, 80],
         ["Primary CTA text", hero.ctaPrimaryText, 2, 30],
         ["Secondary CTA text", hero.ctaSecondaryText, 2, 30],
+        ["Secondary CTA icon", hero.ctaSecondaryIcon, 2, 80],
       ];
       for (const [label, fieldValue, min, max] of fields) {
         const error = validateRequiredString(label, fieldValue, min, max);

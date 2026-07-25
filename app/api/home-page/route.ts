@@ -29,7 +29,9 @@ export async function POST(request: Request) {
     homePage.set(section, data);
     
     await homePage.save();
-    revalidateTag(TAG_HOME_PAGE, 'max');
+    // expire: 0 = immediate cache miss (required for admin "read your own writes").
+    // 'max' uses stale-while-revalidate and can keep showing old CTA data after save.
+    revalidateTag(TAG_HOME_PAGE, { expire: 0 });
     revalidatePath('/');
     if (section === 'sailor_moon_resorts_page') {
       revalidatePath('/sailor-moon-resorts');

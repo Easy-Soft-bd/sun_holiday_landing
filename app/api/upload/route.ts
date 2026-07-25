@@ -71,9 +71,9 @@ export async function POST(request: NextRequest) {
     
     await writeFile(filepath, buffer);
     // Uploads are currently used by admin-managed CMS content and branding assets.
-    revalidateTag(TAG_HOME_PAGE, 'max');
-    revalidateTag(TAG_GENERAL_SETTINGS, 'max');
-    revalidateTag(TAG_SUNVIA_ECO_RESORT, 'max');
+    revalidateTag(TAG_HOME_PAGE, { expire: 0 });
+    revalidateTag(TAG_GENERAL_SETTINGS, { expire: 0 });
+    revalidateTag(TAG_SUNVIA_ECO_RESORT, { expire: 0 });
     
     // Return the public URL
     const fileUrl = `${urlPrefix}/${filename}`;
