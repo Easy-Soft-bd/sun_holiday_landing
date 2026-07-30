@@ -1,55 +1,56 @@
-import React from 'react';
-import type { Metadata } from 'next';
-import Nav from "@/src/components/layouts/Nav";
+import { Suspense } from "react";
+import MainChrome from "@/src/components/layouts/MainChrome";
 import Footer from "@/src/components/layouts/Footer";
-import TopBanner from "@/src/components/common/TopBanner";
-import { getCachedAdminSession, getCachedAdminStatus, getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
-import { resolvePublicAssetPath } from "@/src/lib/public-assets";
+import { getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
 import { isDevelopmentModeBannerEnabled } from "@/src/lib/env";
+import HomeDeferredGate from "@/src/view/Home/HomeDeferredGate";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const settings = await getCachedSettings();
-  const icon = resolvePublicAssetPath(settings?.siteLogo);
+async function DeferredFooter() {
+  const [pageData, settings] = await Promise.all([
+    getCachedHomePageData(),
+    getCachedSettings(),
+  ]);
 
-  return {
-    icons: {
-      icon,
-      apple: icon,
-    },
-  };
+  return (
+    <Footer
+      data={pageData?.footer}
+      settings={settings ?? undefined}
+      branding={
+        settings
+          ? {
+              siteName: settings.siteName,
+              siteLogo: settings.siteLogo,
+            }
+          : undefined
+      }
+    />
+  );
 }
 
 export default async function MainLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-    const [admin, adminSession, pageData, settings] = await Promise.all([
-      getCachedAdminStatus(),
-      getCachedAdminSession(),
-      getCachedHomePageData(),
-      getCachedSettings(),
-    ]);
-    const branding = {
-      siteName: settings?.siteName,
-      siteLogo: settings?.siteLogo,
-    };
-    const showDevelopmentBanner = isDevelopmentModeBannerEnabled();
-    const showTopBanner = Boolean(adminSession.user) || showDevelopmentBanner;
+}) {
+  const settings = await getCachedSettings();
+  const branding = settings
+    ? {
+        siteName: settings.siteName,
+        siteLogo: settings.siteLogo,
+      }
+    : {};
 
   return (
-    <>
-      {showTopBanner ? (
-        <TopBanner
-          adminUser={adminSession.user}
-          showDevelopmentBanner={showDevelopmentBanner}
-        />
-      ) : null}
-      <div className="relative">
-        <Nav branding={branding} admin={admin} />
-        {children}
-        <Footer data={pageData?.footer} admin={admin} settings={settings} branding={branding} />
-      </div>
-    </>
+    <MainChrome
+      branding={branding}
+      showDevelopmentBanner={isDevelopmentModeBannerEnabled()}
+    >
+      {children}
+      <Suspense fallback={null}>
+        <HomeDeferredGate>
+          <DeferredFooter />
+        </HomeDeferredGate>
+      </Suspense>
+    </MainChrome>
   );
 }

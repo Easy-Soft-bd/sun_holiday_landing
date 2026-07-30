@@ -1,7 +1,7 @@
 "use client";
 
 import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from "@ant-design/icons";
-import { Button, Divider, Form, Input, InputNumber, Modal, Space, message } from "antd";
+import { App, Button, Divider, Form, Input, InputNumber, Modal, Space } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ImageUrlUploadField from "@/src/components/common/ImageUrlUploadField";
@@ -25,6 +25,7 @@ type Props = {
 };
 
 export default function SailorMoonResortsEditModal({ isOpen, onClose, initialData }: Props) {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm<FormValues>();
   const [isSaving, setIsSaving] = useState(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from "@ant-design/icons";
-import { Button, Divider, Form, Input, InputNumber, Modal, Select, Space, Tabs, message } from "antd";
+import { App, Button, Divider, Form, Input, InputNumber, Modal, Select, Space, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -37,6 +37,7 @@ function normalizeResortsFromForm(
 }
 
 export default function ResortsListingEditModal({ isOpen, onClose, initialData }: Props) {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm<FormValues>();
   const [isSaving, setIsSaving] = useState(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import { UploadOutlined } from "@ant-design/icons";
-import { Upload, message } from "antd";
+import { App, Upload } from "antd";
 import type { FormInstance } from "antd";
 import StringListField from "../StringListField";
 import type { TourFormValues } from "../types";
@@ -12,6 +12,8 @@ type GallerySectionProps = {
 };
 
 export default function GallerySection({ form }: GallerySectionProps) {
+  const { message } = App.useApp();
+
   return (
     <>
       <p className="mb-4 text-sm leading-relaxed text-slate-600">

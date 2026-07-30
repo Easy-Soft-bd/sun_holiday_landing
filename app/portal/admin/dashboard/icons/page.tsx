@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Alert,
+  App,
   Button,
   Card,
   Form,
@@ -13,7 +14,6 @@ import {
   Table,
   Tag,
   Typography,
-  message,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { CopyOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
@@ -40,6 +40,7 @@ interface IconFormValues {
 }
 
 export default function IconLibraryPage() {
+  const { message } = App.useApp();
   const [form] = Form.useForm<IconFormValues>();
   const { data, isLoading, isError, refetch } = useGetCustomIconsQuery();
   const [createIcon, { isLoading: isCreating }] = useCreateCustomIconMutation();

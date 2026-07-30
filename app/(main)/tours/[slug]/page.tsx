@@ -33,7 +33,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  return buildTourDetailMetadata(tour, getTourPublicPath(tour));
+  const path = getTourPublicPath(tour);
+  if (!path) {
+    return {
+      title: "Tour not found | Sun Tourism Ltd",
+      description: "This tour is unavailable or no longer listed.",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  return buildTourDetailMetadata(tour, path);
 }
 
 export default async function TourDetailsPage({ params }: Props) {
@@ -46,6 +55,9 @@ export default async function TourDetailsPage({ params }: Props) {
   }
 
   const canonical = getTourCanonicalSegment(tour);
+  if (!canonical) {
+    notFound();
+  }
   if (segment !== canonical) {
     permanentRedirect(`/tours/${encodeURIComponent(canonical)}`);
   }

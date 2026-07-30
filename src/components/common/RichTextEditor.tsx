@@ -9,7 +9,7 @@ import {
   StrikethroughOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Modal, Space, Tooltip, message } from "antd";
+import { App, Button, Input, Modal, Space, Tooltip } from "antd";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
@@ -48,6 +48,7 @@ export default function RichTextEditor({
   placeholder = "Write here…",
   enableHeadings = false,
 }: RichTextEditorProps) {
+  const { message } = App.useApp();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
 

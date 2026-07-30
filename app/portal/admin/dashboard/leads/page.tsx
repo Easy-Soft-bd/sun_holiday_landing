@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
     Alert,
+    App,
     Button,
     Card,
     Col,
@@ -19,7 +20,6 @@ import {
     Tag,
     Tooltip,
     Typography,
-    message,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import {
@@ -179,6 +179,7 @@ function useLeads() {
 }
 
 function BookingsPanel() {
+    const { message } = App.useApp();
     const { items, setItems, loading, error, refresh } = useBookings();
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState<BookingStatus | "all">("all");
@@ -564,6 +565,7 @@ function BookingsPanel() {
 }
 
 function LeadsPanel() {
+    const { message } = App.useApp();
     const { items, setItems, loading, error, refresh } = useLeads();
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");

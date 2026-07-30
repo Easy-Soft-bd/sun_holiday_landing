@@ -1,4 +1,4 @@
-import { resolveSocialLinks } from '@/src/lib/social-links';
+import { resolveSocialLinks, type SocialLink } from '@/src/lib/social-links';
 
 export function parseMultiValue(value: unknown): string[] {
   return String(value ?? '')
@@ -7,11 +7,34 @@ export function parseMultiValue(value: unknown): string[] {
     .filter(Boolean);
 }
 
+/** Public-facing general settings after contact/social normalization. */
+export type NormalizedSettings = {
+  siteName?: string | null;
+  siteLogo?: string | null;
+  metaImage?: string | null;
+  contactEmail: string;
+  contactPhone: string;
+  contactEmails: string[];
+  contactPhones: string[];
+  address?: string | null;
+  googleMapsUrl: string;
+  facebookUrl?: string | null;
+  twitterUrl?: string | null;
+  instagramUrl?: string | null;
+  linkedinUrl?: string | null;
+  socialLinks: SocialLink[];
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaKeywords?: string | null;
+};
+
 /**
  * Expand newline/comma-joined contact strings into arrays for public consumers
  * (footer, contact page, JSON-LD). Safe to call on already-normalized payloads.
  */
-export function normalizeSettingsPlain<T extends Record<string, unknown>>(settings: T) {
+export function normalizeSettingsPlain(
+  settings: Record<string, unknown>,
+): NormalizedSettings {
   const contactEmails =
     Array.isArray(settings.contactEmails) && (settings.contactEmails as unknown[]).length > 0
       ? (settings.contactEmails as unknown[]).map((v) => String(v).trim()).filter(Boolean)
@@ -34,7 +57,7 @@ export function normalizeSettingsPlain<T extends Record<string, unknown>>(settin
     // Falls back to the legacy facebook/twitter/instagram/linkedin columns until
     // the admin saves the configurable list for the first time.
     socialLinks: resolveSocialLinks(settings),
-  };
+  } as NormalizedSettings;
 }
 
 /** Prefer an embed URL for iframes; otherwise return null so UI can fall back. */

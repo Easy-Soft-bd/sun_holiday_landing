@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Input, Upload, message } from "antd";
+import { App, Button, Input, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 type Props = {
@@ -19,6 +19,7 @@ export default function ImageUrlUploadField({
   uploadType = "content",
   previewHeightClassName = "h-28",
 }: Props) {
+  const { message } = App.useApp();
   const [uploading, setUploading] = useState(false);
   const src = typeof value === "string" ? value.trim() : "";
 
@@ -67,6 +68,7 @@ export default function ImageUrlUploadField({
 
       {src ? (
         <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
             alt="Preview"

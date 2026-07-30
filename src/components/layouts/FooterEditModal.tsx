@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, Space, message, Upload, Alert } from "antd";
+import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Upload, Alert } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
@@ -61,6 +61,7 @@ interface FooterEditModalProps {
 }
 
 export default function FooterEditModal({ isOpen, onClose, initialData }: FooterEditModalProps) {
+    const { message } = App.useApp();
     const router = useRouter();
     const [form] = Form.useForm();
     const [isSaving, setIsSaving] = useState(false);
@@ -225,6 +226,7 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
 }
 
 function CertificationImageItem({ form, fieldName, setIsSaving, restField }: { form: any, fieldName: number, setIsSaving: (s: boolean) => void, restField?: any }) {
+    const { message } = App.useApp();
     const imageUrl = Form.useWatch(['certifications', fieldName, 'image'], form);
 
     return (

@@ -10,6 +10,7 @@ type TourJsonLdProps = {
 
 export default function TourJsonLd({ tour }: TourJsonLdProps) {
   const path = getTourPublicPath(tour);
+  if (!path) return null;
   const pageUrl = absoluteUrl(path);
   const gallery = parseJsonArray<string>(tour.gallery).filter((u) => u?.trim());
   const imageUrls = [tour.image, ...gallery]

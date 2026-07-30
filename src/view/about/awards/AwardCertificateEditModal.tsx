@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Divider, Form, Input, Modal, Select, Space, Tabs, message } from "antd";
+import { App, Button, Divider, Form, Input, Modal, Select, Space, Tabs } from "antd";
 import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from "@ant-design/icons";
 import ImageUrlUploadField from "@/src/components/common/ImageUrlUploadField";
 import type { AwardCertificatePageData } from "@/src/lib/data/award-certificate-page";
@@ -19,6 +19,7 @@ type Props = {
 };
 
 export default function AwardCertificateEditModal({ isOpen, onClose, initialData }: Props) {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm<FormValues>();
   const [saving, setSaving] = useState(false);

@@ -40,7 +40,7 @@ const WhyChooseUs = () => {
                                 className="flex items-center gap-4 p-4 rounded-2xl bg-base-200/50 hover:bg-base-100 hover:shadow-xl hover:shadow-primary/5 transition-all group border border-transparent hover:border-primary/20"
                             >
                                 {/* Icon Circle */}
-                                <div className="shrink-0 size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all text-primary">
+                                <div className="shrink-0 size-12 rounded-xl bg-base-300 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-content transition-all text-base-content" aria-hidden>
                                     <PublicIconRenderer iconName={item.icon} size={24} />
                                 </div>
 
@@ -49,7 +49,7 @@ const WhyChooseUs = () => {
                                     <h3 className="font-bold text-base text-base-content leading-none">
                                         {item.title}
                                     </h3>
-                                    <p className="text-xs text-base-content/50 font-medium italic leading-tight">
+                                    <p className="text-xs text-base-content/70 font-medium italic leading-tight">
                                         {item.desc}
                                     </p>
                                 </div>

@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [64, 96, 128, 256, 384],
+    qualities: [50, 55, 60, 65, 75, 95],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
         protocol: 'https',
@@ -16,7 +21,9 @@ const nextConfig: NextConfig = {
     ]
   },
   serverExternalPackages: ['sequelize'],
-  turbopack: {},
+  experimental: {
+    optimizePackageImports: ['antd', '@ant-design/icons', 'lucide-react'],
+  },
 };
 
 export default nextConfig;

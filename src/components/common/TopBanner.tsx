@@ -136,6 +136,7 @@ export default function TopBanner({
                 <button 
                     type="button" 
                     onClick={handleClose}
+                    aria-label="Dismiss"
                     className="-m-2 p-2 sm:-m-3 sm:p-3 focus-visible:outline-offset-[-4px] group"
                 >
                     <span className="sr-only">Dismiss</span>

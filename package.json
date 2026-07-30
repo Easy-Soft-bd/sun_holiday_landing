@@ -2,6 +2,12 @@
   "name": "sunholidaysltd_landing",
   "version": "0.1.0",
   "private": true,
+  "browserslist": [
+    "chrome >= 92",
+    "edge >= 92",
+    "firefox >= 90",
+    "safari >= 15"
+  ],
   "scripts": {
     "dev": "npm run icons && next dev",
     "build": "npm run icons && npm run dbsync && next build",

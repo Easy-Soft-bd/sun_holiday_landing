@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, Space, message, Select, Upload } from "antd";
+import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Select, Upload } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 import IconPicker from "@/src/components/common/IconPicker";
 
@@ -67,6 +67,7 @@ interface ResortCtaEditModalProps {
 }
 
 export default function ResortCtaEditModal({ isOpen, onClose, initialData }: ResortCtaEditModalProps) {
+    const { message } = App.useApp();
     const router = useRouter();
     const [form] = Form.useForm();
     const [isSaving, setIsSaving] = useState(false);

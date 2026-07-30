@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Form, Spin, message } from "antd";
+import { App, Button, Card, Form, Spin } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import BasicInfoSection from "./sections/BasicInfoSection";
@@ -28,6 +28,7 @@ type AddTourFormProps = {
 };
 
 export default function AddTourForm({ tourId }: AddTourFormProps) {
+  const { message } = App.useApp();
   const [form] = Form.useForm<TourFormValues>();
   const router = useRouter();
   const [loading, setLoading] = useState(false);

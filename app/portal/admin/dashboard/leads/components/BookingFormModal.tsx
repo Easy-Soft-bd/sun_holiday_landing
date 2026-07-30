@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { DatePicker, Form, Input, Modal, Select, message } from "antd";
+import { App, DatePicker, Form, Input, Modal, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import {
     BOOKING_SERVICE_OPTIONS,
@@ -41,6 +41,7 @@ function bookingTourId(record: BookingRecord | null | undefined): number | null 
 }
 
 export default function BookingFormModal({ open, initial, onClose, onSaved }: Props) {
+    const { message } = App.useApp();
     const [form] = Form.useForm<FormValues>();
     const isEdit = Boolean(initial?.id);
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Form, Input, Button, Checkbox, Card, Typography, Space, message } from "antd";
+import { App, Form, Input, Button, Checkbox, Card, Typography, Space } from "antd";
 import { UserOutlined, LockOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,7 @@ type LoginResponse = {
 };
 
 export default function AdminLoginPage() {
+    const { message } = App.useApp();
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 

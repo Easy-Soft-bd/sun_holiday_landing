@@ -5,8 +5,9 @@ import {
     ChevronRight,
     MapPin
 } from "lucide-react";
-import ClientOnly from "@/src/components/common/ClientOnly";
+import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
+import { optimizeRemoteImageUrl } from "@/src/lib/media";
 
 interface RoomDetail {
     label: string;
@@ -64,22 +65,9 @@ const defaultData = {
 
 interface ResortCtaProps {
     data?: ResortCtaData;
-    admin?: boolean;
 }
 
-async function ResortCtaAdminSlot({ data }: { data: ResortCtaData }) {
-    const ResortCtaAdminControl = (await import("./ResortCtaAdminControl")).default;
-
-    return (
-        <ClientOnly>
-            <div className="absolute bottom-4 left-4 z-50">
-                <ResortCtaAdminControl data={data} />
-            </div>
-        </ClientOnly>
-    );
-}
-
-const ResortCta = async ({ data, admin = false }: ResortCtaProps) => {
+const ResortCta = async ({ data }: ResortCtaProps) => {
     const resortData = {
         ...defaultData,
         ...Object.fromEntries(
@@ -94,14 +82,16 @@ const ResortCta = async ({ data, admin = false }: ResortCtaProps) => {
                 ? data.amenities
                 : defaultData.amenities,
     };
+    const imageUrl = optimizeRemoteImageUrl(resortData.imageUrl, 1200);
 
     return (
         <section className="relative bg-base-200 py-20 lg:py-28 overflow-hidden group/resort">
             
-            {/* Admin Edit Controls */}
-            {admin && (
-                <ResortCtaAdminSlot data={resortData} />
-            )}
+            <DeferredAdmin
+                name="resort"
+                data={resortData}
+                className="absolute bottom-4 left-4 z-50"
+            />
 
             <div className="container mx-auto px-4 lg:px-8">
                 <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
@@ -110,10 +100,12 @@ const ResortCta = async ({ data, admin = false }: ResortCtaProps) => {
                     <div className="w-full lg:w-1/2 relative group">
                         <div className="relative h-[400px] md:h-[600px] w-full rounded-4xl overflow-hidden shadow-2xl">
                             <Image
-                                src={resortData.imageUrl}
+                                src={imageUrl}
                                 alt="Grandeur Bliss Luxury Hotel Cox's Bazar"
                                 fill
                                 sizes="(max-width: 1024px) 100vw, 50vw"
+                                quality={55}
+                                loading="lazy"
                                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
                             />
                             {/* Image Overlay */}
@@ -134,7 +126,7 @@ const ResortCta = async ({ data, admin = false }: ResortCtaProps) => {
                                 </div>
                                 <div>
                                     <p className="text-2xl font-black text-base-content">{resortData.trustCardTitle}</p>
-                                    <p className="text-xs font-bold text-base-content/50 uppercase tracking-widest">{resortData.trustCardSubtitle}</p>
+                                    <p className="text-xs font-bold text-base-content/70 uppercase tracking-widest">{resortData.trustCardSubtitle}</p>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +135,7 @@ const ResortCta = async ({ data, admin = false }: ResortCtaProps) => {
                     {/* 2. Content Section */}
                     <div className="w-full lg:w-1/2 space-y-8">
                         <div className="space-y-4">
-                            <p className="text-primary font-bold tracking-[0.3em] uppercase text-sm">
+                            <p className="text-base-content font-bold tracking-[0.3em] uppercase text-sm">
                                 {resortData.subHeadline}
                             </p>
                             <h2 className="font-gilliequest text-5xl md:text-6xl leading-none tracking-tighter">
@@ -158,10 +150,10 @@ const ResortCta = async ({ data, admin = false }: ResortCtaProps) => {
                         <div className="grid grid-cols-2 gap-4">
                             {resortData.roomDetails.map((room, i) => (
                                 <div key={i} className="bg-base-100 p-4 rounded-xl border border-base-300 hover:border-primary/30 transition-colors group">
-                                    <p className="text-xs font-black text-primary uppercase tracking-tighter mb-1">{room.label}</p>
+                                    <p className="text-xs font-black text-base-content uppercase tracking-tighter mb-1">{room.label}</p>
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-xl font-bold">{room.count}</span>
-                                        <span className="text-[10px] font-medium text-base-content/50">Rooms • {room.size}</span>
+                                        <span className="text-[10px] font-medium text-base-content/70">Rooms • {room.size}</span>
                                     </div>
                                 </div>
                             ))}
@@ -169,23 +161,23 @@ const ResortCta = async ({ data, admin = false }: ResortCtaProps) => {
 
                         {/* Amenities Section */}
                         <div className="space-y-4 pt-4">
-                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-base-content/40">Premium Facilities</h3>
+                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-base-content/70">Premium Facilities</h3>
                             <div className="flex flex-wrap gap-3">
                                 {resortData.amenities.map((item, i) => (
-                                    <div key={i} className="flex items-center gap-2 bg-base-300/50 px-4 py-2 rounded-lg group hover:bg-primary hover:text-white transition-all duration-300">
-                                        <PublicIconRenderer iconName={item.icon} className="size-4 text-primary group-hover:text-white transition-colors" />
+                                    <div key={i} className="flex items-center gap-2 bg-base-300/50 px-4 py-2 rounded-lg group hover:bg-primary hover:text-primary-content transition-all duration-300">
+                                        <PublicIconRenderer iconName={item.icon} className="size-4 text-base-content group-hover:text-primary-content transition-colors" />
                                         <span className="text-xs font-bold">{item.label}</span>
                                     </div>
                                 ))}
                                 <div className="flex items-center gap-2 bg-base-300/50 px-4 py-2 rounded-lg">
-                                    <span className="text-xs font-bold text-base-content/40 italic">+ much more</span>
+                                    <span className="text-xs font-bold text-base-content/70 italic">+ much more</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* CTA Button */}
                         <div className="pt-6">
-                            <Link href={resortData.ctaButtonLink} className="btn btn-primary btn-lg rounded-full px-10 text-white shadow-xl shadow-primary/20 group">
+                            <Link href={resortData.ctaButtonLink} className="btn btn-primary btn-lg rounded-full px-10 text-primary-content shadow-xl shadow-primary/20 group">
                                 {resortData.ctaButtonText}
                                 <ChevronRight className="size-5 group-hover:translate-x-1 transition-transform" />
                             </Link>

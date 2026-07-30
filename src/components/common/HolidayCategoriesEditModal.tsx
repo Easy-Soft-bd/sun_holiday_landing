@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, Space, message, Select, Upload } from "antd";
+import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Select, Upload } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 import IconPicker from "@/src/components/common/IconPicker";
 
@@ -92,6 +92,7 @@ interface HolidayCategoriesEditModalProps {
 }
 
 export default function HolidayCategoriesEditModal({ isOpen, onClose, initialData }: HolidayCategoriesEditModalProps) {
+    const { message } = App.useApp();
     const router = useRouter();
     const [form] = Form.useForm();
     const [isSaving, setIsSaving] = useState(false);
@@ -257,6 +258,7 @@ export default function HolidayCategoriesEditModal({ isOpen, onClose, initialDat
 
 // Sub-component for category image upload to handle `useWatch` specifically for each field
 function CategoryImageUpload({ form, fieldName, setIsSaving }: { form: any, fieldName: number, setIsSaving: (s: boolean) => void }) {
+    const { message } = App.useApp();
     const imageUrl = Form.useWatch(['categories', fieldName, 'image'], form);
 
     return (

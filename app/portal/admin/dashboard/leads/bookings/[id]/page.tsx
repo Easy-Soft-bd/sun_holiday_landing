@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
     Alert,
+    App,
     Avatar,
     Button,
     Card,
@@ -20,7 +21,6 @@ import {
     Timeline,
     Tooltip,
     Typography,
-    message,
 } from "antd";
 import {
     ArrowLeftOutlined,
@@ -212,12 +212,16 @@ function whatsappHref(phone: string, name: string, tour: string | null) {
     return `https://wa.me/${digits}?text=${text}`;
 }
 
-function copyValue(value: string | null | undefined, label: string) {
+function copyValue(
+    value: string | null | undefined,
+    label: string,
+    messageApi: ReturnType<typeof App.useApp>["message"]
+) {
     if (!value) return;
     navigator.clipboard
         .writeText(value)
-        .then(() => message.success(`${label} copied`))
-        .catch(() => message.error(`Could not copy ${label.toLowerCase()}`));
+        .then(() => messageApi.success(`${label} copied`))
+        .catch(() => messageApi.error(`Could not copy ${label.toLowerCase()}`));
 }
 
 function RiskBadge({ score }: { score: "low" | "medium" | "high" }) {
@@ -329,6 +333,7 @@ function MetaRow({
 }
 
 export default function BookingDetailPage() {
+    const { message } = App.useApp();
     const params = useParams<{ id: string }>();
     const router = useRouter();
     const bookingId = params?.id;
@@ -649,7 +654,7 @@ export default function BookingDetailPage() {
                                     className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        copyValue(booking.phone, "Phone");
+                                        copyValue(booking.phone, "Phone", message);
                                     }}
                                 >
                                     <CopyOutlined />
@@ -678,7 +683,7 @@ export default function BookingDetailPage() {
                                         className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            copyValue(booking.email, "Email");
+                                            copyValue(booking.email, "Email", message);
                                         }}
                                     >
                                         <CopyOutlined />
@@ -1382,7 +1387,7 @@ export default function BookingDetailPage() {
                                             type="button"
                                             className="font-mono text-xs text-slate-700 hover:text-slate-900 hover:underline"
                                             onClick={() =>
-                                                copyValue(booking.ipAddress, "IP address")
+                                                copyValue(booking.ipAddress, "IP address", message)
                                             }
                                         >
                                             {booking.ipAddress}

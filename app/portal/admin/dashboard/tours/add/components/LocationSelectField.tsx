@@ -1,7 +1,7 @@
 "use client";
 
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Divider, Form, Input, Modal, Select, message } from "antd";
+import { App, Button, Divider, Form, Input, Modal, Select } from "antd";
 import { useCallback, useEffect, useState } from "react";
 
 export type LocationOption = {
@@ -10,6 +10,7 @@ export type LocationOption = {
 };
 
 export default function LocationSelectField() {
+  const { message } = App.useApp();
   const form = Form.useFormInstance();
   const [options, setOptions] = useState<LocationOption[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,7 @@ export default function LocationSelectField() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [message]);
 
   useEffect(() => {
     void load();

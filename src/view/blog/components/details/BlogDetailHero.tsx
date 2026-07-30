@@ -9,9 +9,9 @@ export default function BlogDetailHero({ post }: { post: BlogPost }) {
             <div className="container mx-auto px-4">
                 <Link 
                     href="/blog" 
-                    className="inline-flex items-center gap-2 text-sm font-bold text-base-content/50 hover:text-primary transition-colors mb-8 group"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-base-content/70 hover:text-primary transition-colors mb-8 group"
                 >
-                    <ChevronLeft size={16} className="transition-transform group-hover:-translate-x-1" />
+                    <ChevronLeft size={16} className="transition-transform group-hover:-translate-x-1" aria-hidden />
                     Back to all stories
                 </Link>
 
@@ -20,8 +20,8 @@ export default function BlogDetailHero({ post }: { post: BlogPost }) {
                         <span className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
                             {post.category}
                         </span>
-                        <div className="flex items-center gap-2 text-xs text-base-content/40 font-bold uppercase tracking-widest">
-                            <Calendar size={14} className="text-primary" />
+                        <div className="flex items-center gap-2 text-xs text-base-content/70 font-bold uppercase tracking-widest">
+                            <Calendar size={14} className="text-primary" aria-hidden />
                             {post.date}
                         </div>
                     </div>
@@ -30,13 +30,17 @@ export default function BlogDetailHero({ post }: { post: BlogPost }) {
                         {post.title}
                     </h1>
 
-                    <p className="text-xl text-base-content/60 leading-relaxed max-w-3xl">
+                    <p className="text-xl text-base-content/70 leading-relaxed max-w-3xl">
                         {post.excerpt}
                     </p>
 
                     <div className="flex items-center gap-4 pt-4">
-                        <button className="btn btn-ghost btn-sm btn-circle hover:bg-primary/10 hover:text-primary">
-                            <Share2 size={18} />
+                        <button
+                            type="button"
+                            aria-label="Share this article"
+                            className="btn btn-ghost btn-sm btn-circle hover:bg-primary/10 hover:text-primary"
+                        >
+                            <Share2 size={18} aria-hidden />
                         </button>
                     </div>
                 </div>

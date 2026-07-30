@@ -30,30 +30,40 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
-    const contactEmails = Array.isArray(body.contactEmails)
-      ? body.contactEmails.map((v: unknown) => String(v).trim()).filter(Boolean)
-      : parseMultiValue(body.contactEmail);
-    const contactPhones = Array.isArray(body.contactPhones)
-      ? body.contactPhones.map((v: unknown) => String(v).trim()).filter(Boolean)
-      : parseMultiValue(body.contactPhone);
+    const body = (await request.json()) as Record<string, unknown>;
+    const payload: Record<string, unknown> = { ...body };
 
-    const payload = {
-      ...body,
-      contactEmails,
-      contactPhones,
-      googleMapsUrl: String(body.googleMapsUrl ?? '').trim(),
-      address: String(body.address ?? '').trim(),
-      // Persist compatibility in existing string columns (no array columns required)
-      contactEmail: contactEmails.join('\n'),
-      contactPhone: contactPhones.join('\n'),
-    };
+    // Only touch contact fields when the client actually sent them (supports partial updates).
+    if ('contactEmails' in body || 'contactEmail' in body) {
+      const contactEmails = Array.isArray(body.contactEmails)
+        ? body.contactEmails.map((v) => String(v).trim()).filter(Boolean)
+        : parseMultiValue(body.contactEmail);
+      payload.contactEmail = contactEmails.join('\n');
+      delete payload.contactEmails;
+    }
 
-    delete (payload as Record<string, unknown>).contactEmails;
-    delete (payload as Record<string, unknown>).contactPhones;
+    if ('contactPhones' in body || 'contactPhone' in body) {
+      const contactPhones = Array.isArray(body.contactPhones)
+        ? body.contactPhones.map((v) => String(v).trim()).filter(Boolean)
+        : parseMultiValue(body.contactPhone);
+      payload.contactPhone = contactPhones.join('\n');
+      delete payload.contactPhones;
+    }
 
+    if ('googleMapsUrl' in body) {
+      payload.googleMapsUrl = String(body.googleMapsUrl ?? '').trim();
+    }
+    if ('address' in body) {
+      payload.address = String(body.address ?? '').trim();
+    }
     if ('socialLinks' in body) {
       payload.socialLinks = normalizeSocialLinks(body.socialLinks);
+    }
+
+    for (const key of Object.keys(payload)) {
+      if (payload[key] === undefined) {
+        delete payload[key];
+      }
     }
 
     let settings = await GeneralSettings.findOne();
@@ -66,6 +76,7 @@ export async function PUT(request: Request) {
 
     revalidateTag(TAG_GENERAL_SETTINGS, 'max');
     revalidatePath('/', 'layout');
+    revalidatePath('/', 'page');
 
     const plain = settings.get({ plain: true }) as Record<string, unknown>;
     return NextResponse.json({ success: true, data: normalizeSettingsPlain(plain) });

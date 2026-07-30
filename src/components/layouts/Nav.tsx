@@ -71,7 +71,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
 
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            <Logo width={55} height={55} showText={false} siteName={branding?.siteName} logoUrl={branding?.siteLogo} />
+                            <Logo height={55} showText={false} siteName={branding?.siteName} logoUrl={branding?.siteLogo} />
                         </Link>
 
                         {/* Desktop Navigation */}
@@ -82,6 +82,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                                     <div key={link.name} className="relative group">
                                         <Link
                                             href={link.href}
+                                            prefetch={false}
                                             className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-base-content/80 hover:text-primary transition-colors rounded-lg hover:bg-base-200"
                                         >
                                             <Icon size={18} className="opacity-70 group-hover:text-primary group-hover:opacity-100" />
@@ -97,6 +98,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                                                         <Link
                                                             key={sublink.name}
                                                             href={sublink.href}
+                                                            prefetch={false}
                                                             className="block px-4 py-2.5 text-sm text-base-content hover:bg-primary hover:text-primary-content transition-colors"
                                                         >
                                                             {sublink.name}
@@ -115,7 +117,8 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                             {admin ? (
                                 <Link
                                     href="/portal/admin/dashboard"
-                                    className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-white border-none flex items-center gap-2"
+                                    prefetch={false}
+                                    className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-primary-content border-none flex items-center gap-2"
                                 >
                                     <LayoutDashboard size={18} />
                                     Dashboard
@@ -123,18 +126,21 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                             ) : (
                                 <Link
                                     href="/services"
-                                    className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-white border-none"
+                                    prefetch={false}
+                                    className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-primary-content border-none"
                                 >
                                     Our Services
                                 </Link>
                             )}
 
                             <button
+                                type="button"
                                 onClick={toggleDrawer}
                                 className="lg:hidden btn btn-ghost btn-square"
-                                aria-label="Toggle menu"
+                                aria-label="Open menu"
+                                aria-expanded={isDrawerOpen}
                             >
-                                <Menu size={24} className="text-base-content" />
+                                <Menu size={24} className="text-base-content" aria-hidden />
                             </button>
                         </div>
                     </div>
@@ -147,12 +153,24 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             )}
 
             {/* Mobile Drawer */}
-            <div className={`fixed top-0 right-0 h-full w-full max-w-xs bg-base-100 z-50 transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+            <div
+                className={`fixed top-0 right-0 h-full w-full max-w-xs bg-base-100 z-50 transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                aria-hidden={!isDrawerOpen}
+                inert={!isDrawerOpen ? true : undefined}
+            >
                 <div className="flex flex-col h-full">
                     <div className="flex items-center justify-between p-6 border-b border-base-200">
                         <Logo width={35} height={35} siteName={branding?.siteName} logoUrl={branding?.siteLogo} />
-                        <button onClick={toggleDrawer} className="btn btn-ghost btn-circle btn-sm">
-                            <X size={24} />
+                        <button
+                            type="button"
+                            onClick={toggleDrawer}
+                            className="btn btn-ghost btn-circle btn-sm"
+                            aria-label="Close menu"
+                            title="Close menu"
+                            tabIndex={isDrawerOpen ? 0 : -1}
+                        >
+                            <X size={24} aria-hidden />
+                            <span className="sr-only">Close menu</span>
                         </button>
                     </div>
 
@@ -167,20 +185,23 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                                         {link.submenu ? (
                                             <>
                                                 <button
+                                                    type="button"
                                                     onClick={() => toggleSubmenu(link.name)}
-                                                    className="flex items-center justify-between py-3 px-4 active:bg-primary/10"
+                                                    className="flex items-center justify-between py-3 px-4 active:bg-primary/10 w-full text-left"
+                                                    aria-expanded={isSubmenuOpen}
+                                                    aria-label={`${isSubmenuOpen ? 'Collapse' : 'Expand'} ${link.name} submenu`}
                                                 >
                                                     <div className="flex items-center gap-3">
-                                                        <Icon size={20} className="text-primary" />
+                                                        <Icon size={20} className="text-primary" aria-hidden />
                                                         <span className="font-bold text-base-content">{link.name}</span>
                                                     </div>
-                                                    <ChevronDown size={18} className={`transition-transform duration-300 ${isSubmenuOpen ? 'rotate-180' : ''}`} />
+                                                    <ChevronDown size={18} aria-hidden className={`transition-transform duration-300 ${isSubmenuOpen ? 'rotate-180' : ''}`} />
                                                 </button>
                                                 {isSubmenuOpen && (
                                                     <ul className="bg-base-200 rounded-lg mx-2 mb-2">
                                                         {link.submenu.map((sublink) => (
                                                             <li key={sublink.name}>
-                                                                <Link href={sublink.href} onClick={toggleDrawer} className="py-3 px-6 text-sm font-medium">
+                                                                <Link href={sublink.href} prefetch={false} onClick={toggleDrawer} className="py-3 px-6 text-sm font-medium">
                                                                     {sublink.name}
                                                                 </Link>
                                                             </li>
@@ -189,8 +210,8 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                                                 )}
                                             </>
                                         ) : (
-                                            <Link href={link.href} onClick={toggleDrawer} className="flex items-center gap-3 py-3 px-4">
-                                                <Icon size={20} className="text-primary" />
+                                            <Link href={link.href} prefetch={false} onClick={toggleDrawer} className="flex items-center gap-3 py-3 px-4">
+                                                <Icon size={20} className="text-primary" aria-hidden />
                                                 <span className="font-bold text-base-content">{link.name}</span>
                                             </Link>
                                         )}
@@ -204,7 +225,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                         {admin ? (
                             <Link
                                 href="/portal/admin/dashboard"
-                                className="btn btn-primary w-full rounded-full text-white flex items-center justify-center gap-2"
+                                className="btn btn-primary w-full rounded-full text-primary-content flex items-center justify-center gap-2"
                                 onClick={toggleDrawer}
                             >
                                 <LayoutDashboard size={18} />
@@ -213,7 +234,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                         ) : (
                             <Link
                                 href="/services"
-                                className="btn btn-primary w-full rounded-full text-white"
+                                className="btn btn-primary w-full rounded-full text-primary-content"
                                 onClick={toggleDrawer}
                             >
                                 Our Services

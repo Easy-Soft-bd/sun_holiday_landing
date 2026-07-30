@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, UploadOutlined } from "@ant-design/icons";
-import { Button, Input, Upload, message } from "antd";
+import { App, Button, Input, Upload } from "antd";
 import { useState } from "react";
 
 type Props = {
@@ -25,6 +25,7 @@ export default function SailorMoonGalleryImageCell({
   onMoveUp,
   onMoveDown,
 }: Props) {
+  const { message } = App.useApp();
   const [uploading, setUploading] = useState(false);
   const src = typeof value === "string" ? value.trim() : "";
 

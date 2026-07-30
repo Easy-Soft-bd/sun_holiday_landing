@@ -6,8 +6,9 @@ import {
     UserCheck,
     ArrowRight
 } from "lucide-react";
-import ClientOnly from "@/src/components/common/ClientOnly";
+import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
+import { optimizeRemoteImageUrl } from "@/src/lib/media";
 
 interface Inclusion {
     icon: string;
@@ -57,31 +58,20 @@ const defaultData = {
 
 interface HajjCtaProps {
     data?: HajjCtaData;
-    admin?: boolean;
 }
 
-async function HajjCtaAdminSlot({ data }: { data: HajjCtaData }) {
-    const HajjCtaAdminControl = (await import("./HajjCtaAdminControl")).default;
-
-    return (
-        <ClientOnly>
-            <div className="absolute bottom-4 left-4 z-50">
-                <HajjCtaAdminControl data={data} />
-            </div>
-        </ClientOnly>
-    );
-}
-
-const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
+const HajjCta = async ({ data }: HajjCtaProps) => {
     const hajjData = { ...defaultData, ...data };
+    const imageUrl = optimizeRemoteImageUrl(hajjData.imageUrl, 1200);
 
     return (
         <section className="relative bg-base-100 py-20 lg:py-32 overflow-hidden group/hajj">
             
-            {/* Admin Edit Controls */}
-            {admin && (
-                <HajjCtaAdminSlot data={hajjData} />
-            )}
+            <DeferredAdmin
+                name="hajj"
+                data={hajjData}
+                className="absolute bottom-4 left-4 z-50"
+            />
 
             {/* Decorative Background Elements */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 translate-x-1/2 pointer-events-none" />
@@ -93,10 +83,12 @@ const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
                     <div className="w-full lg:w-1/2 relative group">
                         <div className="relative h-[450px] md:h-[550px] w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
                             <Image
-                                src={hajjData.imageUrl}
+                                src={imageUrl}
                                 alt="Umrah Hajj Package Bangladesh - Sun Tourism Ltd"
                                 fill
                                 sizes="(max-width: 1024px) 100vw, 50vw"
+                                quality={55}
+                                loading="lazy"
                                 className="object-cover transition-transform duration-1000 group-hover:scale-110"
                             />
                             {/* Soft Gradient Overlay */}
@@ -106,7 +98,7 @@ const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
                             <div className="absolute top-6 right-6 bg-white shadow-xl rounded-2xl p-4 flex flex-col items-center min-w-[100px] animate-float">
                                 <Calendar className="size-6 text-primary mb-1" />
                                 <span className="text-2xl font-black text-base-content">{hajjData.duration}</span>
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-base-content/50">{hajjData.durationLabel}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-base-content/70">{hajjData.durationLabel}</span>
                             </div>
                         </div>
 
@@ -117,7 +109,7 @@ const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
                                     <UserCheck className="size-6 text-success" />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-base-content">{hajjData.mualimTitle}</h4>
+                                    <p className="font-bold text-base-content">{hajjData.mualimTitle}</p>
                                     <p className="text-xs text-base-content/60 mt-1 leading-relaxed">
                                         {hajjData.mualimDescription}
                                     </p>
@@ -129,7 +121,7 @@ const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
                     {/* 2. Content Section */}
                     <div className="w-full lg:w-1/2 space-y-8">
                         <div className="space-y-4">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-base-200 text-base-content text-xs font-bold uppercase tracking-widest border border-base-300">
                                 {hajjData.offerBadge}
                             </div>
                             <h2 className="font-gilliequest text-5xl md:text-7xl leading-none tracking-tighter">
@@ -147,7 +139,7 @@ const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
                                     key={i}
                                     className="flex items-center gap-4 p-4 rounded-xl border border-base-200 bg-base-200/30 hover:bg-base-100 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group"
                                 >
-                                    <div className="bg-base-100 p-2 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
+                                    <div className="bg-base-100 p-2 rounded-lg group-hover:bg-primary group-hover:text-primary-content transition-colors">
                                         <PublicIconRenderer iconName={item.icon} className="size-5" />
                                     </div>
                                     <span className="text-sm font-bold text-base-content/80 group-hover:text-base-content transition-colors">
@@ -159,10 +151,10 @@ const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
 
                         {/* Accommodation Details */}
                         <div className="p-6 rounded-2xl bg-base-200 border-l-4 border-primary space-y-2">
-                            <h4 className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                            <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                                 <Hotel className="size-4 text-primary" />
                                 {hajjData.accommodationTitle}
-                            </h4>
+                            </h3>
                             <p className="text-sm text-base-content/60">
                                 {hajjData.accommodationDescription}
                             </p>
@@ -172,7 +164,7 @@ const HajjCta = async ({ data, admin = false }: HajjCtaProps) => {
                         <div className="flex flex-wrap items-center gap-4 pt-4">
                             <Link
                                 href={hajjData.viewDetailsLink}
-                                className="btn btn-primary btn-lg rounded-full px-10 text-white shadow-xl shadow-primary/20 group"
+                                className="btn btn-primary btn-lg rounded-full px-10 text-primary-content shadow-xl shadow-primary/20 group"
                             >
                                 View Details
                                 <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />

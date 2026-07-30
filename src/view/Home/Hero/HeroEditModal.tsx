@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, message, Upload, Space } from "antd";
+import { Modal, Form, Input, Button, Divider, Row, Col, App, Upload, Space } from "antd";
 import { SaveOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
@@ -54,6 +54,7 @@ interface HeroEditModalProps {
 }
 
 export default function HeroEditModal({ isOpen, onClose, initialData }: HeroEditModalProps) {
+    const { message } = App.useApp();
     const router = useRouter();
     const [form] = Form.useForm();
     const [isSaving, setIsSaving] = useState(false);

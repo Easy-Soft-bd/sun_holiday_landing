@@ -37,7 +37,7 @@ export const mockTours: TourPackage[] = [
         price: 5500,
         duration: "3 Days / 2 Nights",
         category: "Domestic",
-        image: "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=1200&auto=format&fit=crop",
         rating: 4.8,
         reviews: 124,
 
@@ -56,14 +56,14 @@ export const mockTours: TourPackage[] = [
         includes: ["AC Bus tickets (Dhaka-Cox's Bazar-Dhaka)", "2 Nights accommodation (Twin share)", "Breakfast at hotel", "Sightseeing transport"],
         excludes: ["Lunch and Dinner", "Personal expenses", "Entry fees to parks"],
         gallery: [
-            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2070&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=1200&auto=format&fit=crop",
 
         ],
         videoUrl: "https://www.youtube.com/watch?v=-758gHCMn0M"
@@ -76,7 +76,7 @@ export const mockTours: TourPackage[] = [
         price: 8500,
         duration: "3 Days / 2 Nights",
         category: "Domestic",
-        image: "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=2070&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=1200&auto=format&fit=crop",
         rating: 4.9,
         reviews: 85,
 
@@ -95,11 +95,11 @@ export const mockTours: TourPackage[] = [
         includes: ["Bus & Ship tickets", "2 Nights resort accommodation", "All meals on the island", "Chera Dwip boat trip"],
         excludes: ["Snorkeling gear rental", "Personal expenses"],
         gallery: [
-            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=2070&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1684689799775-e77a87667188?q=80&w=1200&auto=format&fit=crop",
         ],
         videoUrl: "https://www.youtube.com/watch?v=-758gHCMn0M"
     },
@@ -111,7 +111,7 @@ export const mockTours: TourPackage[] = [
         price: 6500,
         duration: "2 Days / 3 Nights",
         category: "Domestic",
-        image: "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=2070&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=1200&auto=format&fit=crop",
         rating: 4.7,
         reviews: 92,
 
@@ -125,10 +125,10 @@ export const mockTours: TourPackage[] = [
         includes: ["Dhaka-Khagrachari bus", "Jeep Safari", "Resort stay", "All meals"],
         excludes: ["Personal medications", "Entry tickets"],
         gallery: [
-            "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=2070&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1658383895221-173f07c6a9d0?q=80&w=1200&auto=format&fit=crop"
         ],
         videoUrl: "https://www.youtube.com/watch?v=-758gHCMn0M"
     },
@@ -140,7 +140,7 @@ export const mockTours: TourPackage[] = [
         price: 45000,
         duration: "5 Days / 4 Nights",
         category: "International",
-        image: "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=2070&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=1200&auto=format&fit=crop",
         rating: 4.9,
         reviews: 210,
 
@@ -156,10 +156,10 @@ export const mockTours: TourPackage[] = [
         includes: ["4 Nights 3* Hotel", "Daily Breakfast", "Airport Transfers", "Visa processing", "Tours mentioned"],
         excludes: ["Airfare", "Tourism Dirham Fee", "Lunch & Dinner"],
         gallery: [
-            "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=2070&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1643904736472-8b77e93ca3d7?q=80&w=1200&auto=format&fit=crop"
         ],
         videoUrl: "https://www.youtube.com/watch?v=-758gHCMn0M"
     },
@@ -171,7 +171,7 @@ export const mockTours: TourPackage[] = [
         price: 32000,
         duration: "5 Days / 4 Nights",
         category: "International",
-        image: "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=2070&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=1200&auto=format&fit=crop",
         rating: 4.6,
         reviews: 156,
 
@@ -187,10 +187,10 @@ export const mockTours: TourPackage[] = [
         includes: ["Hotel Accommodation", "Breakfast", "All Transfers", "Sightseeing"],
         excludes: ["Airfare", "Visa Fee", "Personal Expenses"],
         gallery: [
-            "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=2070&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1626018517488-5b64242cfa75?q=80&w=1200&auto=format&fit=crop"
         ],
         videoUrl: "https://www.youtube.com/watch?v=-758gHCMn0M"
     },
@@ -202,7 +202,7 @@ export const mockTours: TourPackage[] = [
         price: 150000,
         duration: "14 Days",
         category: "Hajj & Umrah",
-        image: "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=2070&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=1200&auto=format&fit=crop",
         rating: 5.0,
         reviews: 340,
 
@@ -219,10 +219,10 @@ export const mockTours: TourPackage[] = [
          includes: ["Visa", "Airfare", "Hotel Stay", "Transport", "Guide"],
          excludes: ["Food (optional add-on)", "Personal Shopping"],
          gallery: [
-             "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=2070&auto=format&fit=crop",
-             "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=2070&auto=format&fit=crop",
-             "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=2070&auto=format&fit=crop",
-             "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=2070&auto=format&fit=crop"
+             "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=1200&auto=format&fit=crop",
+             "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=1200&auto=format&fit=crop",
+             "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=1200&auto=format&fit=crop",
+             "https://images.unsplash.com/photo-1720549973451-018d3623b55a?q=80&w=1200&auto=format&fit=crop"
          ],
          videoUrl: "https://www.youtube.com/watch?v=-758gHCMn0M"
     },
@@ -234,7 +234,7 @@ export const mockTours: TourPackage[] = [
         price: 65000,
         duration: "6 Days / 5 Nights",
         category: "International",
-        image: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=2070&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200&auto=format&fit=crop",
         rating: 4.8,
         reviews: 98,
 
@@ -251,10 +251,10 @@ export const mockTours: TourPackage[] = [
         includes: ["Hotel", "Breakfast", "Tours", "Transfers"],
         excludes: ["Airfare", "Visa", "Lunch/Dinner"],
         gallery: [
-            "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=2070&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200&auto=format&fit=crop"
         ],
         videoUrl: "https://www.youtube.com/watch?v=-758gHCMn0M"
     },
@@ -266,7 +266,7 @@ export const mockTours: TourPackage[] = [
         price: 450000,
         duration: "21 Days",
         category: "Hajj & Umrah",
-        image: "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=2000&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=1200&auto=format&fit=crop",
         rating: 4.9,
         reviews: 112,
 
@@ -282,10 +282,10 @@ export const mockTours: TourPackage[] = [
         includes: ["Visa", "Ticket", "Accommodation", "Food", "Hajj Draft"],
         excludes: ["Qurbani", "Personal expenses"],
         gallery: [
-            "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=2000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=2000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=2000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=2000&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1704104501136-8f35402af395?q=80&w=1200&auto=format&fit=crop"
         ],
         videoUrl: "https://www.youtube.com/watch?v=-758gHCMn0M"
     },
@@ -297,7 +297,7 @@ export const mockTours: TourPackage[] = [
         price: 12500,
         duration: "3 Days / 2 Nights",
         category: "Domestic",
-        image: "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=2070&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=1200&auto=format&fit=crop",
         rating: 4.7,
         reviews: 67,
 
@@ -311,10 +311,10 @@ export const mockTours: TourPackage[] = [
         includes: ["Ship Cruise", "All Meals", "Forest Permission", "Guide", "Armed Guard"],
         excludes: ["Bus to Khulna", "Personal tips"],
         gallery: [
-            "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=2070&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=2070&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=1200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1706459671567-43529d418cd1?q=80&w=1200&auto=format&fit=crop"
         ],
         videoUrl: "https://www.youtube.com/watch?v=-758gHCMn0M"
     }

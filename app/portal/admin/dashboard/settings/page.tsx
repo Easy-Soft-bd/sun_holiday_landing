@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Card, Typography, Space, message, Tabs, Skeleton, Upload } from 'antd';
+import { Form, Input, Button, Card, Typography, Space, App, Tabs, Skeleton, Upload } from 'antd';
 import type { GetProp, UploadProps } from 'antd';
 import {
   GlobalOutlined,
@@ -24,6 +24,7 @@ const { TextArea } = Input;
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 export default function SettingsPage() {
+  const { message } = App.useApp();
   const [form] = Form.useForm();
   const { data: settingsData, isLoading, isError } = useGetSettingsQuery({});
   const [updateSettings, { isLoading: isUpdating }] = useUpdateSettingsMutation();
@@ -68,7 +69,9 @@ export default function SettingsPage() {
       if (response?.success && response?.url) {
         setLogoUrl(response.url);
         form.setFieldValue('siteLogo', response.url);
-        message.success('Logo uploaded successfully');
+        // Persist immediately so navbar/footer update without a separate Save click.
+        await updateSettings({ siteLogo: response.url }).unwrap();
+        message.success('Logo updated on the website');
       } else {
         message.error('Upload failed');
       }
@@ -92,13 +95,12 @@ export default function SettingsPage() {
       .filter((link: { url: string }) => link.url.length > 0);
     const payload = {
       ...values,
-      siteLogo: String(values.siteLogo || '').trim(),
+      siteLogo: String(values.siteLogo || logoUrl || '').trim(),
       address: String(values.address || '').trim(),
       googleMapsUrl: String(values.googleMapsUrl || '').trim(),
       contactEmails,
       contactPhones,
       socialLinks,
-      // keep single-value compatibility for consumers still using legacy fields
       contactEmail: contactEmails[0] || '',
       contactPhone: contactPhones[0] || '',
     };
@@ -147,7 +149,7 @@ export default function SettingsPage() {
             >
               <Input placeholder="Sun Tourism" />
             </Form.Item>
-            <Form.Item label="Main Website Logo" extra="Used by navbar and footer brand logo.">
+            <Form.Item label="Main Website Logo" extra="Uploading saves immediately and updates the navbar/footer logo.">
               <Upload
                 name="siteLogo"
                 listType="picture-card"

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, message, Space, Row, Col } from "antd";
+import { Modal, Form, Input, Button, Divider, App, Space, Row, Col } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import * as LucideIcons from "lucide-react";
 
@@ -54,6 +54,7 @@ interface AirLineMarqueeEditModalProps {
 }
 
 export default function AirLineMarqueeEditModal({ isOpen, onClose, initialData }: AirLineMarqueeEditModalProps) {
+    const { message } = App.useApp();
     const router = useRouter();
     const [form] = Form.useForm();
     const [isSaving, setIsSaving] = useState(false);

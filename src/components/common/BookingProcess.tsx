@@ -66,9 +66,9 @@ const BookingProcess = () => {
 
                                 {/* Content */}
                                 <div className="space-y-3">
-                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary">
-                                        {step.title}
-                                    </h3>
+                                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-base-content">
+                                    {step.title}
+                                </h3>
                                     <h4 className="text-xl font-bold text-base-content tracking-tight">
                                         {step.subtitle}
                                     </h4>
@@ -77,8 +77,8 @@ const BookingProcess = () => {
                                     </p>
 
                                     {step.link && (
-                                        <Link href={step.link} className="inline-flex items-center gap-2 text-xs font-bold text-primary hover:underline underline-offset-4 mt-2">
-                                            {step.linkText} <ArrowRight size={14} />
+                                        <Link href={step.link} prefetch={false} className="inline-flex items-center gap-2 min-h-11 py-2.5 text-xs font-bold text-base-content hover:text-primary hover:underline underline-offset-4 mt-2">
+                                            {step.linkText} <ArrowRight size={14} aria-hidden />
                                         </Link>
                                     )}
                                 </div>
@@ -87,7 +87,7 @@ const BookingProcess = () => {
 
                         {/* Success Card */}
                         <div className="lg:translate-y-[-10px]">
-                            <div className="bg-primary rounded-3xl p-8 text-white shadow-2xl shadow-primary/30 relative overflow-hidden group hover:scale-105 transition-transform duration-500">
+                            <div className="bg-primary rounded-3xl p-8 text-primary-content shadow-2xl shadow-primary/30 relative overflow-hidden group hover:scale-105 transition-transform duration-500">
                                 {/* Decorative background circle */}
                                 <div className="absolute -bottom-10 -right-10 size-40 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
 
@@ -95,13 +95,13 @@ const BookingProcess = () => {
                                     <div className="size-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
                                         <PublicIconRenderer iconName="LuCheckCircle" size={24} />
                                     </div>
-                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/80">
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary-content">
                                         Success
                                     </h3>
                                     <h4 className="text-xl font-bold tracking-tight">
                                         Ready to Fly!
                                     </h4>
-                                    <p className="text-sm text-white/80 leading-relaxed font-medium">
+                                    <p className="text-sm text-primary-content leading-relaxed font-medium">
                                         That&apos;s it! Now we will contact you shortly and provide booking confirmation.
                                     </p>
                                 </div>

@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "../common/Logo";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
-import ClientOnly from "../common/ClientOnly";
 import PublicIconRenderer from "../common/PublicIconRenderer";
+import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import { resolveSocialLinks, type SocialLink } from "@/src/lib/social-links";
 import { parseMultiValue } from "@/src/lib/settings-normalize";
 
@@ -125,7 +125,6 @@ function mergeFooterData(data?: FooterData): FooterData {
 
 interface FooterProps {
     data?: FooterData;
-    admin?: boolean;
     settings?: {
         contactEmails?: string[] | null;
         contactPhones?: string[] | null;
@@ -145,19 +144,7 @@ interface FooterProps {
     };
 }
 
-async function FooterAdminSlot({ data }: { data: FooterData }) {
-    const FooterAdminControl = (await import("./FooterAdminControl")).default;
-
-    return (
-        <ClientOnly>
-            <div className="absolute top-4 left-4 z-50">
-                <FooterAdminControl data={data} />
-            </div>
-        </ClientOnly>
-    );
-}
-
-const Footer = async ({ data, admin = false, settings, branding }: FooterProps) => {
+const Footer = async ({ data, settings, branding }: FooterProps) => {
     const footerData = mergeFooterData(data);
     const currentYear = new Date().getFullYear();
 
@@ -188,11 +175,13 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
 
     return (
         <footer className="relative bg-base-200 text-base-content border-t border-base-300 group/footer">
-            
+
             {/* Admin Edit Controls */}
-            {admin && (
-                <FooterAdminSlot data={footerData} />
-            )}
+            <DeferredAdmin
+                name="footer"
+                data={footerData}
+                className="absolute top-4 left-4 z-50"
+            />
 
             {/* Main Footer Content */}
             <div className="container mx-auto px-6 pt-16 pb-8">
@@ -200,10 +189,9 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
 
                     {/* Column 1: Brand & Bio */}
                     <div className="space-y-6">
-                        <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
+                        <Link href="/" prefetch={false} className="inline-block hover:opacity-80 transition-opacity">
                             <Logo
                                 showText={false}
-                                width={60}
                                 height={60}
                                 siteName={branding?.siteName}
                                 logoUrl={branding?.siteLogo}
@@ -217,6 +205,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
                                 <Link
                                     key={`${social.icon}-${social.url}-${i}`}
                                     href={social.url}
+                                    prefetch={false}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label={social.label || undefined}
@@ -239,11 +228,15 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
 
                     {/* Column 2: Quick Links */}
                     <div>
-                        <h3 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-primary">{footerData.servicesTitle}</h3>
-                        <ul className="space-y-4 text-sm font-medium">
+                        <h2 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-base-content">{footerData.servicesTitle}</h2>
+                        <ul className="space-y-1 text-sm font-medium">
                             {footerData.servicesLinks?.map((link, i) => (
                                 <li key={i}>
-                                    <Link href={link.url} className="hover:text-primary transition-colors">
+                                    <Link
+                                        href={link.url}
+                                        prefetch={false}
+                                        className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors"
+                                    >
                                         {link.label}
                                     </Link>
                                 </li>
@@ -253,7 +246,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
 
                     {/* Column 3: Contact Info */}
                     <div>
-                        <h3 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-primary">{footerData.contactTitle}</h3>
+                        <h2 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-base-content">{footerData.contactTitle}</h2>
                         <ul className="space-y-4 text-sm font-medium">
                             <li className="flex items-start gap-3">
                                 <MapPin size={18} className="text-primary shrink-0" />
@@ -271,22 +264,22 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
                                 )}
                             </li>
                             {contactPhones.map((phone, i) => (
-                                <li key={`phone-${i}`} className="flex items-center gap-3">
+                                <li key={`phone-${i}`} className="flex items-center gap-3 min-h-11">
                                     <Phone size={18} className="text-primary shrink-0" />
                                     <a
                                         href={`tel:${phone.replace(/\s/g, "")}`}
-                                        className="text-base-content/70 hover:text-primary transition-colors"
+                                        className="inline-flex items-center min-h-11 py-2.5 text-base-content/70 hover:text-primary transition-colors"
                                     >
                                         {phone}
                                     </a>
                                 </li>
                             ))}
                             {contactEmails.map((email, i) => (
-                                <li key={`email-${i}`} className="flex items-center gap-3">
+                                <li key={`email-${i}`} className="flex items-center gap-3 min-h-11">
                                     <Mail size={18} className="text-primary shrink-0" />
                                     <a
                                         href={`mailto:${email}`}
-                                        className="text-base-content/70 hover:text-primary transition-colors break-all"
+                                        className="inline-flex items-center min-h-11 py-2.5 text-base-content/70 hover:text-primary transition-colors break-all"
                                     >
                                         {email}
                                     </a>
@@ -297,7 +290,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
 
                     {/* Column 4: Newsletter */}
                     <div>
-                        <h3 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-primary">{footerData.newsletterTitle}</h3>
+                        <h2 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-base-content">{footerData.newsletterTitle}</h2>
                         <p className="text-sm text-base-content/70 mb-4">{footerData.newsletterDescription}</p>
                         <div className="form-control">
                             <form className="relative group">
@@ -322,7 +315,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
                 <div className="mt-16 pt-8 border-t border-base-300">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-8">
                         <div className="text-center md:text-left">
-                            <h4 className="text-xs font-bold uppercase tracking-widest text-base-content/40 mb-4">{footerData.certificationsTitle}</h4>
+                            <h3 className="text-xs font-bold uppercase tracking-widest text-base-content/70 mb-4">{footerData.certificationsTitle}</h3>
                             <div className="flex flex-wrap justify-center md:justify-start gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                                 {footerData.certifications?.map((cert, i) => (
                                     <Image
@@ -331,6 +324,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
                                         alt={cert.name}
                                         width={120}
                                         height={40}
+                                        loading="lazy"
                                         className="h-10 w-auto object-contain"
                                     />
                                 ))}
@@ -339,7 +333,7 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
 
                         {/* Payment Methods */}
                         <div className="text-center md:text-right">
-                            <h4 className="text-xs font-bold uppercase tracking-widest text-base-content/40 mb-4">{footerData.paymentsTitle}</h4>
+                            <h3 className="text-xs font-bold uppercase tracking-widest text-base-content/70 mb-4">{footerData.paymentsTitle}</h3>
                             <div className="flex gap-3 justify-center md:justify-end opacity-70">
                                 <div className="bg-white px-2 py-1 rounded border border-base-300 text-[10px] font-bold text-black">VISA</div>
                                 <div className="bg-white px-2 py-1 rounded border border-base-300 text-[10px] font-bold text-black">MasterCard</div>
@@ -350,12 +344,12 @@ const Footer = async ({ data, admin = false, settings, branding }: FooterProps) 
                 </div>
 
                 {/* Bottom Legal Section */}
-                <div className="mt-12 pt-8 border-t border-base-300 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-base-content/50">
+                <div className="mt-12 pt-8 border-t border-base-300 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-base-content/70">
                     <p>© {currentYear} {footerData.copyrightText}</p>
-                    <div className="flex gap-6">
-                        <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-                        <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
-                        <Link href="/cookies" className="hover:text-primary transition-colors">Cookie Policy</Link>
+                    <div className="flex flex-wrap gap-x-6 gap-y-1">
+                        <Link href="/privacy" prefetch={false} className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors">Privacy Policy</Link>
+                        <Link href="/terms" prefetch={false} className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors">Terms of Service</Link>
+                        <Link href="/cookies" prefetch={false} className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors">Cookie Policy</Link>
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Col, Divider, Form, Input, Modal, Row, message } from "antd";
+import { App, Button, Col, Divider, Form, Input, Modal, Row } from "antd";
 import { DeleteOutlined, PlusOutlined, SaveOutlined } from "@ant-design/icons";
 import type { TeamsPageData } from "./teams-page-data";
 import { defaultTeamsPageData } from "./teams-page-data";
@@ -17,6 +17,7 @@ type Props = {
 };
 
 export default function TeamsEditModal({ isOpen, onClose, initialData }: Props) {
+  const { message } = App.useApp();
   const [form] = Form.useForm<TeamsPageData>();
   const [saving, setSaving] = useState(false);
   const router = useRouter();

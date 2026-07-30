@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import ClientOnly from "./components/common/ClientOnly";
+import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import PublicIconRenderer from "./components/common/PublicIconRenderer";
 
 interface CategoryItem {
@@ -78,31 +78,19 @@ const defaultData: HolidayCategoriesData = {
 
 interface HolidayCategoriesProps {
     data?: HolidayCategoriesData;
-    admin?: boolean;
 }
 
-async function HolidayCategoriesAdminSlot({ data }: { data: HolidayCategoriesData }) {
-    const HolidayCategoriesAdminControl = (await import("./components/common/HolidayCategoriesAdminControl")).default;
-
-    return (
-        <ClientOnly>
-            <div className="absolute bottom-4 left-4 z-50">
-                <HolidayCategoriesAdminControl data={data} />
-            </div>
-        </ClientOnly>
-    );
-}
-
-export default async function HolidayCategories({ data, admin = false }: HolidayCategoriesProps) {
+export default async function HolidayCategories({ data }: HolidayCategoriesProps) {
     const holidayData = { ...defaultData, ...data };
 
     return (
         <section className="relative bg-base-100 py-20 lg:py-32 group/holiday">
             
-            {/* Admin Edit Controls */}
-            {admin && (
-                <HolidayCategoriesAdminSlot data={holidayData} />
-            )}
+            <DeferredAdmin
+                name="holidayCategories"
+                data={holidayData}
+                className="absolute bottom-4 left-4 z-50"
+            />
 
             <div className="container mx-auto px-4">
 
@@ -116,7 +104,11 @@ export default async function HolidayCategories({ data, admin = false }: Holiday
                             {holidayData.headerDescription}
                         </p>
                     </div>
-                    <Link href={holidayData.headerButtonLink || "#"} className="btn btn-primary rounded-full px-8 text-white">
+                    <Link
+                        href={holidayData.headerButtonLink || "#"}
+                        prefetch={false}
+                        className="btn btn-primary btn-md rounded-full px-8 min-h-11 h-11 inline-flex items-center text-primary-content"
+                    >
                         {holidayData.headerButtonText}
                     </Link>
                 </div>

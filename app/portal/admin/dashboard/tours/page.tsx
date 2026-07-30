@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Table, Button, Space, Input, Tag, message, Popconfirm, Card, Row, Col, Statistic } from 'antd';
+import { App, Table, Button, Space, Input, Tag, Popconfirm, Card, Row, Col, Statistic } from 'antd';
 import {
   PlusOutlined,
   SearchOutlined,
@@ -30,6 +30,7 @@ interface TourDataType {
 }
 
 export default function TourManagementPage() {
+  const { message } = App.useApp();
   const [searchText, setSearchText] = useState('');
   const [tours, setTours] = useState<TourDataType[]>([]);
   const [loading, setLoading] = useState(true);

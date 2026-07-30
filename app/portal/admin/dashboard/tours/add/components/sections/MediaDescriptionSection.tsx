@@ -1,7 +1,7 @@
 "use client";
 
 import { UploadOutlined } from "@ant-design/icons";
-import { Form, Input, Space, Upload, message } from "antd";
+import { App, Form, Input, Space, Upload } from "antd";
 import type { FormInstance } from "antd";
 import RichTextEditor from "../RichTextEditor";
 import { uploadImage } from "../upload-image";
@@ -12,6 +12,8 @@ type MediaDescriptionSectionProps = {
 };
 
 export default function MediaDescriptionSection({ form }: MediaDescriptionSectionProps) {
+  const { message } = App.useApp();
+
   return (
     <>
       <Form.Item label="Main Image" required help="Upload an image or provide a URL">

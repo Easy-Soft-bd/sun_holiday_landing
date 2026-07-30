@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  App,
   Button,
   Col,
   Divider,
@@ -13,7 +14,6 @@ import {
   Row,
   Space,
   Upload,
-  message,
 } from "antd";
 import {
   DeleteOutlined,
@@ -175,6 +175,7 @@ function UploadField({
   label: string;
   extra?: string;
 }) {
+  const { message } = App.useApp();
   const imageUrl = Form.useWatch(name, form);
 
   return (
@@ -229,6 +230,7 @@ function GalleryImageField({
   form: ReturnType<typeof Form.useForm>[0];
   name: number;
 }) {
+  const { message } = App.useApp();
   const imageUrl = Form.useWatch(["items", name, "src"], form);
 
   return (
@@ -287,6 +289,7 @@ function AccommodationImageField({
   form: ReturnType<typeof Form.useForm>[0];
   name: number;
 }) {
+  const { message } = App.useApp();
   const imageUrl = Form.useWatch(["items", name, "image"], form);
 
   return (
@@ -345,6 +348,7 @@ export default function SectionEditModal({
   title,
   initialData,
 }: SectionEditModalProps) {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm();
   const [isSaving, setIsSaving] = useState(false);

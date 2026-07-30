@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Col, Form, Input, Modal, Row, Space, message } from "antd";
+import { App, Button, Col, Form, Input, Modal, Row, Space } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 import type { AboutPageData } from "./about-page-data";
 import { defaultAboutPageData } from "./about-page-data";
@@ -16,6 +16,7 @@ type Props = {
 };
 
 export default function AboutEditModal({ isOpen, onClose, initialData }: Props) {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm<AboutPageData>();
   const [saving, setSaving] = useState(false);

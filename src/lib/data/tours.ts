@@ -98,8 +98,14 @@ export const getCachedActiveTours = cache(async () => {
 /** Active tours marked for the home "Popular Tour Packages" slider, ordered by `homeSortOrder`. */
 export const getCachedHomeFeaturedTours = cache(async () => {
   const tours = await getToursFromDb();
+  const { getTourPublicPath } = await import("@/src/lib/tours/public-path");
   return tours
-    .filter((tour) => tour.status === 'Active' && Boolean(tour.showOnHome))
+    .filter(
+      (tour) =>
+        tour.status === "Active" &&
+        Boolean(tour.showOnHome) &&
+        Boolean(getTourPublicPath(tour))
+    )
     .sort((a, b) => {
       const orderA = Number(a.homeSortOrder ?? 0);
       const orderB = Number(b.homeSortOrder ?? 0);
@@ -109,7 +115,8 @@ export const getCachedHomeFeaturedTours = cache(async () => {
       const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
       const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
       return timeB - timeA;
-    });
+    })
+    .slice(0, 8);
 });
 
 export const getCachedTourById = cache(async (id: string) => {

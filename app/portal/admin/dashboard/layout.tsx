@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import {
+    App,
     Avatar,
     Breadcrumb,
     Button,
@@ -13,7 +14,6 @@ import {
     Space,
     Tag,
     Tooltip,
-    message,
     theme,
 } from "antd";
 import type { MenuProps } from "antd";
@@ -183,6 +183,7 @@ function selectedKeyForPath(pathname: string): string {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+    const { message } = App.useApp();
     const router = useRouter();
     const pathname = usePathname() || ROOT;
     const screens = Grid.useBreakpoint();

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  App,
   Button,
   Card,
   DatePicker,
@@ -11,7 +12,6 @@ import {
   Spin,
   Typography,
   Upload,
-  message,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import dayjs, { type Dayjs } from "dayjs";
@@ -62,6 +62,7 @@ type BlogPostFormProps = {
 };
 
 export default function BlogPostForm({ postId }: BlogPostFormProps) {
+  const { message } = App.useApp();
   const [form] = Form.useForm<BlogFormValues>();
   const router = useRouter();
   const [loading, setLoading] = useState(false);

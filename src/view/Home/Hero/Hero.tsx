@@ -1,244 +1,203 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { Play, MapPin } from "lucide-react";
-import ClientOnly from "@/src/components/common/ClientOnly";
+import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import { canUseNextImage } from "@/src/lib/media";
-
-const HeroEditButton = dynamic(() => import("./HeroEditButton"), {
-    ssr: false,
-    loading: () => null,
-});
+import HeroBackgroundVideo from "./HeroBackgroundVideo";
 
 interface HeroData {
-    badgeText?: string;
-    titlePart1?: string;
-    titlePart2?: string;
-    titlePart3?: string;
-    description?: string;
-    button1Text?: string;
-    button1Link?: string;
-    button2Text?: string;
-    button2Link?: string;
-    stat1Count?: string;
-    stat1Label?: string;
-    stat2Count?: string;
-    stat2Label?: string;
-    stat3Count?: string;
-    stat3Label?: string;
-    videoSrc?: string;
-    backgroundImage?: string;
+  badgeText?: string;
+  titlePart1?: string;
+  titlePart2?: string;
+  titlePart3?: string;
+  description?: string;
+  button1Text?: string;
+  button1Link?: string;
+  button2Text?: string;
+  button2Link?: string;
+  stat1Count?: string;
+  stat1Label?: string;
+  stat2Count?: string;
+  stat2Label?: string;
+  stat3Count?: string;
+  stat3Label?: string;
+  videoSrc?: string;
+  backgroundImage?: string;
 }
 
 const defaultData = {
-    badgeText: "Explore the Unexplored",
-    titlePart1: "SUN",
-    titlePart2: "HOLIDAYS",
-    titlePart3: "LTD",
-    description: "Experience world-class travel with Sun Tourism Ltd. From exotic beaches to mountain retreats, we curate memories that last a lifetime.",
-    button1Text: "Find a Destination",
-    button1Link: "/destinations",
-    button2Text: "Watch Story",
-    button2Link: "#",
-    stat1Count: "500+",
-    stat1Label: "Destinations",
-    stat2Count: "12k+",
-    stat2Label: "Happy Travelers",
-    stat3Count: "24/7",
-    stat3Label: "Support",
-    videoSrc: "/hero/hero-video.mp4",
-    backgroundImage: "/hero/hero.jpg"
+  badgeText: "Explore the Unexplored",
+  titlePart1: "SUN",
+  titlePart2: "HOLIDAYS",
+  titlePart3: "LTD",
+  description:
+    "Experience world-class travel with Sun Tourism Ltd. From exotic beaches to mountain retreats, we curate memories that last a lifetime.",
+  button1Text: "Find a Destination",
+  button1Link: "/destinations",
+  button2Text: "Watch Story",
+  button2Link: "#",
+  stat1Count: "500+",
+  stat1Label: "Destinations",
+  stat2Count: "12k+",
+  stat2Label: "Happy Travelers",
+  stat3Count: "24/7",
+  stat3Label: "Support",
+  videoSrc: "/hero/hero-video.mp4",
+  backgroundImage: "/hero/hero.jpg",
 };
 
+const DEFAULT_HERO_IMAGE = "/hero/hero.jpg";
 
 interface HeroProps {
-    data?: HeroData;
-    admin?: boolean;
+  data?: HeroData;
 }
 
-type IdleWindow = Window & {
-    requestIdleCallback?: (
-        callback: IdleRequestCallback,
-        options?: IdleRequestOptions
-    ) => number;
-    cancelIdleCallback?: (handle: number) => void;
-    navigator: Window['navigator'] & {
-        connection?: {
-            saveData?: boolean;
-            effectiveType?: string;
-        };
-    };
-};
+function DefaultHeroPicture() {
+  // Direct WebP src — no <picture>/jpg fallback so LCP matches the preloaded resource.
+  // Inline positioning so the LCP image can paint before the large Tailwind CSS arrives.
+  return (
+    <img
+      src="/hero/hero-640.webp"
+      srcSet="/hero/hero-640.webp 640w, /hero/hero-750.webp 750w, /hero/hero-1280.webp 1280w, /hero/hero-1920.webp 1920w"
+      sizes="100vw"
+      alt="Beautiful tropical holiday destination"
+      width={1600}
+      height={1066}
+      fetchPriority="high"
+      decoding="sync"
+      className="absolute inset-0 h-full w-full object-cover object-center"
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        objectPosition: "center",
+      }}
+    />
+  );
+}
 
-export default function Hero({ data, admin = false }: HeroProps) {
-    const heroData = { ...defaultData, ...data };
-    const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
-    const supportsImageOptimization = canUseNextImage(heroData.backgroundImage);
+export default function Hero({ data }: HeroProps) {
+  const heroData = { ...defaultData, ...data };
+  const isDefaultHero =
+    !data?.backgroundImage || data.backgroundImage === DEFAULT_HERO_IMAGE;
+  const supportsImageOptimization = canUseNextImage(heroData.backgroundImage);
 
-    useEffect(() => {
-        const idleWindow = window as IdleWindow;
-        let timeoutId: ReturnType<typeof setTimeout> | undefined;
-        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const connection = idleWindow.navigator.connection;
-        const hasSlowConnection =
-            connection?.saveData ||
-            connection?.effectiveType === "slow-2g" ||
-            connection?.effectiveType === "2g";
+  return (
+    <section
+      className="group/hero relative flex min-h-[90vh] w-full items-center justify-center overflow-hidden bg-base-300 lg:min-h-screen"
+      style={{
+        position: "relative",
+        display: "flex",
+        minHeight: "90vh",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        backgroundColor: "#e8e4d9",
+      }}
+    >
+      <DeferredAdmin
+        name="hero"
+        data={heroData}
+        className="absolute bottom-4 left-4 z-50"
+      />
 
-        const startVideoLoad = () => {
-            timeoutId = setTimeout(() => setShouldLoadVideo(true), 2500);
-        };
+      {isDefaultHero ? (
+        <DefaultHeroPicture />
+      ) : supportsImageOptimization ? (
+        <Image
+          src={heroData.backgroundImage}
+          alt="Beautiful tropical holiday destination"
+          fill
+          priority
+          fetchPriority="high"
+          quality={60}
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+      ) : (
+        <Image
+          src={heroData.backgroundImage}
+          alt="Beautiful tropical holiday destination"
+          fill
+          priority
+          fetchPriority="high"
+          unoptimized
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+      )}
 
-        if (prefersReducedMotion || hasSlowConnection || window.innerWidth < 1024) {
-            return undefined;
-        }
+      <HeroBackgroundVideo
+        videoSrc={heroData.videoSrc}
+        poster={isDefaultHero ? "/hero/hero-640.webp" : heroData.backgroundImage}
+      />
 
-        if (typeof idleWindow.requestIdleCallback === "function") {
-            const idleId = idleWindow.requestIdleCallback(startVideoLoad, { timeout: 1500 });
+      <div className="absolute inset-0 z-20 bg-gradient-to-b from-black/60 via-black/30 to-black/60" />
 
-            return () => {
-                if (typeof idleWindow.cancelIdleCallback === "function") {
-                    idleWindow.cancelIdleCallback(idleId);
-                }
-                if (timeoutId) {
-                    clearTimeout(timeoutId);
-                }
-            };
-        }
+      <div className="container relative z-30 mx-auto px-4 text-center text-white">
+        <div className="mx-auto max-w-4xl space-y-6">
+          <div className="animate-fade-in inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/20 px-4 py-2 backdrop-blur-md">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+            </span>
+            <span className="text-xs font-bold tracking-widest uppercase italic">
+              {heroData.badgeText}
+            </span>
+          </div>
 
-        startVideoLoad();
+          <h1 className="font-magmawave text-5xl leading-tight font-black tracking-tighter md:text-7xl lg:text-8xl">
+            {heroData.titlePart1}{" "}
+            <span className="text-primary">{heroData.titlePart2}</span> {heroData.titlePart3}
+          </h1>
 
-        return () => {
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-        };
-    }, []);
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed font-medium text-gray-200 md:text-xl">
+            {heroData.description}
+          </p>
 
-    return (
-        <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center justify-center overflow-hidden bg-base-300 group/hero">
-            
-            {/* Admin Edit Controls */}
-            {admin && (
-                <ClientOnly>
-                    <div className="absolute bottom-4 left-4 z-50">
-                        <HeroEditButton data={heroData} />
-                    </div>
-                </ClientOnly>
-            )}
+          <div className="flex flex-col items-center justify-center gap-4 pt-8 sm:flex-row">
+            <Link
+              href={heroData.button1Link}
+              className="btn btn-primary btn-lg rounded-full border-none px-10 text-primary-content shadow-2xl shadow-primary/40 transition-transform hover:scale-105"
+            >
+              <MapPin size={20} />
+              {heroData.button1Text}
+            </Link>
 
-            {/* 1. Fallback / Placeholder Image (Critical for LCP SEO) */}
-            {supportsImageOptimization ? (
-                <Image
-                    src={heroData.backgroundImage}
-                    alt="Beautiful tropical holiday destination"
-                    fill
-                    priority
-                    unoptimized={!supportsImageOptimization}
-                    className="object-cover object-center"
-                    sizes="100vw"
-                />
-            ) : (
-                <Image
-                    src={heroData.backgroundImage}
-                    alt="Beautiful tropical holiday destination"
-                    fill
-                    priority
-                    unoptimized
-                    className="object-cover object-center"
-                    sizes="100vw"
-                />
-            )}
+            <Link
+              href={heroData.button2Link}
+              className="btn btn-ghost btn-lg group rounded-full border border-white/20 px-10 text-white backdrop-blur-md hover:bg-white/10"
+            >
+              <Play size={20} className="fill-white transition-transform group-hover:scale-110" />
+              {heroData.button2Text}
+            </Link>
+          </div>
 
-            {/* 2. Video Background */}
-            {shouldLoadVideo ? (
-                <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="none"
-                    poster={heroData.backgroundImage}
-                    className="absolute inset-0 w-full h-full object-cover z-10"
-                >
-                    <source src={heroData.videoSrc} type="video/mp4" />
-                </video>
-            ) : null}
-
-            {/* 3. Dark Overlay for Text Readability */}
-            <div className="absolute inset-0 z-20 bg-gradient-to-b from-black/60 via-black/30 to-black/60" />
-
-            {/* 4. Content Layer */}
-            <div className="container relative z-30 px-4 mx-auto text-center text-white">
-                <div className="max-w-4xl mx-auto space-y-6">
-
-                    {/* Badge (Optional but modern) */}
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-md animate-fade-in">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                        </span>
-                        <span className="text-xs font-bold tracking-widest uppercase italic">
-                            {heroData.badgeText}
-                        </span>
-                    </div>
-
-                    {/* Main SEO Headline */}
-                    <h1 className="font-magmawave text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-tight">
-                        {heroData.titlePart1} <span className="text-primary">{heroData.titlePart2}</span> {heroData.titlePart3}
-                    </h1>
-
-                    <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-200 font-medium leading-relaxed">
-                        {heroData.description}
-                    </p>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
-                        <Link
-                            href={heroData.button1Link}
-                            className="btn btn-primary btn-lg rounded-full px-10 text-white border-none shadow-2xl shadow-primary/40 hover:scale-105 transition-transform"
-                        >
-                            <MapPin size={20} />
-                            {heroData.button1Text}
-                        </Link>
-
-                        <Link
-                            href={heroData.button2Link}
-                            className="btn btn-ghost btn-lg rounded-full px-10 text-white backdrop-blur-md border border-white/20 hover:bg-white/10 group"
-                        >
-                            <Play size={20} className="fill-white group-hover:scale-110 transition-transform" />
-                            {heroData.button2Text}
-                        </Link>
-                    </div>
-
-                    {/* Trust Indicators (SEO & Conversion) */}
-                    <div className="pt-12 grid grid-cols-2 md:grid-cols-3 gap-8 opacity-70 max-w-2xl mx-auto border-t border-white/10">
-                        <div className="flex flex-col items-center">
-                            <span className="text-2xl font-bold">{heroData.stat1Count}</span>
-                            <span className="text-xs uppercase tracking-widest">{heroData.stat1Label}</span>
-                        </div>
-                        <div className="flex flex-col items-center border-x border-white/10">
-                            <span className="text-2xl font-bold">{heroData.stat2Count}</span>
-                            <span className="text-xs uppercase tracking-widest">{heroData.stat2Label}</span>
-                        </div>
-                        <div className="flex-col items-center hidden md:flex">
-                            <span className="text-2xl font-bold">{heroData.stat3Count}</span>
-                            <span className="text-xs uppercase tracking-widest">{heroData.stat3Label}</span>
-                        </div>
-                    </div>
-                </div>
+          <div className="mx-auto grid max-w-2xl grid-cols-2 gap-8 border-t border-white/10 pt-12 opacity-70 md:grid-cols-3">
+            <div className="flex flex-col items-center">
+              <span className="text-2xl font-bold">{heroData.stat1Count}</span>
+              <span className="text-xs tracking-widest uppercase">{heroData.stat1Label}</span>
             </div>
-
-            {/* 5. Scroll Indicator (UX) */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 hidden lg:block">
-                <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-1">
-                    <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
-                </div>
+            <div className="flex flex-col items-center border-x border-white/10">
+              <span className="text-2xl font-bold">{heroData.stat2Count}</span>
+              <span className="text-xs tracking-widest uppercase">{heroData.stat2Label}</span>
             </div>
+            <div className="hidden flex-col items-center md:flex">
+              <span className="text-2xl font-bold">{heroData.stat3Count}</span>
+              <span className="text-xs tracking-widest uppercase">{heroData.stat3Label}</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        </section>
-    );
+      <div className="absolute bottom-10 left-1/2 z-30 hidden -translate-x-1/2 lg:block">
+        <div className="flex h-10 w-6 justify-center rounded-full border-2 border-white/30 p-1">
+          <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary" />
+        </div>
+      </div>
+    </section>
+  );
 }

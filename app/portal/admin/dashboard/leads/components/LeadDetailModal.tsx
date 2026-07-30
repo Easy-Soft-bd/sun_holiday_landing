@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Descriptions, Form, Input, Modal, Select, Tag, message } from "antd";
+import { App, Descriptions, Form, Input, Modal, Select, Tag } from "antd";
 import { LEAD_STATUS_OPTIONS, LeadRecord, LeadStatus } from "../types";
 
 const { TextArea } = Input;
@@ -26,6 +26,7 @@ function formatDate(value: string | null | undefined) {
 }
 
 export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props) {
+    const { message } = App.useApp();
     const [form] = Form.useForm<FormValues>();
 
     useEffect(() => {

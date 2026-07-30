@@ -1,5 +1,5 @@
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import StoreProvider from '@/src/lib/redux/StoreProvider';
+import AntdProviders from "@/src/components/providers/AntdProviders";
+import StoreProvider from "@/src/lib/redux/StoreProvider";
 
 export default function PortalLayout({
   children,
@@ -7,12 +7,10 @@ export default function PortalLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AntdRegistry>
+    <AntdProviders>
       <StoreProvider>
-        <div className="min-h-screen bg-base-200">
-          {children}
-        </div>
+        <div className="min-h-screen bg-base-200">{children}</div>
       </StoreProvider>
-    </AntdRegistry>
+    </AntdProviders>
   );
 }

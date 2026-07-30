@@ -8,7 +8,7 @@ const MotionLink = motion.create(Link);
 
 export default function NotFoundClient() {
     return (
-        <main className="min-h-screen flex items-center justify-center p-4 md:p-6 bg-base-100 overflow-hidden relative">
+        <div className="min-h-screen flex items-center justify-center p-4 md:p-6 bg-base-100 overflow-hidden relative">
             {/* Mesh Gradient Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                  {/* Orb 1 - Primary (Red/Orange) */}
@@ -175,6 +175,6 @@ export default function NotFoundClient() {
                 </motion.div>
 
             </div>
-        </main>
+        </div>
     );
 }

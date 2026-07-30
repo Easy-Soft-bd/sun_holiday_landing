@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import ClientOnly from "@/src/components/common/ClientOnly";
+import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
+import { optimizeRemoteImageUrl } from "@/src/lib/media";
 
 interface Amenity {
     icon: string;
@@ -57,7 +58,6 @@ const defaultData: Required<SailorMoonCtaData> = {
 
 interface SailorMoonCtaProps {
     data?: SailorMoonCtaData;
-    admin?: boolean;
 }
 
 function mergeCtaData(data?: SailorMoonCtaData): Required<SailorMoonCtaData> {
@@ -75,38 +75,29 @@ function mergeCtaData(data?: SailorMoonCtaData): Required<SailorMoonCtaData> {
     } as Required<SailorMoonCtaData>;
 }
 
-async function SailorMoonCtaAdminSlot({ data }: { data: Required<SailorMoonCtaData> }) {
-    const SailorMoonCtaAdminControl = (await import("./SailorMoonCtaAdminControl")).default;
-
-    return (
-        <ClientOnly>
-            <div className="absolute top-8 right-8 z-50">
-                <SailorMoonCtaAdminControl data={data} />
-            </div>
-        </ClientOnly>
-    );
-}
-
-const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
+const SailorMoonCta = async ({ data }: SailorMoonCtaProps) => {
   const ctaData = mergeCtaData(data);
   const visibleAmenities = ctaData.amenities.slice(0, 4);
 
   return (
     <section className="group/sailor-moon relative w-full px-4 py-4 md:py-6">
-      {/* Admin Edit Controls */}
-      {admin && (
-          <SailorMoonCtaAdminSlot data={ctaData} />
-      )}
+      <DeferredAdmin
+        name="sailorMoon"
+        data={ctaData}
+        className="absolute top-8 right-8 z-50"
+      />
 
       <div className="container mx-auto">
         <div className="relative w-full rounded-[2rem] overflow-hidden min-h-[300px] md:min-h-[400px] flex items-center justify-end shadow-2xl group border border-white/10 bg-black">
           
           {/* Background Image */}
           <Image
-            src={ctaData.bgImageUrl}
+            src={optimizeRemoteImageUrl(ctaData.bgImageUrl, 1200)}
             alt="Sailor Moon Resort"
             fill
-            sizes="100vw"
+            loading="lazy"
+            quality={55}
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 800px"
             className="object-cover transition-transform duration-1000 group-hover:scale-105"
           />
           
@@ -118,8 +109,8 @@ const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
           <div className="relative z-10 w-full md:w-3/4 lg:w-3/5 p-6 md:p-12 flex flex-col items-start md:items-end md:text-right gap-4 md:gap-5">
             
             <div className="flex flex-wrap items-center justify-start md:justify-end gap-3 w-full">
-              <span className="flex items-center gap-1.5 bg-primary/20 backdrop-blur-md border border-primary/40 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold text-primary tracking-widest uppercase">
-                <PublicIconRenderer iconName={ctaData.badgeIcon} className="size-3 text-primary animate-pulse" />
+              <span className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/30 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold text-white tracking-widest uppercase">
+                <PublicIconRenderer iconName={ctaData.badgeIcon} className="size-3 text-white animate-pulse" />
                 {ctaData.badgeText}
               </span>
               <span className="flex items-center gap-1.5 text-white/80 text-xs md:text-sm font-medium border border-white/20 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full">
@@ -161,7 +152,7 @@ const SailorMoonCta = async ({ data, admin = false }: SailorMoonCtaProps) => {
 
               <Link 
                 href={ctaData.ctaButtonLink} 
-                className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold w-full sm:w-auto rounded-full px-6 py-3 transition-all shadow-lg group/btn order-1 sm:order-2 border-none"
+                className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-content font-bold w-full sm:w-auto rounded-full px-6 py-3 transition-all shadow-lg group/btn order-1 sm:order-2 border-none"
               >
                 {ctaData.ctaButtonText}
                 <PublicIconRenderer iconName="LuChevronRight" className="size-4 md:size-5 group-hover/btn:translate-x-1 transition-transform" />

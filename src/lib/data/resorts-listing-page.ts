@@ -135,7 +135,7 @@ export const defaultResortsListingPageData: ResortsListingPageData = {
       category: "city",
       rating: 5,
       image:
-        "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2080&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop",
       description:
         "A state-of-the-art luxury escape nestled adjacent to the serene Inani Beach. Experience sophistication and coastal tranquility.",
       features: ["250 Luxury Rooms", "Spa & Gym", "Conference Facilities", "Multiple Restaurants"],

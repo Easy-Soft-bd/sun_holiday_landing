@@ -8,28 +8,28 @@ export default function PopularRoutes() {
             to: "Dubai",
             price: 45000,
             airline: "Emirates",
-            image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=2000&auto=format&fit=crop"
+            image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=640&auto=format&fit=crop"
         },
         {
             from: "Dhaka",
             to: "Bangkok",
             price: 32000,
             airline: "US-Bangla Airlines",
-            image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=2000&auto=format&fit=crop"
+            image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=640&auto=format&fit=crop"
         },
         {
             from: "Dhaka",
             to: "Cox's Bazar",
             price: 4500,
             airline: "Biman Bangladesh",
-            image: "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=2000&auto=format&fit=crop"
+            image: "https://images.unsplash.com/photo-1658139657766-3ba1adc5a010?q=80&w=640&auto=format&fit=crop"
         },
         {
             from: "Dhaka",
             to: "Singapore",
             price: 55000,
             airline: "Singapore Airlines",
-            image: "https://images.unsplash.com/photo-1565967511849-76a60a516170?q=80&w=2000&auto=format&fit=crop"
+            image: "https://images.unsplash.com/photo-1565967511849-76a60a516170?q=80&w=640&auto=format&fit=crop"
         }
     ];
 
@@ -52,9 +52,13 @@ export default function PopularRoutes() {
                     {routes.map((route, index) => (
                         <div key={index} className="group bg-base-100 rounded-3xl overflow-hidden shadow-sm border border-base-200 hover:shadow-xl hover:border-primary/20 transition-all duration-300 hover:-translate-y-1">
                             <div className="h-40 overflow-hidden relative">
-                                <img 
-                                    src={route.image} 
+                                <img
+                                    src={route.image}
                                     alt={`${route.from} to ${route.to}`}
+                                    width={640}
+                                    height={320}
+                                    loading="lazy"
+                                    decoding="async"
                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -63,16 +67,16 @@ export default function PopularRoutes() {
                                 </div>
                             </div>
                             <div className="p-6">
-                                <div className="flex items-center gap-2 text-xs font-bold text-base-content/50 uppercase tracking-wider mb-2">
+                                <div className="flex items-center gap-2 text-xs font-bold text-base-content/70 uppercase tracking-wider mb-2">
                                     <Plane size={14} />
                                     {route.airline}
                                 </div>
                                 <div className="flex items-end justify-between">
                                     <div>
-                                        <p className="text-xs text-base-content/60 mb-1">Starts from</p>
+                                        <p className="text-xs text-base-content/70 mb-1">Starts from</p>
                                         <p className="text-xl font-black text-primary">{currencyFormatter.format(route.price)}</p>
                                     </div>
-                                    <button className="btn btn-sm btn-ghost text-primary hover:bg-primary/10 rounded-full">Book Now</button>
+                                    <button type="button" className="btn btn-sm btn-ghost text-primary hover:bg-primary/10 rounded-full" aria-label={`Book ${route.from} to ${route.to}`}>Book Now</button>
                                 </div>
                             </div>
                         </div>

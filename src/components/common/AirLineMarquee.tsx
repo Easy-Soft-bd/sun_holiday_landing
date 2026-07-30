@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Marquee } from "../ui/marquee";
-import ClientOnly from "./ClientOnly";
+import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 
 interface AirlineItem {
     id: number;
@@ -43,19 +43,6 @@ const defaultData = {
 
 interface AirLineMarqueeProps {
     data?: AirLineMarqueeData;
-    admin?: boolean;
-}
-
-async function AirLineMarqueeAdminSlot({ data }: { data: AirLineMarqueeData }) {
-    const AirLineMarqueeAdminControl = (await import("./AirLineMarqueeAdminControl")).default;
-
-    return (
-        <ClientOnly>
-            <div className="absolute bottom-4 left-4 z-50">
-                <AirLineMarqueeAdminControl data={data} />
-            </div>
-        </ClientOnly>
-    );
 }
 
 const LogoCard = ({ url, name }: { url: string; name: string }) => {
@@ -67,7 +54,8 @@ const LogoCard = ({ url, name }: { url: string; name: string }) => {
                     alt={`${name} Partner Logo`}
                     fill
                     sizes="150px"
-                    priority={false}
+                    quality={50}
+                    loading="lazy"
                     className="object-contain grayscale opacity-40 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
                 />
             </div>
@@ -75,16 +63,17 @@ const LogoCard = ({ url, name }: { url: string; name: string }) => {
     );
 };
 
-export async function AirLineMarquee({ data, admin = false }: AirLineMarqueeProps) {
+export async function AirLineMarquee({ data }: AirLineMarqueeProps) {
     const marqueeData = { ...defaultData, ...data };
 
     return (
         <section className="relative bg-base-100 py-7 lg:py-16 overflow-hidden group/marquee">
             
-            {/* Admin Edit Controls */}
-            {admin && (
-                <AirLineMarqueeAdminSlot data={marqueeData} />
-            )}
+            <DeferredAdmin
+                name="airline"
+                data={marqueeData}
+                className="absolute bottom-4 left-4 z-50"
+            />
 
             {/* Premium Title Section */}
             <div className="flex flex-col items-center text-center space-y-4">
@@ -92,7 +81,7 @@ export async function AirLineMarquee({ data, admin = false }: AirLineMarqueeProp
                 {/* 1. Subtle Animated Subtitle */}
                 <div className="flex items-center gap-3">
                     <div className="h-px w-8 bg-primary/40 hidden sm:block" />
-                    <span className="text-primary text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] animate-pulse">
+                    <span className="text-base-content text-xs sm:text-sm font-bold uppercase tracking-[0.25em] sm:tracking-[0.35em]">
                         {marqueeData.subtitle}
                     </span>
                     <div className="h-px w-8 bg-primary/40 hidden sm:block" />
@@ -110,7 +99,7 @@ export async function AirLineMarquee({ data, admin = false }: AirLineMarqueeProp
                 </div>
 
                 {/* 3. Descriptive Sub-Headline (SEO Rich) */}
-                <p className="max-w-xl mx-auto text-sm md:text-base text-base-content/60 font-medium leading-relaxed pt-2">
+                <p className="max-w-xl mx-auto text-sm md:text-base text-base-content/70 font-medium leading-relaxed pt-2">
                     {marqueeData.description}
                 </p>
             </div>
@@ -119,14 +108,11 @@ export async function AirLineMarquee({ data, admin = false }: AirLineMarqueeProp
             <div className="relative flex w-full items-center justify-center">
                 <Marquee
                     pauseOnHover
+                    repeat={2}
                     className="flex items-center [--gap:10px]"
                 >
                     {marqueeData.airlines?.map((logo) => (
                         <LogoCard key={logo.id} {...logo} />
-                    ))}
-                    {/* Map again for a seamless loop */}
-                    {marqueeData.airlines?.map((logo) => (
-                        <LogoCard key={`dup-${logo.id}`} {...logo} />
                     ))}
                 </Marquee>
 

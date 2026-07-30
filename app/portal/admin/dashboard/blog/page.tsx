@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Table, Button, Space, Input, Tag, message, Popconfirm, Card, Row, Col, Statistic } from 'antd';
+import { App, Table, Button, Space, Input, Tag, Popconfirm, Card, Row, Col, Statistic } from 'antd';
 import {
   PlusOutlined,
   SearchOutlined,
@@ -29,6 +29,7 @@ interface BlogRow {
 }
 
 export default function BlogManagementPage() {
+  const { message } = App.useApp();
   const [searchText, setSearchText] = useState('');
   const [posts, setPosts] = useState<BlogRow[]>([]);
   const [loading, setLoading] = useState(true);

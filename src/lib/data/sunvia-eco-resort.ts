@@ -250,7 +250,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
       "Sustainable Tourism Bangladesh",
     ],
     metaImage:
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2080&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop",
   },
   hero: {
     badgeText: "5-Star Eco-Luxury",
@@ -271,7 +271,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
     stat3Label: "Guest Capacity",
     stat3Icon: "LuActivity",
     backgroundImage:
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2080&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop",
     ctaPrimaryText: "Plan Your Escape",
     ctaPrimaryHref: "#contact",
     ctaSecondaryText: "Explore Gallery",
@@ -284,7 +284,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
     description:
       "Spanning 12 lush acres in Manikganj, Sunvia Eco Resort is a premier 5-star destination combining sustainability with modern sophistication. Surrounded by forests, lakes, and hills, the resort offers an immersive escape into nature without compromising on luxury.",
     image:
-      "https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?q=80&w=2074&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?q=80&w=1200&auto=format&fit=crop",
     floatingBadgeText: "100% Eco-Friendly",
     highlights: [
       { label: "Area", value: "12 Acres" },
@@ -304,7 +304,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
         description:
           "Spacious rooms featuring modern interiors with calming earth tones, a private balcony overlooking the lake, and all essential amenities for a restful stay.",
         image:
-          "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2070&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop",
         amenities: ["Air Conditioning", "Smart TV", "Minibar", "Lake View", "Wi-Fi", "Balcony"],
       },
       {
@@ -312,7 +312,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
         description:
           "Elegant suites with a separate living area, premium furnishings, panoramic views, and an upgraded minibar with local organic refreshments.",
         image:
-          "https://images.unsplash.com/photo-1587061949409-02df41d5e562?q=80&w=2070&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1587061949409-02df41d5e562?q=80&w=1200&auto=format&fit=crop",
         amenities: ["Air Conditioning", "Smart TV", "Minibar", "Lake View", "Wi-Fi", "Balcony"],
       },
       {
@@ -320,7 +320,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
         description:
           "Charming standalone cottages surrounded by greenery, perfect for families. Includes multiple bedrooms, a cozy porch, and kid-friendly arrangements.",
         image:
-          "https://images.unsplash.com/photo-1587061949409-02df41d5e562?q=80&w=2070&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1587061949409-02df41d5e562?q=80&w=1200&auto=format&fit=crop",
         amenities: ["Air Conditioning", "Smart TV", "Minibar", "Garden View", "Wi-Fi", "Porch"],
       },
       {
@@ -328,7 +328,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
         description:
           "Ultra-luxurious private villas with a personal butler, infinity pool access, designer interiors, and an exclusive garden terrace with breathtaking views.",
         image:
-          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop",
         amenities: [
           "Air Conditioning",
           "Smart TV",
@@ -352,25 +352,25 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
         name: "Halal Fine Dining",
         description: "Premium halal cuisine served in an elegant atmosphere.",
         image:
-          "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1200&auto=format&fit=crop",
       },
       {
         name: "Garden Dining",
         description: "Al-fresco meals surrounded by lush tropical gardens.",
         image:
-          "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=2074&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop",
       },
       {
         name: "Lakeside Cafe",
         description: "Casual bites and artisan coffee with serene lake views.",
         image:
-          "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2047&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1200&auto=format&fit=crop",
       },
       {
         name: "VIP Private Dining",
         description: "Exclusive dining with a personal chef and curated menu.",
         image:
-          "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=2074&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop",
       },
     ],
   },
@@ -402,7 +402,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
     description:
       "Sunvia Eco Resort is committed to sustainable tourism. Every aspect of our resort is designed to minimise environmental impact while maximising comfort and natural beauty.",
     image:
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2232&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop",
     floatingBadgeText: "Carbon Neutral",
     features: [
       {
@@ -438,7 +438,7 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
     description:
       "From intimate gatherings to grand celebrations, our versatile event spaces are equipped with world-class facilities to make every occasion memorable.",
     image:
-      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2098&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
     maxCapacity: 600,
     services: [
       "Weddings & Receptions",
@@ -456,39 +456,39 @@ export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
     description: "Step inside the spaces, scenery, and experiences that define Sunvia Eco Resort.",
     items: [
       {
-        src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2080&auto=format&fit=crop",
+        src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop",
         alt: "Resort Aerial View",
       },
       {
-        src: "https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?q=80&w=2074&auto=format&fit=crop",
+        src: "https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?q=80&w=1200&auto=format&fit=crop",
         alt: "Luxury Pool Area",
       },
       {
-        src: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2070&auto=format&fit=crop",
+        src: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop",
         alt: "Deluxe Room Interior",
       },
       {
-        src: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop",
+        src: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop",
         alt: "VIP Villa",
       },
       {
-        src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop",
+        src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1200&auto=format&fit=crop",
         alt: "Fine Dining",
       },
       {
-        src: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2232&auto=format&fit=crop",
+        src: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop",
         alt: "Natural Landscape",
       },
       {
-        src: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=2074&auto=format&fit=crop",
+        src: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop",
         alt: "Garden Dining",
       },
       {
-        src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2098&auto=format&fit=crop",
+        src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
         alt: "Event Space",
       },
       {
-        src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2098&auto=format&fit=crop",
+        src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
         alt: "Executive Suite",
       },
     ],

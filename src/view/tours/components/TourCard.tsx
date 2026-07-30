@@ -22,6 +22,7 @@ type TourCardTour = Pick<
 export default function TourCard({ tour }: { tour: TourCardTour }) {
     const supportsImageOptimization = canUseNextImage(tour.image);
     const detailHref = getTourPublicPath(tour);
+    if (!detailHref) return null;
 
     return (
         <div className="group bg-base-100 rounded-3xl overflow-hidden shadow-sm border border-base-200 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full hover:-translate-y-1">
@@ -39,7 +40,7 @@ export default function TourCard({ tour }: { tour: TourCardTour }) {
                 </div>
                 <div className="absolute top-4 right-4 bg-base-100/90 backdrop-blur-md px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">
                     <Star size={14} className="fill-orange-400 text-orange-400" />
-                    {tour.rating} <span className="text-base-content/50 font-normal">({tour.reviews})</span>
+                    {tour.rating} <span className="text-base-content/60 font-normal">({tour.reviews})</span>
                 </div>
             </div>
 
@@ -72,7 +73,7 @@ export default function TourCard({ tour }: { tour: TourCardTour }) {
                     </div>
                     <Link 
                         href={detailHref}
-                        className="btn btn-primary btn-sm rounded-full text-white px-4"
+                        className="btn btn-primary btn-sm rounded-full text-primary-content px-4"
                     >
                         Details <ArrowRight size={16} />
                     </Link>

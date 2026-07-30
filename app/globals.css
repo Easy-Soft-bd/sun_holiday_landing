@@ -1,7 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@plugin "daisyui";
+@plugin "daisyui" {
+    /*
+     * Include only components this app uses. Full daisyUI is ~220KB uncompressed
+     * and sits on the LCP critical path as render-blocking CSS.
+     */
+    include: alert, avatar, badge, breadcrumbs, button, card, checkbox, collapse, divider, drawer, dropdown, fieldset, fileinput, filter, footer, hero, indicator, input, join, label, link, list, loading, menu, modal, navbar, progress, radio, range, rating, select, skeleton, stack, stat, status, steps, swap, tab, table, textarea, toggle, tooltip, validator;
+}
 
 /* 1. DaisyUI Theme Configuration (The Source of Truth) */
 @plugin "daisyui/theme" {
@@ -50,9 +56,9 @@
     /* Breakpoints */
     --breakpoint-xs: 480px;
 
-    /* Font Mapping */
-    --font-magmawave: "MagmaWave", sans-serif;
-    --font-gilliequest: "GillieQuest", sans-serif;
+    /* Font Mapping — faces injected by next/font/local on <html> */
+    --font-magmawave: var(--font-magmawave-face), ui-sans-serif, system-ui, sans-serif;
+    --font-gilliequest: var(--font-gilliequest-face), ui-sans-serif, system-ui, sans-serif;
 
     /* Shadcn-Compatible Variable Mapping (syncs with DaisyUI) */
     --color-background: var(--color-base-100);
@@ -160,22 +166,6 @@
 
 /* 3. Global Base Styles */
 @layer base {
-    @font-face {
-        font-family: 'MagmaWave';
-        src: url('/font/MagmaWave.otf') format('opentype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-    }
-
-    @font-face {
-        font-family: 'GillieQuest';
-        src: url('/font/GillieQuestRegular.otf') format('opentype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-    }
-
     html {
         scroll-behavior: smooth;
         color-scheme: light;
@@ -192,11 +182,6 @@
 
 /* 4. Custom Scrollbar Utility */
 @layer utilities {
-
-    .font-gilliequest {
-        font-family: 'GillieQuest', sans-serif;
-    }
-
     /* Firefox */
     * {
         scrollbar-width: thin;

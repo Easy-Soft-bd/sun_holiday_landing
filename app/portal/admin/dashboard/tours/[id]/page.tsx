@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Tag, Descriptions, Card, Spin, message, Image, Empty } from "antd";
+import { App, Button, Tag, Descriptions, Card, Spin, Image, Empty } from "antd";
 import { EditOutlined, ArrowLeftOutlined, EnvironmentOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -14,6 +14,7 @@ const cardCls =
   "!rounded-2xl border border-slate-200/90 bg-white shadow-sm shadow-slate-900/5 [&_.ant-card-head]:!border-slate-100 [&_.ant-card-head]:!min-h-14";
 
 export default function TourDetailPage() {
+  const { message } = App.useApp();
   const params = useParams();
   const id = params?.id;
 
