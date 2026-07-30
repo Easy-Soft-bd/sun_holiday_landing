@@ -33,12 +33,19 @@ interface TourAttributes {
   excludes: string[];
   gallery: string[];
   videoUrl?: string;
+  /** When true, Active tours appear in the home "Popular Tour Packages" slider. */
+  showOnHome: boolean;
+  /** Ascending order in the home slider (lower first). */
+  homeSortOrder: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 interface TourCreationAttributes
-  extends Optional<TourAttributes, 'id' | 'rating' | 'reviews' | 'slug' | 'locationId'> {}
+  extends Optional<
+    TourAttributes,
+    'id' | 'rating' | 'reviews' | 'slug' | 'locationId' | 'showOnHome' | 'homeSortOrder'
+  > {}
 
 class Tour extends Model<TourAttributes, TourCreationAttributes> implements TourAttributes {
   declare id: number;
@@ -61,6 +68,8 @@ class Tour extends Model<TourAttributes, TourCreationAttributes> implements Tour
   declare excludes: string[];
   declare gallery: string[];
   declare videoUrl: string;
+  declare showOnHome: boolean;
+  declare homeSortOrder: number;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -160,6 +169,16 @@ Tour.init(
     videoUrl: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    showOnHome: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    homeSortOrder: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
   },
   {

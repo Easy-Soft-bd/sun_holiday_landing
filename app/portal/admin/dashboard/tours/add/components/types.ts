@@ -23,4 +23,8 @@ export type TourFormValues = {
   includes?: string[];
   excludes?: string[];
   itinerary?: ItineraryItem[];
+  /** Show this tour in the home page Popular Tour Packages slider. */
+  showOnHome?: boolean;
+  /** Display order in the home slider (lower numbers first). */
+  homeSortOrder?: number;
 };

@@ -14,6 +14,8 @@ import { normalizeTourPlain } from "@/src/lib/tours/normalize-tour";
 const INITIAL_VALUES: Partial<TourFormValues> = {
   status: "Draft",
   category: "Domestic",
+  showOnHome: false,
+  homeSortOrder: 0,
 };
 
 const cardClass = "!rounded-2xl border border-slate-200/90 bg-white shadow-sm shadow-slate-900/5";

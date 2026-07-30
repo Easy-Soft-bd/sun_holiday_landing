@@ -111,6 +111,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     for (const s of segments) {
       revalidateTag(tourRouteTag(s), 'max');
     }
+    revalidatePath('/');
     revalidatePath('/sitemap.xml');
 
     return NextResponse.json(tour);
@@ -154,6 +155,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     if (prev.slug?.trim()) {
       revalidateTag(tourRouteTag(prev.slug.trim()), 'max');
     }
+    revalidatePath('/');
     revalidatePath('/sitemap.xml');
 
     return NextResponse.json({ message: 'Tour deleted successfully' });

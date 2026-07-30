@@ -25,6 +25,8 @@ interface TourDataType {
   category: string;
   status: string;
   image: string;
+  showOnHome: boolean;
+  homeSortOrder: number;
 }
 
 export default function TourManagementPage() {
@@ -47,6 +49,8 @@ export default function TourManagementPage() {
           category: tour.category,
           status: tour.status,
           image: tour.image,
+          showOnHome: Boolean(tour.showOnHome),
+          homeSortOrder: Number(tour.homeSortOrder ?? 0),
         }));
         setTours(formattedData);
       } else {
@@ -165,6 +169,25 @@ export default function TourManagementPage() {
       key: 'price',
       render: (price) => `৳${price.toLocaleString()}`,
       sorter: (a, b) => a.price - b.price,
+    },
+    {
+      title: 'Home',
+      dataIndex: 'showOnHome',
+      key: 'showOnHome',
+      filters: [
+        { text: 'On home', value: true },
+        { text: 'Not on home', value: false },
+      ],
+      onFilter: (value, record) => Boolean(record.showOnHome) === value,
+      render: (showOnHome) =>
+        showOnHome ? <Tag color="processing">Home</Tag> : <Tag>Off</Tag>,
+    },
+    {
+      title: 'Home order',
+      dataIndex: 'homeSortOrder',
+      key: 'homeSortOrder',
+      sorter: (a, b) => (a.homeSortOrder ?? 0) - (b.homeSortOrder ?? 0),
+      render: (order, record) => (record.showOnHome ? order ?? 0 : '—'),
     },
     {
       title: 'Action',

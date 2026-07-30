@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
     // Sequelize JSON fields + dynamic admin payload; validated at runtime
     const tour = await Tour.create({ ...rest, ...resolvedLoc, slug } as never);
     revalidateTag(TAG_TOURS_LIST, 'max');
+    revalidatePath('/');
     revalidatePath('/sitemap.xml');
 
     return NextResponse.json(tour, { status: 201 });

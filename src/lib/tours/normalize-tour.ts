@@ -30,6 +30,14 @@ export function normalizeItinerary(value: unknown): TourItineraryDay[] {
 
 /** Coerce JSON columns that may arrive as strings or malformed values from the DB. */
 export function normalizeTourPlain<T extends Record<string, unknown>>(tour: T): T {
+  const homeSortRaw = tour.homeSortOrder;
+  const homeSortOrder =
+    homeSortRaw == null || homeSortRaw === ""
+      ? 0
+      : Number.isFinite(Number(homeSortRaw))
+        ? Number(homeSortRaw)
+        : 0;
+
   return {
     ...tour,
     highlights: parseJsonArray<string>(tour.highlights),
@@ -37,5 +45,7 @@ export function normalizeTourPlain<T extends Record<string, unknown>>(tour: T): 
     includes: parseJsonArray<string>(tour.includes),
     excludes: parseJsonArray<string>(tour.excludes),
     gallery: parseJsonArray<string>(tour.gallery),
+    showOnHome: Boolean(tour.showOnHome),
+    homeSortOrder,
   } as T;
 }

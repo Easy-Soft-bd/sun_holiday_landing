@@ -57,6 +57,8 @@ export type TourRecord = {
   excludes: string[];
   gallery: string[];
   videoUrl?: string;
+  showOnHome?: boolean;
+  homeSortOrder?: number;
   createdAt?: string | Date;
   updatedAt?: string | Date;
 };
@@ -91,6 +93,23 @@ export const getCachedTours = cache(async () => getToursFromDb());
 export const getCachedActiveTours = cache(async () => {
   const tours = await getToursFromDb();
   return tours.filter((tour) => tour.status === 'Active');
+});
+
+/** Active tours marked for the home "Popular Tour Packages" slider, ordered by `homeSortOrder`. */
+export const getCachedHomeFeaturedTours = cache(async () => {
+  const tours = await getToursFromDb();
+  return tours
+    .filter((tour) => tour.status === 'Active' && Boolean(tour.showOnHome))
+    .sort((a, b) => {
+      const orderA = Number(a.homeSortOrder ?? 0);
+      const orderB = Number(b.homeSortOrder ?? 0);
+      if (orderA !== orderB) {
+        return orderA - orderB;
+      }
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return timeB - timeA;
+    });
 });
 
 export const getCachedTourById = cache(async (id: string) => {

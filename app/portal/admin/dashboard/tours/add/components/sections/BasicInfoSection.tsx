@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Form, Input, InputNumber, Select, Typography } from "antd";
+import { Button, Checkbox, Form, Input, InputNumber, Select, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { slugifyText } from "@/src/lib/tours/slugify-text";
 import LocationSelectField from "../LocationSelectField";
@@ -27,6 +27,7 @@ export default function BasicInfoSection({ tourId, autoSlugFromTitle = true }: B
   const form = Form.useFormInstance();
   const title = Form.useWatch("title", form);
   const slug = Form.useWatch("slug", form);
+  const showOnHome = Form.useWatch("showOnHome", form);
   const slugTouchedRef = useRef(false);
   const [slugHint, setSlugHint] = useState<"idle" | "checking" | "ok" | "taken">("idle");
   const [suggestion, setSuggestion] = useState<string | null>(null);
@@ -239,6 +240,33 @@ export default function BasicInfoSection({ tourId, autoSlugFromTitle = true }: B
 
       <Form.Item name="duration" label="Duration" rules={[{ required: true, message: "Please enter duration" }]}>
         <Input placeholder="e.g. 3 Days / 2 Nights" size="large" className="!rounded-lg" />
+      </Form.Item>
+
+      <Form.Item
+        name="showOnHome"
+        label="Home page"
+        valuePropName="checked"
+        tooltip="When checked, this Active tour appears in the Popular Tour Packages slider on the home page."
+        className="md:col-span-2"
+      >
+        <Checkbox>Show in Popular Tour Packages slider</Checkbox>
+      </Form.Item>
+
+      <Form.Item
+        name="homeSortOrder"
+        label="Home slider order"
+        tooltip="Lower numbers appear first in the home page slider."
+        extra="Only used when the tour is shown on the home page."
+      >
+        <InputNumber<number>
+          className="!w-full !rounded-lg"
+          size="large"
+          min={0}
+          step={1}
+          precision={0}
+          disabled={!showOnHome}
+          placeholder="0"
+        />
       </Form.Item>
     </div>
   );

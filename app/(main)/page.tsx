@@ -14,6 +14,7 @@ import {
   getCachedSettings,
   getCachedSunviaEcoResortPageData,
 } from "@/src/lib/get-page-data";
+import { getCachedHomeFeaturedTours } from "@/src/lib/data/tours";
 import SailorMoonCta from "@/src/view/Home/resort_cta/sailor-moon/SailorMoonCta";
 import SunviaEcoResort from "@/src/view/Home/sunvia_eco_resort/SunviaEcoResort";
 import { absoluteUrl, buildPageMetadata } from "@/src/lib/site";
@@ -47,11 +48,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [admin, pageData, settings, resortPageData] = await Promise.all([
+  const [admin, pageData, settings, resortPageData, featuredTours] = await Promise.all([
     getCachedAdminStatus(),
     getCachedHomePageData(),
     getCachedSettings(),
     getCachedSunviaEcoResortPageData(),
+    getCachedHomeFeaturedTours(),
   ]);
   const primaryEmail = Array.isArray(settings?.contactEmails) && settings.contactEmails.length > 0
     ? settings.contactEmails[0]
@@ -105,7 +107,7 @@ export default async function Home() {
         </div>
       ) : null}
       <AirLineMarquee data={pageData?.airline_marquee} admin={admin} />
-      <FeatureTour />
+      <FeatureTour tours={featuredTours} />
       <SailorMoonCta data={pageData?.sailor_moon_cta} admin={admin} />
       <SunviaEcoResort data={resortPageData.hero} admin={admin} />
       <ResortCta data={pageData?.resort_cta} admin={admin} />
