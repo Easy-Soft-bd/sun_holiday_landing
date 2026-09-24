@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import SectionAdminControl from "./SectionAdminControl";
 import type { ResortGalleryData } from "@/src/lib/data/sunvia-eco-resort";
 
@@ -40,7 +40,7 @@ export default function GallerySection({ data, admin = false }: GallerySectionPr
                   isLarge ? "sm:row-span-2 h-[300px] sm:h-full" : "h-[250px] md:h-[280px]"
                 }`}
               >
-                <Image
+                <AppImage
                   src={item.src}
                   alt={item.alt}
                   fill

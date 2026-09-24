@@ -1,4 +1,5 @@
 import { Quote, Sparkles } from "lucide-react";
+import AppImage from "@/src/components/common/AppImage";
 
 type Props = {
     name: string;
@@ -60,11 +61,14 @@ export default function DirectorCard({
 
                         {/* Image */}
                         <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1.75rem] bg-base-200 shadow-xl ring-1 ring-base-200/60">
-                            <img
+                            <AppImage
                                 src={safeImage}
                                 alt={safeName}
+                                fill
                                 loading="lazy"
-                                className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                                quality={55}
+                                sizes="(max-width: 768px) 100vw, 340px"
+                                className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
                             />
                             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base-900/60 via-transparent to-transparent" />
 

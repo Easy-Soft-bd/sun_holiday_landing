@@ -1,9 +1,8 @@
 
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { MapPin, Clock, Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { TourRecord } from "@/src/lib/data/tours";
-import { canUseNextImage } from "@/src/lib/media";
 import { getTourPublicPath } from "@/src/lib/tours/public-path";
 
 const currencyFormatter = new Intl.NumberFormat('en-BD', {
@@ -20,18 +19,18 @@ type TourCardTour = Pick<
 >;
 
 export default function TourCard({ tour }: { tour: TourCardTour }) {
-    const supportsImageOptimization = canUseNextImage(tour.image);
     const detailHref = getTourPublicPath(tour);
     if (!detailHref) return null;
 
     return (
         <div className="group bg-base-100 rounded-3xl overflow-hidden shadow-sm border border-base-200 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full hover:-translate-y-1">
             <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
+                <AppImage
                     src={tour.image}
                     alt={tour.title}
                     fill
-                    unoptimized={!supportsImageOptimization}
+                    loading="lazy"
+                    quality={55}
                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />

@@ -1,4 +1,5 @@
 
+import AppImage from "@/src/components/common/AppImage";
 import { Star, MapPin, Clock } from "lucide-react";
 import { TourPackage } from "@/src/view/tours/data/mockTours";
 
@@ -13,10 +14,14 @@ export default function TourHero({ tour }: { tour: TourPackage }) {
     return (
         <section className="relative flex min-h-[300px] items-end overflow-hidden pb-6 sm:h-[56vh] sm:min-h-[420px] sm:pb-14 md:min-h-[500px] md:pb-20">
              <div className="absolute inset-0 z-0">
-                <img 
-                    src={tour.image} 
+                <AppImage
+                    src={tour.image}
                     alt={tour.title}
-                    className="w-full h-full object-cover"
+                    fill
+                    priority
+                    sizes="100vw"
+                    quality={60}
+                    className="object-cover"
                 />
                  <div className="absolute inset-0 bg-gradient-to-t from-[#001030] via-[#001030]/40 to-transparent" />
              </div>

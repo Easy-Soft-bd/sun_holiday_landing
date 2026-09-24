@@ -1,5 +1,5 @@
 
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { BlogPost } from "../../data/blogData";
 
 export default function BlogContent({ post }: { post: BlogPost }) {
@@ -9,12 +9,14 @@ export default function BlogContent({ post }: { post: BlogPost }) {
                 <div className="max-w-4xl mx-auto">
                     {/* Featured Image */}
                     <div className="relative aspect-[21/9] rounded-[3rem] overflow-hidden shadow-2xl mb-16 border-4 border-white">
-                        <Image 
+                        <AppImage 
                             src={post.image} 
                             alt={post.title}
                             fill
-                            className="object-cover"
                             priority
+                            quality={60}
+                            sizes="(max-width: 768px) 100vw, 896px"
+                            className="object-cover"
                         />
                     </div>
 

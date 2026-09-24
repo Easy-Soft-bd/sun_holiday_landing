@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { Leaf, Check } from "lucide-react";
 import SectionAdminControl from "./SectionAdminControl";
 import type { ResortEcoData } from "@/src/lib/data/sunvia-eco-resort";
@@ -60,7 +60,7 @@ export default function EcoSection({ data, admin = false }: EcoSectionProps) {
           {/* Image Side */}
           <div className="flex-1 relative w-full max-w-lg lg:max-w-none order-1 lg:order-2">
             <div className="absolute inset-0 lg:-inset-4 bg-emerald-500/10 rounded-3xl -z-10 -rotate-1 lg:-rotate-3" />
-            <Image
+            <AppImage
               src={data.image}
               alt="Eco-friendly resort environment"
               width={800}

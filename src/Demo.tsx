@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
@@ -122,10 +122,12 @@ export default async function HolidayCategories({ data }: HolidayCategoriesProps
                             className={`group relative overflow-hidden rounded-3xl bg-base-300 ${cat.className}`}
                         >
                             {/* Image with subtle zoom on hover */}
-                            <Image
+                            <AppImage
                                 src={cat.image}
                                 alt={cat.title}
                                 fill
+                                loading="lazy"
+                                quality={55}
                                 sizes="(max-width: 768px) 100vw, 50vw"
                                 className="object-cover transition-transform duration-700 group-hover:scale-110"
                             />

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import {
   MapPin,
@@ -36,7 +36,7 @@ function ResortCard({ resort }: { resort: ResortsListingResort }) {
   return (
     <div className="group overflow-hidden rounded-3xl border border-base-300 bg-base-100 transition-all duration-300 hover:border-primary/30 hover:shadow-2xl">
       <div className="relative h-[300px] overflow-hidden">
-        <Image src={resort.image} alt={resort.name} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+        <AppImage src={resort.image} alt={resort.name} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
         {isComingSoon ? (
@@ -125,7 +125,7 @@ export default async function ResortsListingView({ data, admin = false }: Props)
       <section className="relative h-[60vh] overflow-hidden md:h-[70vh]">
         {admin ? <ResortsListingAdminSlot data={page} /> : null}
         <div className="absolute inset-0">
-          <Image
+          <AppImage
             src={page.heroBackgroundImage}
             alt="Sun Tourism Resorts"
             fill

@@ -1,4 +1,5 @@
 import type { TourItineraryDay } from "@/src/models/Tour";
+import { usableTourSlug } from "@/src/lib/tours/slugify-text";
 
 export function parseJsonArray<T>(value: unknown): T[] {
   if (Array.isArray(value)) {
@@ -40,6 +41,7 @@ export function normalizeTourPlain<T extends Record<string, unknown>>(tour: T): 
 
   return {
     ...tour,
+    slug: usableTourSlug(tour.slug),
     highlights: parseJsonArray<string>(tour.highlights),
     itinerary: normalizeItinerary(tour.itinerary),
     includes: parseJsonArray<string>(tour.includes),

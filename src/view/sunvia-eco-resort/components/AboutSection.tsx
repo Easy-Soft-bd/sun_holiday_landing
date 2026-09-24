@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { Leaf, Calendar, Users, Ruler } from "lucide-react";
 import SectionAdminControl from "./SectionAdminControl";
 import type { ResortAboutData } from "@/src/lib/data/sunvia-eco-resort";
@@ -31,7 +31,7 @@ export default function AboutSection({ data, admin = false }: AboutSectionProps)
           {/* Image Side */}
           <div className="flex-1 relative w-full max-w-lg lg:max-w-none">
             <div className="absolute inset-0 lg:-inset-4 bg-emerald-500/10 rounded-3xl -z-10 rotate-1 lg:rotate-3" />
-            <Image
+            <AppImage
               src={data.image}
               alt="Sunvia Eco Resort surroundings"
               width={800}

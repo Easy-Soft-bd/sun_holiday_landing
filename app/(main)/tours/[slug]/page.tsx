@@ -2,10 +2,7 @@ import { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import TourDetailsView from "@/src/view/tours/TourDetailsView";
 import TourJsonLd from "@/src/view/tours/components/details/TourJsonLd";
-import {
-  generateStaticParamsForActiveTours,
-  getCachedTourForPublicPage,
-} from "@/src/lib/data/tours";
+import { getCachedTourForPublicPage } from "@/src/lib/data/tours";
 import { buildTourDetailMetadata } from "@/src/lib/site";
 import { getTourCanonicalSegment, getTourPublicPath } from "@/src/lib/tours/public-path";
 
@@ -13,12 +10,9 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-/** Pre-render active tours; new slugs still work via `dynamicParams`. */
+/** CMS-backed pages must not serve a stale Full Route Cache after admin saves. */
+export const dynamic = "force-dynamic";
 export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  return generateStaticParamsForActiveTours();
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug: raw } = await params;

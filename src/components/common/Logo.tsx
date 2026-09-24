@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { cn } from "@/lib/utils";
-import { canUseNextImage } from "@/src/lib/media";
 
 interface LogoProps {
     className?: string;
@@ -26,7 +25,6 @@ const Logo = ({
     logoUrl = DEFAULT_LOGO_URL,
 }: LogoProps) => {
     const resolvedLogoUrl = logoUrl || DEFAULT_LOGO_URL;
-    const supportsImageOptimization = canUseNextImage(resolvedLogoUrl);
     const autoWidth = width == null;
 
     return (
@@ -35,7 +33,6 @@ const Logo = ({
             aria-label="Home"
         >
             {autoWidth ? (
-                // Plain img avoids Next/Image aspect-ratio warnings when width is CSS-auto.
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                     key={resolvedLogoUrl}
@@ -48,14 +45,14 @@ const Logo = ({
                 />
             ) : (
                 <div className="relative shrink-0" style={{ width, height }}>
-                    <Image
+                    <AppImage
                         key={resolvedLogoUrl}
                         src={resolvedLogoUrl}
                         alt="Company Logo"
                         fill
                         sizes={`${Math.max(width, height) * 3}px`}
                         quality={95}
-                        unoptimized={!supportsImageOptimization}
+                        showLoader={false}
                         className="object-contain"
                     />
                 </div>

@@ -1,3 +1,4 @@
+import AppImage from "@/src/components/common/AppImage";
 import type { TeamItem } from "../teams-page-data";
 
 export default function TeamList({ teams }: { teams: TeamItem[] }) {
@@ -19,11 +20,14 @@ export default function TeamList({ teams }: { teams: TeamItem[] }) {
                         className="group relative overflow-hidden rounded-xl bg-base-200 shadow-sm ring-1 ring-base-200/70 transition-all duration-500 sm:rounded-2xl sm:hover:-translate-y-1 sm:hover:shadow-xl sm:hover:ring-primary/25"
                     >
                         <div className="relative aspect-3/4 w-full overflow-hidden">
-                            <img
+                            <AppImage
                                 src={image}
                                 alt={name}
+                                fill
                                 loading="lazy"
-                                className="h-full w-full object-cover object-top transition-transform duration-900 ease-out group-hover:scale-[1.06]"
+                                quality={55}
+                                sizes="(max-width: 640px) 50vw, 25vw"
+                                className="object-cover object-top transition-transform duration-900 ease-out group-hover:scale-[1.06]"
                             />
 
                             <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />

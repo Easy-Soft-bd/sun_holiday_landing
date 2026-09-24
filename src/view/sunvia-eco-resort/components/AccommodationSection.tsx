@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { BedDouble, Check } from "lucide-react";
 import SectionAdminControl from "./SectionAdminControl";
 import type { ResortAccommodationData } from "@/src/lib/data/sunvia-eco-resort";
@@ -40,7 +40,7 @@ export default function AccommodationSection({ data, admin = false }: Accommodat
             >
               {/* Image */}
               <div className="relative h-56 md:h-64 overflow-hidden">
-                <Image
+                <AppImage
                   src={room.image}
                   alt={room.type}
                   fill

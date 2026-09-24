@@ -2,7 +2,7 @@
 
 import { Button, Checkbox, Form, Input, InputNumber, Select, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { slugifyText } from "@/src/lib/tours/slugify-text";
+import { slugifyText, isUsableTourSlug } from "@/src/lib/tours/slugify-text";
 import LocationSelectField from "../LocationSelectField";
 
 const { Option } = Select;
@@ -126,6 +126,9 @@ export default function BasicInfoSection({ tourId, autoSlugFromTitle = true }: B
               }
               if (!SLUG_PATTERN.test(s)) {
                 throw new Error("Use letters, numbers, and hyphens only");
+              }
+              if (!isUsableTourSlug(s)) {
+                throw new Error("This slug is reserved. Use a descriptive name instead.");
               }
             },
           },

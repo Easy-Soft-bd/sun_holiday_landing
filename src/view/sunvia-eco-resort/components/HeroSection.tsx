@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
 import SectionAdminControl from "./SectionAdminControl";
@@ -20,7 +20,7 @@ export default function HeroSection({ data, admin = false }: HeroSectionProps) {
 
       {/* Background Image */}
       <div className="absolute inset-0">
-        <Image
+        <AppImage
           src={data.backgroundImage}
           alt={`${data.titlePart1} ${data.titlePart2}`}
           fill

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { getSiteUrl } from "@/src/lib/site";
 
 const magmaWave = localFont({
   src: "../public/font/MagmaWave.otf",
@@ -21,6 +22,7 @@ const gillieQuest = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: "Sun Tour LTD - Your Gateway to Amazing Holidays",
   description: "Discover amazing holiday destinations with Sun Tour LTD. Book your dream vacation today!",
   openGraph: {

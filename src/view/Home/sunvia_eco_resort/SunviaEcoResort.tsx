@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
@@ -131,7 +131,7 @@ const SunviaEcoResort = async ({ data }: SunviaEcoResortProps) => {
             />
           ) : null}
 
-          <Image
+          <AppImage
             src={optimizeRemoteImageUrl(ctaData.bgImageUrl, 1200)}
             alt="Sunvia Eco Resort"
             fill

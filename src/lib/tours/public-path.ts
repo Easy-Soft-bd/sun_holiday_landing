@@ -1,9 +1,10 @@
 import type { TourRecord } from "@/src/lib/data/tours";
+import { usableTourSlug } from "@/src/lib/tours/slugify-text";
 
 /** Path segment for canonical tour URLs (slug when set, otherwise numeric id). */
 export function getTourCanonicalSegment(tour: Pick<TourRecord, "id" | "slug">): string {
-  const s = typeof tour.slug === "string" ? tour.slug.trim() : "";
-  if (s && s.toLowerCase() !== "null" && s.toLowerCase() !== "undefined") return s;
+  const slug = usableTourSlug(tour.slug);
+  if (slug) return slug;
   if (tour.id == null) return "";
   const id = String(tour.id).trim();
   if (!id || id.toLowerCase() === "null" || id.toLowerCase() === "undefined") return "";
@@ -22,7 +23,7 @@ export function getTourPublicPath(tour: Pick<TourRecord, "id" | "slug">): string
  * search engines do not index numeric legacy paths.
  */
 export function getTourSlugOnlyPath(tour: Pick<TourRecord, "slug">): string | null {
-  const s = typeof tour.slug === "string" ? tour.slug.trim() : "";
-  if (!s || s.toLowerCase() === "null" || s.toLowerCase() === "undefined") return null;
-  return `/tours/${encodeURIComponent(s)}`;
+  const slug = usableTourSlug(tour.slug);
+  if (!slug) return null;
+  return `/tours/${encodeURIComponent(slug)}`;
 }

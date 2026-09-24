@@ -1,6 +1,5 @@
 
-import { Sparkles, Newspaper, Search } from "lucide-react";
-import Image from "next/image";
+import { Sparkles, Search } from "lucide-react";
 
 export default function BlogHero() {
     return (

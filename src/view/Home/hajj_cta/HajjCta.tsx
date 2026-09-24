@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import {
     Calendar,
@@ -82,7 +82,7 @@ const HajjCta = async ({ data }: HajjCtaProps) => {
                     {/* 1. Visual Section */}
                     <div className="w-full lg:w-1/2 relative group">
                         <div className="relative h-[450px] md:h-[550px] w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                            <Image
+                            <AppImage
                                 src={imageUrl}
                                 alt="Umrah Hajj Package Bangladesh - Sun Tourism Ltd"
                                 fill

@@ -3,7 +3,7 @@ import sequelize from '@/src/lib/db';
 import { verifyAuth } from '@/src/lib/auth';
 import Tour from '@/src/models/Tour';
 import { allocateUniqueTourSlug } from '@/src/lib/tours/slug';
-import { slugifyText } from '@/src/lib/tours/slugify-text';
+import { isUsableTourSlug, slugifyText } from '@/src/lib/tours/slugify-text';
 
 /**
  * GET ?slug=...&excludeId=...&title=...
@@ -35,6 +35,17 @@ export async function GET(request: NextRequest) {
 
   try {
     await sequelize.authenticate();
+
+    if (!isUsableTourSlug(normalized)) {
+      const title = typeof titleRaw === 'string' && titleRaw.trim() ? titleRaw : 'tour';
+      const suggestion = await allocateUniqueTourSlug(title, null, excludeId);
+      return NextResponse.json({
+        available: false,
+        normalized,
+        suggestion,
+      });
+    }
+
     const existing = await Tour.findOne({ where: { slug: normalized } });
     const takenByOther =
       existing != null && (excludeId == null || existing.id !== excludeId);

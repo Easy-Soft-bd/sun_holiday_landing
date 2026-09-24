@@ -4,6 +4,7 @@ import path from 'path';
 import { existsSync } from 'fs';
 import { revalidateTag } from 'next/cache';
 import { verifyAuth } from '@/src/lib/auth';
+import { buildProcessedFilename, processUploadedImage } from '@/src/lib/image-process';
 import { TAG_BLOG_LIST, TAG_GENERAL_SETTINGS, TAG_HOME_PAGE, TAG_SUNVIA_ECO_RESORT } from '@/src/lib/revalidate-tags';
 
 export async function POST(request: NextRequest) {
@@ -36,10 +37,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File too large. Maximum size is 5MB.' }, { status: 400 });
     }
 
-    // Generate unique filename
     const timestamp = Date.now();
     const originalName = file.name.replace(/\s+/g, '-');
-    const filename = `${timestamp}-${originalName}`;
     
     const type = formData.get('type') as string;
     
@@ -67,12 +66,14 @@ export async function POST(request: NextRequest) {
       await mkdir(uploadDir, { recursive: true });
     }
 
-    // Convert file to buffer and save
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const rawBuffer = Buffer.from(bytes);
+    const processed = await processUploadedImage(rawBuffer, file.type);
+    const processedName = buildProcessedFilename(originalName, processed.extension);
+    const filename = `${timestamp}-${processedName}`;
     const filepath = path.join(uploadDir, filename);
-    
-    await writeFile(filepath, buffer);
+
+    await writeFile(filepath, processed.buffer);
     // Uploads are currently used by admin-managed CMS content and branding assets.
     revalidateTag(TAG_HOME_PAGE, { expire: 0 });
     revalidateTag(TAG_GENERAL_SETTINGS, { expire: 0 });

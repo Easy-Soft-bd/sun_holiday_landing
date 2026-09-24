@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import Logo from "../common/Logo";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
@@ -318,7 +318,7 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                             <h3 className="text-xs font-bold uppercase tracking-widest text-base-content/70 mb-4">{footerData.certificationsTitle}</h3>
                             <div className="flex flex-wrap justify-center md:justify-start gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                                 {footerData.certifications?.map((cert, i) => (
-                                    <Image
+                                    <AppImage
                                         key={i}
                                         src={cert.image}
                                         alt={cert.name}

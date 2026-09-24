@@ -1,5 +1,6 @@
 
 import { Plane, ArrowRight } from "lucide-react";
+import AppImage from "@/src/components/common/AppImage";
 
 export default function PopularRoutes() {
     const routes = [
@@ -52,14 +53,14 @@ export default function PopularRoutes() {
                     {routes.map((route, index) => (
                         <div key={index} className="group bg-base-100 rounded-3xl overflow-hidden shadow-sm border border-base-200 hover:shadow-xl hover:border-primary/20 transition-all duration-300 hover:-translate-y-1">
                             <div className="h-40 overflow-hidden relative">
-                                <img
+                                <AppImage
                                     src={route.image}
                                     alt={`${route.from} to ${route.to}`}
-                                    width={640}
-                                    height={320}
+                                    fill
                                     loading="lazy"
-                                    decoding="async"
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    quality={55}
+                                    sizes="(max-width: 768px) 100vw, 25vw"
+                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                                 <div className="absolute bottom-4 left-4 text-white font-bold flex items-center gap-2">

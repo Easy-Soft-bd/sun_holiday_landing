@@ -1,5 +1,5 @@
 import type { TourRecord } from "@/src/lib/data/tours";
-import { absoluteUrl } from "@/src/lib/site";
+import { absoluteUrl, getDefaultSeo, getSiteUrl } from "@/src/lib/site";
 import { getTourPublicPath } from "@/src/lib/tours/public-path";
 import { stripHtml } from "@/src/lib/html";
 import { parseJsonArray } from "@/src/lib/tours/normalize-tour";
@@ -18,6 +18,7 @@ export default function TourJsonLd({ tour }: TourJsonLdProps) {
     .slice(0, 12)
     .map((u) => absoluteUrl(u));
 
+  const { siteName } = getDefaultSeo();
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "TouristTrip",
@@ -26,6 +27,11 @@ export default function TourJsonLd({ tour }: TourJsonLdProps) {
     touristType: tour.category,
     image: imageUrls,
     url: pageUrl,
+    provider: {
+      "@type": "Organization",
+      name: siteName,
+      url: getSiteUrl(),
+    },
     offers: {
       "@type": "Offer",
       priceCurrency: "BDT",
@@ -34,6 +40,13 @@ export default function TourJsonLd({ tour }: TourJsonLdProps) {
       url: pageUrl,
     },
   };
+
+  if (tour.location?.trim()) {
+    jsonLd.itineraryLocation = {
+      "@type": "Place",
+      name: tour.location,
+    };
+  }
 
   if (tour.reviews > 0) {
     jsonLd.aggregateRating = {

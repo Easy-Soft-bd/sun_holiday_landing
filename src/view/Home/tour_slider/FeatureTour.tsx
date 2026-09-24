@@ -1,11 +1,11 @@
 "use client";
 
 import { ArrowRight, Clock, MapPin, Star } from "lucide-react";
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { TourRecord } from "@/src/lib/data/tours";
-import { canUseNextImage, optimizeRemoteImageUrl } from "@/src/lib/media";
+import { optimizeRemoteImageUrl } from "@/src/lib/media";
 import { getTourPublicPath } from "@/src/lib/tours/public-path";
 import { FeatureTourSkeleton } from "@/src/view/Home/HomeSectionsSkeleton";
 
@@ -98,7 +98,6 @@ const FeatureTour = ({ tours: initialTours }: FeatureTourProps) => {
               if (!detailHref) return null;
 
               const imageSrc = optimizeRemoteImageUrl(tour.image, 800);
-              const supportsImageOptimization = canUseNextImage(imageSrc);
 
               return (
                 <article
@@ -107,13 +106,12 @@ const FeatureTour = ({ tours: initialTours }: FeatureTourProps) => {
                 >
                   <div className="group relative h-[450px] rounded-3xl overflow-hidden bg-base-100 border border-base-200 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                     <div className="absolute inset-0">
-                      <Image
+                      <AppImage
                         src={imageSrc}
                         alt={tour.title}
                         fill
                         loading="lazy"
                         quality={55}
-                        unoptimized={!supportsImageOptimization}
                         sizes="(max-width: 640px) 85vw, (max-width: 1024px) 60vw, 32vw"
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />

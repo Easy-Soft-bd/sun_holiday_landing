@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import {
     Hotel,
@@ -99,7 +99,7 @@ const ResortCta = async ({ data }: ResortCtaProps) => {
                     {/* 1. Image Section with "Floating Card" effect */}
                     <div className="w-full lg:w-1/2 relative group">
                         <div className="relative h-[400px] md:h-[600px] w-full rounded-4xl overflow-hidden shadow-2xl">
-                            <Image
+                            <AppImage
                                 src={imageUrl}
                                 alt="Grandeur Bliss Luxury Hotel Cox's Bazar"
                                 fill

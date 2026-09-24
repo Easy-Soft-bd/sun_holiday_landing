@@ -1,5 +1,5 @@
 import { Globe2, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 
 export default function VisaHero() {
     return (
@@ -69,7 +69,7 @@ export default function VisaHero() {
 
                     <div className="relative flex justify-center">
                         <div className="relative z-10 w-full max-w-[600px] aspect-square min-h-[400px] lg:min-h-[500px] rounded-[3rem] overflow-hidden shadow-2xl shadow-primary/10 border-4 border-white">
-                            <Image 
+                            <AppImage 
                                 src="https://images.unsplash.com/photo-1619467416348-6a782839e95f?q=80&w=2070&auto=format&fit=crop" 
                                 alt="Visa Services" 
                                 fill
@@ -84,7 +84,7 @@ export default function VisaHero() {
                                 <div className="flex -space-x-3">
                                     { [1, 2, 3].map(i => (
                                         <div key={i} className="w-10 h-10 rounded-full border-2 border-primary-content overflow-hidden relative">
-                                            <Image 
+                                            <AppImage 
                                                 src={`https://i.pravatar.cc/100?u=${i + 10}`} 
                                                 alt="User Avatar" 
                                                 fill

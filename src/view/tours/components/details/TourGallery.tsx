@@ -1,11 +1,10 @@
 "use client";
 
 import { TourPackage } from "@/src/view/tours/data/mockTours";
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { useMemo, useState } from "react";
 import { Images, Maximize2 } from "lucide-react";
 import { parseJsonArray } from "@/src/lib/tours/normalize-tour";
-import { canUseNextImage } from "@/src/lib/media";
 
 export default function TourGallery({ tour }: { tour: TourPackage }) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -42,7 +41,6 @@ export default function TourGallery({ tour }: { tour: TourPackage }) {
       <div className="grid auto-rows-[minmax(110px,1fr)] grid-cols-2 gap-2 sm:gap-4 md:auto-rows-[minmax(160px,200px)] md:grid-cols-4">
         {images.map((img, idx) => {
           const isFeatured = idx === 0;
-          const optimized = canUseNextImage(img);
           return (
             <div
               key={`${img}-${idx}`}
@@ -53,11 +51,12 @@ export default function TourGallery({ tour }: { tour: TourPackage }) {
               }
               onClick={() => setSelectedImage(img)}
             >
-              <Image
+              <AppImage
                 src={img}
                 alt={`${tour.title} — photo ${idx + 1}`}
                 fill
-                unoptimized={!optimized}
+                loading={isFeatured ? undefined : "lazy"}
+                quality={55}
                 sizes={
                   isFeatured
                     ? "(max-width: 768px) 100vw, 50vw"
@@ -82,11 +81,11 @@ export default function TourGallery({ tour }: { tour: TourPackage }) {
           role="presentation"
         >
           <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-2xl shadow-2xl">
-            <Image
+            <AppImage
               src={selectedImage}
               alt="Gallery preview"
               fill
-              unoptimized={!canUseNextImage(selectedImage)}
+              quality={75}
               className="object-contain"
             />
             <button

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { Marquee } from "../ui/marquee";
 import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 
@@ -49,7 +49,7 @@ const LogoCard = ({ url, name }: { url: string; name: string }) => {
     return (
         <div className="relative group flex items-center justify-center px-[5px] ml-10">
             <div className="relative h-[60px] w-[150px]">
-                <Image
+                <AppImage
                     src={url}
                     alt={`${name} Partner Logo`}
                     fill

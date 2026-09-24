@@ -1,4 +1,5 @@
 import { Quote, Sparkles } from "lucide-react";
+import AppImage from "@/src/components/common/AppImage";
 import type { DirectorItem } from "../teams-page-data";
 
 type Props = {
@@ -68,11 +69,14 @@ function LeaderPhotoCard({ director }: { director: DirectorItem }) {
     return (
         <article className="group overflow-hidden rounded-2xl border border-base-200 bg-base-100 shadow-sm transition-all duration-500 sm:hover:-translate-y-1 sm:hover:shadow-xl">
             <div className="relative aspect-3/4 w-full overflow-hidden bg-base-200">
-                <img
+                <AppImage
                     src={image}
                     alt={name}
+                    fill
                     loading="lazy"
-                    className="h-full w-full object-cover object-top transition-transform duration-900 ease-out group-hover:scale-[1.05]"
+                    quality={55}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover object-top transition-transform duration-900 ease-out group-hover:scale-[1.05]"
                 />
                 <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
 

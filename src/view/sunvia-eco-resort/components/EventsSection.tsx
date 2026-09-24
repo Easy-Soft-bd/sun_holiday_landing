@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { PartyPopper, Users, Check } from "lucide-react";
 import SectionAdminControl from "./SectionAdminControl";
 import type { ResortEventsData } from "@/src/lib/data/sunvia-eco-resort";
@@ -20,7 +20,7 @@ export default function EventsSection({ data, admin = false }: EventsSectionProp
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           {/* Image Side */}
           <div className="flex-1 relative w-full max-w-lg lg:max-w-none">
-            <Image
+            <AppImage
               src={data.image}
               alt="Resort event venue"
               width={800}

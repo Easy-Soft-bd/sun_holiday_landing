@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import { Utensils } from "lucide-react";
 import SectionAdminControl from "./SectionAdminControl";
 import type { ResortDiningData } from "@/src/lib/data/sunvia-eco-resort";
@@ -54,7 +54,7 @@ export default function DiningSection({ data, admin = false }: DiningSectionProp
               className="group relative rounded-2xl overflow-hidden border border-base-300 hover:border-emerald-500/30 transition-all duration-300 hover:shadow-xl"
             >
               <div className="relative h-60 md:h-72">
-                <Image
+                <AppImage
                   src={exp.image}
                   alt={exp.name}
                   fill

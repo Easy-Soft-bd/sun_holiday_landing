@@ -35,7 +35,7 @@ export default function HomeDeferredGate({
     window.addEventListener("keydown", enable, { once: true });
 
     const startFallback = () => {
-      fallbackId = setTimeout(enable, 5000);
+      fallbackId = setTimeout(enable, 2000);
     };
 
     if (document.readyState === "complete") {

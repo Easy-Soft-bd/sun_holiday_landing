@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
@@ -91,7 +91,7 @@ const SailorMoonCta = async ({ data }: SailorMoonCtaProps) => {
         <div className="relative w-full rounded-[2rem] overflow-hidden min-h-[300px] md:min-h-[400px] flex items-center justify-end shadow-2xl group border border-white/10 bg-black">
           
           {/* Background Image */}
-          <Image
+          <AppImage
             src={optimizeRemoteImageUrl(ctaData.bgImageUrl, 1200)}
             alt="Sailor Moon Resort"
             fill

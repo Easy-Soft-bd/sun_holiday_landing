@@ -106,7 +106,16 @@ export default function AddTourForm({ tourId }: AddTourFormProps) {
       });
 
       if (!response.ok) {
-        message.error(isEdit ? "Failed to update tour" : "Failed to create tour");
+        let detail = "";
+        try {
+          const errBody = (await response.json()) as { error?: string };
+          detail = errBody.error ? `: ${errBody.error}` : "";
+        } catch {
+          detail = "";
+        }
+        message.error(
+          (isEdit ? "Failed to update tour" : "Failed to create tour") + detail,
+        );
         return;
       }
 

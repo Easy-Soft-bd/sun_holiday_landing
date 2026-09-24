@@ -1,4 +1,5 @@
 import { Eye, Heart, Users, MapPin, Calendar } from "lucide-react";
+import AppImage from "@/src/components/common/AppImage";
 import ClientOnly from "@/src/components/common/ClientOnly";
 import type { AboutPageData } from "./about-page-data";
 import { defaultAboutPageData } from "./about-page-data";
@@ -29,9 +30,14 @@ export default async function AboutView({ data, admin = false }: Props) {
             <section className="relative overflow-hidden bg-base-100">
                 {admin ? <AboutAdminSlot data={aboutData} /> : null}
                 <div className="absolute inset-0 z-0">
-                    <div 
-                        className="h-full w-full bg-cover bg-center"
-                        style={{ backgroundImage: `url(${aboutData.heroBackgroundImage})` }}
+                    <AppImage
+                        src={aboutData.heroBackgroundImage}
+                        alt=""
+                        fill
+                        priority
+                        sizes="100vw"
+                        quality={60}
+                        className="object-cover object-center"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-base-100" />
                     <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-50" />
@@ -66,11 +72,17 @@ export default async function AboutView({ data, admin = false }: Props) {
                 <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
                     <div className="flex-1 relative w-full max-w-lg md:max-w-none">
                         <div className="absolute inset-0 md:-inset-4 bg-secondary/10 rounded-3xl -z-10 rotate-1 md:rotate-3" />
-                         <img 
-                            src={aboutData.storyImage} 
-                            alt="Group of friends traveling" 
-                            className="rounded-2xl shadow-2xl w-full object-cover aspect-video"
-                        />
+                        <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-2xl">
+                            <AppImage
+                                src={aboutData.storyImage}
+                                alt="Group of friends traveling"
+                                fill
+                                loading="lazy"
+                                quality={55}
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                className="object-cover"
+                            />
+                        </div>
                          <div className="absolute -bottom-6 right-4 md:-right-6 bg-base-100 p-4 rounded-xl shadow-lg border border-base-200">
                              <div className="flex items-center gap-2 text-primary font-bold">
                                  <Calendar size={20} />

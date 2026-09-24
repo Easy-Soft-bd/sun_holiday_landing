@@ -3,8 +3,9 @@ import { unstable_cache } from 'next/cache';
 import Tour, { TourCategory, TourItineraryDay } from '@/src/models/Tour';
 import Location from '@/src/models/Location';
 import sequelize from '@/src/lib/db';
-import { TAG_TOURS_LIST, tourDetailTag, tourRouteTag } from '@/src/lib/revalidate-tags';
+import { TAG_TOURS_LIST, tourDetailTag } from '@/src/lib/revalidate-tags';
 import { normalizeTourPlain } from '@/src/lib/tours/normalize-tour';
+import { isUsableTourSlug } from '@/src/lib/tours/slugify-text';
 
 const tourIncludeLocation = {
   model: Location,
@@ -146,6 +147,9 @@ async function loadTourByPublicParam(param: string): Promise<TourRecord | null> 
   }
 
   const isNumeric = /^\d+$/.test(key);
+  if (!isNumeric && !isUsableTourSlug(key)) {
+    return null;
+  }
   const row = isNumeric
     ? await Tour.findByPk(key, { include: [tourIncludeLocation] })
     : await Tour.findOne({ where: { slug: key }, include: [tourIncludeLocation] });
@@ -159,22 +163,9 @@ async function loadTourByPublicParam(param: string): Promise<TourRecord | null> 
 
 /**
  * Tour detail for public `/tours/[slug]` (slug or legacy numeric id).
- * Cache is keyed by URL segment; invalidate with `tourRouteTag(segment)` on writes.
+ * Request-scoped only: tagged `unstable_cache` here stayed stale after CMS writes.
  */
 export const getCachedTourForPublicPage = cache(async (param: string) => {
-  const run = unstable_cache(
-    async () => loadTourByPublicParam(param),
-    ['tour-public', param],
-    { tags: [TAG_TOURS_LIST, tourRouteTag(param)] }
-  );
-  return run();
+  return loadTourByPublicParam(param);
 });
 
-/** Prebuild only slug URLs; legacy `/tours/{id}` still works when `dynamicParams` is true. */
-export async function generateStaticParamsForActiveTours() {
-  const tours = await getCachedActiveTours();
-  return tours
-    .map((t) => (typeof t.slug === "string" ? t.slug.trim() : ""))
-    .filter(Boolean)
-    .map((slug) => ({ slug }));
-}

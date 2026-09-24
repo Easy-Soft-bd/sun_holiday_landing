@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Award, BadgeCheck, Medal, Sparkles, X } from "lucide-react";
+import AppImage from "@/src/components/common/AppImage";
 import dynamic from "next/dynamic";
 import ClientOnly from "@/src/components/common/ClientOnly";
 import { mergeAwardCertificatePageData, type AwardCertificatePageData, type AwardCertificateItem } from "@/src/lib/data/award-certificate-page";
@@ -96,10 +97,14 @@ export default function AwardCertificateGallery({ data, admin = false }: Props) 
                 className="relative block h-64 w-full overflow-hidden text-left"
                 aria-label={`Open full preview for ${item.title}`}
               >
-                <img
+                <AppImage
                   src={item.image}
                   alt={item.title}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  fill
+                  loading="lazy"
+                  quality={55}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute left-4 top-4">
@@ -134,11 +139,16 @@ export default function AwardCertificateGallery({ data, admin = false }: Props) 
             <X className="size-5" />
           </button>
           <div className="w-full max-w-5xl rounded-2xl bg-base-100 p-2 md:p-4" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={previewImage.image}
-              alt={previewImage.title}
-              className="mx-auto max-h-[86vh] w-auto max-w-full rounded-xl object-contain"
-            />
+            <div className="relative mx-auto min-h-[50vh] w-full max-w-full">
+              <AppImage
+                src={previewImage.image}
+                alt={previewImage.title}
+                fill
+                quality={75}
+                sizes="(max-width: 768px) 100vw, 1024px"
+                className="rounded-xl object-contain"
+              />
+            </div>
             <div className="mt-3 px-1 pb-1">
               <p className="text-sm font-semibold text-base-content">{previewImage.title}</p>
               <p className="text-xs text-base-content/60">

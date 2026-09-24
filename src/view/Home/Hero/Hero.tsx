@@ -1,9 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Play, MapPin } from "lucide-react";
+import AppImage from "@/src/components/common/AppImage";
 import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
-import { canUseNextImage } from "@/src/lib/media";
 import HeroBackgroundVideo from "./HeroBackgroundVideo";
+import HeroLcpImage from "./HeroLcpImage";
 
 interface HeroData {
   badgeText?: string;
@@ -52,37 +52,10 @@ interface HeroProps {
   data?: HeroData;
 }
 
-function DefaultHeroPicture() {
-  // Direct WebP src — no <picture>/jpg fallback so LCP matches the preloaded resource.
-  // Inline positioning so the LCP image can paint before the large Tailwind CSS arrives.
-  return (
-    <img
-      src="/hero/hero-640.webp"
-      srcSet="/hero/hero-640.webp 640w, /hero/hero-750.webp 750w, /hero/hero-1280.webp 1280w, /hero/hero-1920.webp 1920w"
-      sizes="100vw"
-      alt="Beautiful tropical holiday destination"
-      width={1600}
-      height={1066}
-      fetchPriority="high"
-      decoding="sync"
-      className="absolute inset-0 h-full w-full object-cover object-center"
-      style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        objectPosition: "center",
-      }}
-    />
-  );
-}
-
 export default function Hero({ data }: HeroProps) {
   const heroData = { ...defaultData, ...data };
   const isDefaultHero =
     !data?.backgroundImage || data.backgroundImage === DEFAULT_HERO_IMAGE;
-  const supportsImageOptimization = canUseNextImage(heroData.backgroundImage);
 
   return (
     <section
@@ -105,26 +78,15 @@ export default function Hero({ data }: HeroProps) {
       />
 
       {isDefaultHero ? (
-        <DefaultHeroPicture />
-      ) : supportsImageOptimization ? (
-        <Image
+        <HeroLcpImage />
+      ) : (
+        <AppImage
           src={heroData.backgroundImage}
           alt="Beautiful tropical holiday destination"
           fill
           priority
           fetchPriority="high"
           quality={60}
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-      ) : (
-        <Image
-          src={heroData.backgroundImage}
-          alt="Beautiful tropical holiday destination"
-          fill
-          priority
-          fetchPriority="high"
-          unoptimized
           className="object-cover object-center"
           sizes="100vw"
         />

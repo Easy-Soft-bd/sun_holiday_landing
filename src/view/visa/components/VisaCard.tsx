@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { VisaService } from "../data/visaData";
 import { Clock, Wallet, Calendar } from "lucide-react";
-import Image from "next/image";
+import AppImage from "@/src/components/common/AppImage";
 
 const ServiceBookingModal = dynamic(
     () => import("@/src/view/booking/ServiceBookingModal"),
@@ -27,7 +27,7 @@ export default function VisaCard({ visa }: { visa: VisaService }) {
         <div className="group bg-white rounded-[2rem] overflow-hidden border border-base-200 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 flex flex-col h-full">
             {/* Image & Category */}
             <div className="relative h-56 overflow-hidden">
-                <Image
+                <AppImage
                     src={visa.image}
                     alt={visa.country}
                     fill
