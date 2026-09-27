@@ -1,114 +1,96 @@
 import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
-import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
 import SectionAdminControl from "./SectionAdminControl";
-import type { ResortHeroData } from "@/src/lib/data/sunvia-eco-resort";
+import type { InvestorHeroData } from "@/src/lib/data/sunvia-eco-resort";
+import { whatsappHref } from "@/src/lib/data/sunvia-eco-resort";
 
 interface HeroSectionProps {
-  data: ResortHeroData;
+  data: InvestorHeroData;
   admin?: boolean;
 }
 
-export default function HeroSection({ data, admin = false }: HeroSectionProps) {
+function ActionLink({
+  href,
+  className,
+  children,
+}: {
+  href: string;
+  className: string;
+  children: React.ReactNode;
+}) {
+  const external = /^https?:/i.test(href);
+  if (external) {
+    return (
+      <a href={href} className={className} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    );
+  }
   return (
-    <section className="relative h-[75vh] md:h-[85vh] overflow-hidden bg-emerald-950">
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
+export default function HeroSection({ data, admin = false }: HeroSectionProps) {
+  const chatHref = whatsappHref(data.whatsappNumber, data.whatsappMessage);
+
+  return (
+    <section className="relative min-h-[85vh] overflow-hidden bg-black text-white">
       {admin ? (
-        <div className="absolute bottom-6 right-4 z-30 md:right-6">
-          <SectionAdminControl section="hero" title="Edit Hero" data={data} />
+        <div className="absolute right-4 bottom-28 z-30 md:right-6">
+          <SectionAdminControl section="investor_hero" title="Edit Hero" data={data} />
         </div>
       ) : null}
 
-      {/* Background Image */}
       <div className="absolute inset-0">
         <AppImage
           src={data.backgroundImage}
-          alt={`${data.titlePart1} ${data.titlePart2}`}
+          alt=""
           fill
-          className="object-cover"
           priority
           sizes="100vw"
+          className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/70 via-emerald-950/50 to-emerald-950/80" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/55 to-black/25" />
       </div>
 
-      {/* Content */}
-      <div className="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-center text-white">
-        {/* Badges */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
-          <span className="flex items-center gap-1.5 bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 px-4 py-2 rounded-full text-xs font-bold text-emerald-300 tracking-widest uppercase">
-            <PublicIconRenderer iconName={data.badgeIcon} className="size-3.5 text-emerald-400" />
-            {data.badgeText}
-          </span>
-          <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase">
-            <PublicIconRenderer iconName="LuMapPin" className="size-3.5 text-amber-400" />
-            {data.locationText}
-          </span>
-        </div>
+      <div className="relative container mx-auto flex min-h-[85vh] items-center px-4 py-24 lg:px-8">
+        <div className="max-w-3xl">
+          <p className="text-sm font-bold tracking-[0.22em] text-secondary uppercase">{data.projectName}</p>
+          <p className="mt-4 text-xs font-bold tracking-[0.28em] text-white/80 uppercase">{data.eyebrow}</p>
+          <h1 className="font-gilliequest mt-4 text-4xl leading-none tracking-tight md:text-6xl">{data.headline}</h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">{data.supportLine}</p>
 
-        {/* Title */}
-        <h1 className="font-magmawave text-5xl md:text-7xl lg:text-8xl leading-none tracking-tighter mb-3">
-          {data.titlePart1}{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-amber-400 italic">
-            {data.titlePart2}
-          </span>
-        </h1>
-
-        <h2 className="font-gilliequest text-xl md:text-3xl text-emerald-200/90 mb-4">
-          {data.subtitle}
-        </h2>
-
-        <p className="max-w-2xl text-base md:text-lg leading-relaxed text-white/80 mb-8">
-          {data.description}
-        </p>
-
-        {/* Stats Row */}
-        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-10">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <PublicIconRenderer iconName={data.stat1Icon} className="size-5 text-amber-400" />
-              <div className="text-2xl md:text-3xl font-bold text-amber-400">{data.stat1Value}</div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+              <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-white/70">{data.unitLabel}</p>
+              <p className="mt-1 text-lg font-black">{data.unitValue}</p>
             </div>
-            <div className="text-xs text-emerald-200/70 uppercase tracking-widest mt-1">{data.stat1Label}</div>
-          </div>
-          <div className="w-px h-10 bg-white/20 hidden md:block" />
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <PublicIconRenderer iconName={data.stat2Icon} className="size-5 text-amber-400" />
-              <div className="text-2xl md:text-3xl font-bold text-amber-400">{data.stat2Value}</div>
+            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+              <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-white/70">{data.paymentLabel}</p>
+              <p className="mt-1 text-lg font-black">{data.paymentValue}</p>
             </div>
-            <div className="text-xs text-emerald-200/70 uppercase tracking-widest mt-1">{data.stat2Label}</div>
           </div>
-          <div className="w-px h-10 bg-white/20 hidden md:block" />
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <PublicIconRenderer iconName={data.stat3Icon} className="size-5 text-amber-400" />
-              <div className="text-2xl md:text-3xl font-bold text-amber-400">{data.stat3Value}</div>
-            </div>
-            <div className="text-xs text-emerald-200/70 uppercase tracking-widest mt-1">{data.stat3Label}</div>
-          </div>
-        </div>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-          <Link
-            href={data.ctaPrimaryHref}
-            className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-emerald-950 font-bold rounded-full px-8 py-3.5 transition-all shadow-lg shadow-amber-500/20 group/btn w-full sm:w-auto"
-          >
-            {data.ctaPrimaryText}
-            <PublicIconRenderer iconName="LuChevronRight" className="size-5 group-hover/btn:translate-x-1 transition-transform" />
-          </Link>
-          <Link
-            href={data.ctaSecondaryHref}
-            className="flex items-center justify-center gap-2 border border-white/30 hover:bg-white/10 text-white font-bold rounded-full px-8 py-3.5 transition-all backdrop-blur-sm w-full sm:w-auto"
-          >
-            <PublicIconRenderer iconName={data.ctaSecondaryIcon} className="size-4" />
-            {data.ctaSecondaryText}
-          </Link>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <ActionLink href={data.ctaPrimaryHref} className="btn btn-primary rounded-full border-0 !bg-primary !text-primary-content px-8">
+              {data.ctaPrimaryText}
+            </ActionLink>
+            {chatHref ? (
+              <a
+                href={chatHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn rounded-full border !border-white/40 !bg-white/15 !text-white px-8 backdrop-blur-md hover:!border-secondary hover:!bg-secondary hover:!text-secondary-content"
+              >
+                {data.ctaSecondaryText}
+              </a>
+            ) : null}
+          </div>
         </div>
       </div>
-
-      {/* Bottom Gradient Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-base-100 to-transparent" />
     </section>
   );
 }

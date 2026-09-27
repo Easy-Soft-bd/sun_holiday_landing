@@ -49,7 +49,7 @@ const cmsPages: { key: string; label: string; href: string }[] = [
     { key: "cms-home", label: "Home", href: "/" },
     { key: "cms-sailor", label: "Sailor Moon Resorts", href: "/sailor-moon-resorts" },
     { key: "cms-resorts", label: "Resorts Listing", href: "/resorts" },
-    { key: "cms-sunvia-eco", label: "Sunvia Eco Resort", href: "/sunvia-eco-resort" },
+    { key: "cms-sunvia-eco", label: "Sunvia Hotel & Resort", href: "/sunvia-eco-resort" },
     { key: "cms-about", label: "About", href: "/about" },
     { key: "cms-tours", label: "Tours", href: "/tours" },
     { key: "cms-blog", label: "Blog", href: "/blog" },
@@ -196,7 +196,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
 
     const {
-        token: { colorBgContainer, borderRadiusLG, colorBorderSecondary },
+        token: { colorBgContainer, colorBorderSecondary },
     } = theme.useToken();
 
     const menuItems = useMemo(() => buildMenuItems(), []);
@@ -249,10 +249,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const sidebarBrand = (collapsedView: boolean) => (
         <Link
             href={ROOT}
-            className="flex h-16 items-center justify-center border-b text-base font-bold tracking-tight text-primary"
+            className="flex h-20 items-center gap-3 border-b px-4"
             style={{ borderColor: colorBorderSecondary }}
         >
-            <span>{collapsedView ? "SH" : "Sun Tourism"}</span>
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary text-sm font-black text-primary-content">
+                SH
+            </span>
+            {collapsedView ? null : (
+                <span className="min-w-0">
+                    <span className="block text-[10px] font-bold tracking-[0.22em] text-primary uppercase">Admin</span>
+                    <span className="block truncate text-base font-black tracking-tight text-base-content">Sun Holidays</span>
+                </span>
+            )}
         </Link>
     );
 
@@ -273,16 +281,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
 
     return (
-        <Layout style={{ minHeight: "100vh" }}>
+        <Layout style={{ minHeight: "100vh", background: "transparent" }}>
             {!isMobile && (
                 <Sider
                     trigger={null}
                     collapsible
                     collapsed={collapsed}
                     theme="light"
-                    width={240}
-                    className="shadow-sm"
-                    style={{ borderRight: `1px solid ${colorBorderSecondary}` }}
+                    width={248}
+                    style={{
+                        borderRight: `1px solid ${colorBorderSecondary}`,
+                        background: colorBgContainer,
+                        position: "sticky",
+                        top: 0,
+                        height: "100vh",
+                        overflow: "auto",
+                    }}
                 >
                     {sidebarBrand(collapsed)}
                     {sidebarMenu}
@@ -300,17 +314,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {sidebarMenu}
             </Drawer>
 
-            <Layout>
+            <Layout style={{ background: "transparent" }}>
                 <Header
                     style={{
-                        background: colorBgContainer,
+                        background: "transparent",
                         padding: 0,
                         position: "sticky",
                         top: 0,
-                        zIndex: 10,
+                        zIndex: 20,
                         borderBottom: `1px solid ${colorBorderSecondary}`,
                     }}
-                    className="flex items-center justify-between gap-4 pr-4 md:pr-6"
+                    className="flex items-center justify-between gap-4 bg-base-100/80 pr-4 backdrop-blur-md md:pr-6"
                 >
                     <div className="flex items-center gap-2">
                         <Button
@@ -351,9 +365,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <Button icon={<ExportOutlined />}>View site</Button>
                         </a>
                         <Dropdown menu={{ items: userMenu }} placement="bottomRight" trigger={["click"]}>
-                            <Space className="cursor-pointer rounded-lg px-3 py-2 transition-colors hover:bg-gray-50">
-                                <Avatar style={{ background: "#1677ff" }}>{userInitial}</Avatar>
-                                <span className="hidden font-medium text-gray-700 sm:inline">
+                            <Space className="cursor-pointer rounded-full px-2 py-1 transition-colors hover:bg-primary/10">
+                                <Avatar style={{ background: "#c2410c" }}>{userInitial}</Avatar>
+                                <span className="hidden font-medium text-base-content sm:inline">
                                     {userEmail ? userEmail.split("@")[0] : "Admin"}
                                 </span>
                                 {isLoggingOut ? <Tag color="gold">…</Tag> : null}
@@ -364,11 +378,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 <Content
                     style={{
-                        margin: "16px 12px 24px",
-                        padding: 24,
+                        margin: 0,
+                        padding: "28px 20px 48px",
                         minHeight: 280,
-                        background: colorBgContainer,
-                        borderRadius: borderRadiusLG,
+                        background: "transparent",
                     }}
                 >
                     {children}

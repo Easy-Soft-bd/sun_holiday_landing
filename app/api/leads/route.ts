@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     const pageUrl = sanitizeString(body.pageUrl, 512) || null;
 
     if (!name) return badRequest('Name is required');
-    if (!email || !isEmail(email)) return badRequest('A valid email is required');
+    if (email && !isEmail(email)) return badRequest('A valid email is required');
     if (!phone || !isPhone(phone)) return badRequest('A valid phone number is required');
 
     if (typeof body.website === 'string' && body.website.trim().length > 0) {
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
 
     const created = await Lead.create({
       name,
-      email,
+      email: email || '',
       phone,
       message,
       source,

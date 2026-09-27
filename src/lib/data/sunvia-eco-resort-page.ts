@@ -11,9 +11,11 @@ const getSunviaEcoResortPageDataFromDb = unstable_cache(
       return mergeSunviaEcoResortPageData();
     }
 
-    return mergeSunviaEcoResortPageData(pageDataRaw.get({ plain: true }));
+    return mergeSunviaEcoResortPageData(
+      pageDataRaw.get({ plain: true }) as Parameters<typeof mergeSunviaEcoResortPageData>[0],
+    );
   },
-  ["sunvia-eco-resort-page"],
+  ["sunvia-eco-resort-content-v2"],
   {
     tags: [TAG_SUNVIA_ECO_RESORT],
   },

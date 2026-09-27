@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Card, Typography, Space, App, Tabs, Skeleton, Upload } from 'antd';
+import { Form, Input, Button, Typography, Space, App, Skeleton, Upload } from 'antd';
 import type { GetProp, UploadProps } from 'antd';
 import {
   GlobalOutlined,
@@ -131,220 +131,242 @@ export default function SettingsPage() {
     );
   }
 
-  const tabItems = [
-    {
-      key: '1',
-      label: (
-        <span>
-          <GlobalOutlined /> Global Basic
-        </span>
-      ),
-      children: (
-        <Card variant="borderless" className="shadow-sm">
-          <Space orientation="vertical" size="large" className="w-full">
-            <Form.Item
-              label="Site Name"
-              name="siteName"
-              rules={[{ required: true, message: 'Please enter site name' }]}
-            >
-              <Input placeholder="Sun Tourism" />
-            </Form.Item>
-            <Form.Item label="Main Website Logo" extra="Uploading saves immediately and updates the navbar/footer logo.">
-              <Upload
-                name="siteLogo"
-                listType="picture-card"
-                showUploadList={false}
-                action=""
-                beforeUpload={handleLogoUpload}
-              >
+  const sectionClass = "rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm md:p-8";
+
+  return (
+    <div className="mx-auto max-w-5xl">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="mb-2 text-xs font-bold tracking-[0.24em] text-primary uppercase">Brand and contact</p>
+          <Title level={2} className="!mb-2 !font-gilliequest !text-4xl !tracking-tight">
+            Global settings
+          </Title>
+          <Text type="secondary">
+            The name, logo, contact details, and social links used across the public site.
+          </Text>
+        </div>
+        <Button
+          type="primary"
+          icon={<SaveOutlined />}
+          size="large"
+          loading={isUpdating}
+          onClick={() => form.submit()}
+          className="rounded-full"
+        >
+          Save changes
+        </Button>
+      </div>
+
+      <Form form={form} layout="vertical" onFinish={onFinish} requiredMark={false} className="space-y-6">
+        <section className={sectionClass}>
+          <div className="mb-6">
+            <Title level={4} className="!mb-1">
+              <GlobalOutlined className="mr-2 text-primary" />
+              Brand
+            </Title>
+            <Text type="secondary">Site name and the logo shown in the navbar and footer.</Text>
+          </div>
+          <Form.Item
+            label="Site name"
+            name="siteName"
+            rules={[{ required: true, message: 'Please enter site name' }]}
+          >
+            <Input placeholder="Sun Tourism" />
+          </Form.Item>
+          <Form.Item label="Website logo" extra="Uploading saves immediately and updates the navbar and footer.">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="flex h-28 w-full items-center justify-center overflow-hidden rounded-2xl border border-base-300 bg-base-200 sm:w-56">
                 {logoUrl ? (
-                  <img src={logoUrl} alt="logo" style={{ width: '100%' }} />
+                  <img src={logoUrl} alt="Current website logo" className="max-h-20 max-w-[85%] object-contain" />
                 ) : (
-                  <button style={{ border: 0, background: 'none' }} type="button">
-                    {logoLoading ? <LoadingOutlined /> : <PlusOutlined />}
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </button>
+                  <span className="text-sm text-base-content/50">No logo yet</span>
                 )}
-              </Upload>
-              <Form.Item name="siteLogo" noStyle>
-                <Input
-                  value={logoUrl}
-                  onChange={(e) => {
-                    setLogoUrl(e.target.value);
-                    form.setFieldValue('siteLogo', e.target.value);
-                  }}
-                  placeholder="Or paste logo URL"
-                  className="mt-2"
-                />
-              </Form.Item>
-            </Form.Item>
-            <Text type="secondary">
-              This page is global source for shared branding, contact, and social data.
-              SEO stays page-specific.
-            </Text>
-          </Space>
-        </Card>
-      ),
-    },
-    {
-      key: '2',
-      label: (
-        <span>
-          <ContactsOutlined /> Contact Details
-        </span>
-      ),
-      children: (
-        <Card variant="borderless" className="shadow-sm">
-          <Space orientation="vertical" size="large" className="w-full">
-            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-base-content/50">Email addresses</div>
-            <Form.List name="contactEmails">
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline" className="w-full max-w-full">
-                      <Form.Item
-                        {...restField}
-                        name={[name]}
-                        className="mb-0 flex-1 min-w-0"
-                        rules={[{ required: true, message: 'Email required' }, { type: 'email', message: 'Invalid email' }]}
-                      >
-                        <Input placeholder="info@sunholidaysltd.com" />
-                      </Form.Item>
-                      <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
-                    </Space>
-                  ))}
-                  <Button type="dashed" onClick={() => add('')} block icon={<PlusOutlined />}>
-                    Add email
+              </div>
+              <div className="min-w-0 flex-1">
+                <Upload
+                  name="siteLogo"
+                  showUploadList={false}
+                  beforeUpload={handleLogoUpload}
+                >
+                  <Button icon={logoLoading ? <LoadingOutlined /> : <PlusOutlined />} loading={logoLoading}>
+                    Upload logo
                   </Button>
-                </>
-              )}
-            </Form.List>
+                </Upload>
+                <Form.Item name="siteLogo" noStyle>
+                  <Input
+                    value={logoUrl}
+                    onChange={(e) => {
+                      setLogoUrl(e.target.value);
+                      form.setFieldValue('siteLogo', e.target.value);
+                    }}
+                    placeholder="Or paste a logo URL"
+                    className="mt-3"
+                  />
+                </Form.Item>
+              </div>
+            </div>
+          </Form.Item>
+        </section>
 
-            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-base-content/50">Phone numbers</div>
-            <Form.List name="contactPhones">
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline" className="w-full max-w-full">
-                      <Form.Item
-                        {...restField}
-                        name={[name]}
-                        className="mb-0 flex-1 min-w-0"
-                        rules={[{ required: true, message: 'Phone required' }]}
-                      >
-                        <Input placeholder="+880 1234 567890" />
-                      </Form.Item>
-                      <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
-                    </Space>
-                  ))}
-                  <Button type="dashed" onClick={() => add('')} block icon={<PlusOutlined />}>
-                    Add phone
-                  </Button>
-                </>
-              )}
-            </Form.List>
+        <section className={sectionClass}>
+          <div className="mb-6">
+            <Title level={4} className="!mb-1">
+              <ContactsOutlined className="mr-2 text-primary" />
+              Contact
+            </Title>
+            <Text type="secondary">Shown in the footer and on the contact page.</Text>
+          </div>
+          <div className="mb-2 text-xs font-bold tracking-[0.16em] text-base-content/50 uppercase">Email addresses</div>
+          <Form.List name="contactEmails">
+            {(fields, { add, remove }) => (
+              <div className="mb-6 space-y-2">
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="flex items-start gap-2">
+                    <Form.Item
+                      {...restField}
+                      name={[name]}
+                      className="mb-0 min-w-0 flex-1"
+                      rules={[{ required: true, message: 'Email required' }, { type: 'email', message: 'Invalid email' }]}
+                    >
+                      <Input placeholder="info@sunholidaysltd.com" />
+                    </Form.Item>
+                    <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} aria-label="Remove email" />
+                  </div>
+                ))}
+                <Button type="dashed" onClick={() => add('')} block icon={<PlusOutlined />}>
+                  Add email
+                </Button>
+              </div>
+            )}
+          </Form.List>
 
-            <Form.Item
-              label="Office Address"
-              name="address"
-              extra="Shown in the footer and on the contact page. Use line breaks for multi-line addresses."
-            >
-              <TextArea rows={4} placeholder={"362/1, Holding 13/1 (2nd Floor)\nOld-27 New-16 Dhanmondi\nDhaka-1209, Bangladesh"} />
-            </Form.Item>
+          <div className="mb-2 text-xs font-bold tracking-[0.16em] text-base-content/50 uppercase">Phone numbers</div>
+          <Form.List name="contactPhones">
+            {(fields, { add, remove }) => (
+              <div className="mb-6 space-y-2">
+                {fields.map(({ key, name, ...restField }) => (
+                  <div key={key} className="flex items-start gap-2">
+                    <Form.Item
+                      {...restField}
+                      name={[name]}
+                      className="mb-0 min-w-0 flex-1"
+                      rules={[{ required: true, message: 'Phone required' }]}
+                    >
+                      <Input placeholder="+880 1234 567890" />
+                    </Form.Item>
+                    <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} aria-label="Remove phone" />
+                  </div>
+                ))}
+                <Button type="dashed" onClick={() => add('')} block icon={<PlusOutlined />}>
+                  Add phone
+                </Button>
+              </div>
+            )}
+          </Form.List>
 
-            <Form.Item
-              label="Google Location Link"
-              name="googleMapsUrl"
-              extra="Paste a Google Maps share link or an embed URL. Used for Get Directions and the contact page map."
-              rules={[
-                {
-                  validator: async (_, value) => {
-                    const v = String(value || '').trim();
-                    if (!v) return;
-                    try {
-                      // eslint-disable-next-line no-new
-                      new URL(v);
-                    } catch {
-                      throw new Error('Enter a valid URL');
-                    }
-                  },
+          <Form.Item
+            label="Office address"
+            name="address"
+            extra="Use line breaks for a multi-line address."
+          >
+            <TextArea rows={4} placeholder={"362/1, Holding 13/1 (2nd Floor)\nOld-27 New-16 Dhanmondi\nDhaka-1209, Bangladesh"} />
+          </Form.Item>
+
+          <Form.Item
+            label="Google location link"
+            name="googleMapsUrl"
+            extra="A Google Maps share link or embed URL, used for Get Directions and the contact map."
+            rules={[
+              {
+                validator: async (_, value) => {
+                  const v = String(value || '').trim();
+                  if (!v) return;
+                  try {
+                    // eslint-disable-next-line no-new
+                    new URL(v);
+                  } catch {
+                    throw new Error('Enter a valid URL');
+                  }
                 },
-              ]}
-            >
-              <Input placeholder="https://maps.app.goo.gl/... or https://www.google.com/maps/embed?..." />
-            </Form.Item>
-          </Space>
-        </Card>
-      ),
-    },
-    {
-      key: '3',
-      label: (
-        <span>
-          <ShareAltOutlined /> Social Links
-        </span>
-      ),
-      children: (
-        <Card variant="borderless" className="shadow-sm">
+              },
+            ]}
+          >
+            <Input placeholder="https://maps.app.goo.gl/... or https://www.google.com/maps/embed?..." />
+          </Form.Item>
+        </section>
+
+        <section className={sectionClass}>
+          <div className="mb-6">
+            <Title level={4} className="!mb-1">
+              <ShareAltOutlined className="mr-2 text-primary" />
+              Social links
+            </Title>
+            <Text type="secondary">These appear in the footer in the order listed here.</Text>
+          </div>
           <Form.List name="socialLinks">
             {(fields, { add, remove, move }) => (
               <>
-                {fields.length === 0 && (
+                {fields.length === 0 ? (
                   <Text type="secondary" className="mb-4 block">
                     No social links yet. Add one below or start from a preset.
                   </Text>
-                )}
+                ) : null}
 
-                {fields.map(({ key, name, ...restField }, index) => (
-                  <div key={key} className="mb-3 flex flex-wrap items-start gap-2">
-                    <Form.Item {...restField} name={[name, 'icon']} className="mb-0 w-44">
-                      <IconPicker placeholder="Pick icon" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'label']}
-                      className="mb-0 w-36"
-                      rules={[{ required: true, message: 'Name required' }]}
-                    >
-                      <Input placeholder="Facebook" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'url']}
-                      className="mb-0 min-w-48 flex-1"
-                      rules={[{ required: true, message: 'URL required' }]}
-                    >
-                      <Input placeholder="https://facebook.com/sunholidays" />
-                    </Form.Item>
-                    <Space.Compact>
-                      <Button
-                        icon={<ArrowUpOutlined />}
-                        disabled={index === 0}
-                        onClick={() => move(index, index - 1)}
-                        title="Move up"
-                      />
-                      <Button
-                        icon={<ArrowDownOutlined />}
-                        disabled={index === fields.length - 1}
-                        onClick={() => move(index, index + 1)}
-                        title="Move down"
-                      />
-                    </Space.Compact>
-                    <Button
-                      type="text"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => remove(name)}
-                      title="Remove"
-                    />
-                  </div>
-                ))}
+                <div className="space-y-3">
+                  {fields.map(({ key, name, ...restField }, index) => (
+                    <div key={key} className="rounded-2xl border border-base-300 bg-base-200/60 p-3">
+                      <div className="flex flex-wrap items-start gap-2">
+                        <Form.Item {...restField} name={[name, 'icon']} className="mb-0 w-full sm:w-44">
+                          <IconPicker placeholder="Pick icon" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'label']}
+                          className="mb-0 w-full sm:w-36"
+                          rules={[{ required: true, message: 'Name required' }]}
+                        >
+                          <Input placeholder="Facebook" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'url']}
+                          className="mb-0 min-w-48 flex-1"
+                          rules={[{ required: true, message: 'URL required' }]}
+                        >
+                          <Input placeholder="https://facebook.com/sunholidays" />
+                        </Form.Item>
+                        <Space.Compact>
+                          <Button
+                            icon={<ArrowUpOutlined />}
+                            disabled={index === 0}
+                            onClick={() => move(index, index - 1)}
+                            aria-label="Move up"
+                          />
+                          <Button
+                            icon={<ArrowDownOutlined />}
+                            disabled={index === fields.length - 1}
+                            onClick={() => move(index, index + 1)}
+                            aria-label="Move down"
+                          />
+                        </Space.Compact>
+                        <Button
+                          type="text"
+                          danger
+                          icon={<DeleteOutlined />}
+                          onClick={() => remove(name)}
+                          aria-label="Remove social link"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
                 <Button
                   type="dashed"
                   onClick={() => add({ label: '', icon: DEFAULT_SOCIAL_ICON, url: '' })}
                   block
                   icon={<PlusOutlined />}
+                  className="mt-4"
                 >
                   Add social link
                 </Button>
@@ -364,41 +386,10 @@ export default function SettingsPage() {
                     </Button>
                   ))}
                 </div>
-
-                <Text type="secondary" className="mt-4 block text-xs">
-                  Icons come from the full React Icons library, so any network can be
-                  represented. Links appear in the footer in the order listed here.
-                </Text>
               </>
             )}
           </Form.List>
-        </Card>
-      ),
-    },
-  ];
-
-  return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
-      <div className="mb-8 flex justify-between items-center">
-        <div>
-          <Title level={2} style={{ margin: 0 }}>
-            Global Data Source
-          </Title>
-          <Text type="secondary">Shared contact/social data used across page sections and public layouts.</Text>
-        </div>
-        <Button
-          type="primary"
-          icon={<SaveOutlined />}
-          size="large"
-          loading={isUpdating}
-          onClick={() => form.submit()}
-        >
-          Save Changes
-        </Button>
-      </div>
-
-      <Form form={form} layout="vertical" onFinish={onFinish} requiredMark={false}>
-        <Tabs defaultActiveKey="1" className="settings-tabs" items={tabItems} />
+        </section>
       </Form>
     </div>
   );

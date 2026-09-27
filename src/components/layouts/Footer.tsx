@@ -5,7 +5,7 @@ import { Mail, Phone, MapPin, Send } from "lucide-react";
 import PublicIconRenderer from "../common/PublicIconRenderer";
 import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import { resolveSocialLinks, type SocialLink } from "@/src/lib/social-links";
-import { parseMultiValue } from "@/src/lib/settings-normalize";
+import { parseMultiValue, resolveMapsEmbedSrc } from "@/src/lib/settings-normalize";
 
 /** Footer CMS entries predate the settings editor and may not carry a label. */
 interface CmsSocialLink {
@@ -29,6 +29,8 @@ interface FooterData {
     socialLinks?: CmsSocialLink[];
     servicesTitle?: string;
     servicesLinks?: QuickLink[];
+    resortsTitle?: string;
+    resortsLinks?: QuickLink[];
     contactTitle?: string;
     contactAddress?: string;
     /** Preferred: one or more numbers shown in the footer */
@@ -58,10 +60,15 @@ const defaultData: FooterData = {
     servicesTitle: "Services",
     servicesLinks: [
         { label: "Visa Processing", url: "/visa" },
-        { label: "Air Ticketing", url: "/tickets" },
-        { label: "Resort Bookings", url: "/resorts" },
-        { label: "Custom Tour Packages", url: "/tours" },
+        { label: "Ticket", url: "/tickets" },
+        { label: "Tour", url: "/tours" },
         { label: "News & Blog", url: "/blog" },
+    ],
+    resortsTitle: "Resorts",
+    resortsLinks: [
+        { label: "Sailor Moon Beach Resort", url: "/sailor-moon-resorts" },
+        { label: "Sunvia Hotel Resort", url: "/sunvia-eco-resort" },
+        { label: "Grandeur Bliss", url: "/resort/grandeur-bliss" },
     ],
     contactTitle: "Get In Touch",
     contactAddress: "123 Travel Plaza, Suite 456\nDhaka, Bangladesh",
@@ -79,6 +86,33 @@ const defaultData: FooterData = {
     paymentsTitle: "Secure Payments",
     copyrightText: "Sun Tourism Ltd. All Rights Reserved.",
 };
+
+const PARADISE_SOLUTION_LABEL = "Paradise Solution";
+const PARADISE_SOLUTION_URL = "https://www.paradisesolution.us/";
+const OFFICE_MAP_EMBED =
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.902442430139!2d90.37258331536263!3d23.75085809467645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b33cffc3fb%3A0x4a826f475fd312af!2sDhanmondi%2027!5e0!3m2!1sen!2sbd!4v1675238475234!5m2!1sen!2sbd";
+
+function renderCopyright(text: string) {
+    const credit = text.includes(PARADISE_SOLUTION_LABEL)
+        ? text
+        : `${text} This Site Design & Developed By ${PARADISE_SOLUTION_LABEL}`;
+    const index = credit.indexOf(PARADISE_SOLUTION_LABEL);
+
+    return (
+        <>
+            {credit.slice(0, index)}
+            <a
+                href={PARADISE_SOLUTION_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary hover:underline"
+            >
+                {PARADISE_SOLUTION_LABEL}
+            </a>
+            {credit.slice(index + PARADISE_SOLUTION_LABEL.length)}
+        </>
+    );
+}
 
 function normalizeContactList(
     fromArray: string[] | undefined,
@@ -120,6 +154,13 @@ function mergeFooterData(data?: FooterData): FooterData {
         merged.contactEmail,
         defaultData.contactEmails ?? []
     );
+    if (!Array.isArray(merged.servicesLinks) || merged.servicesLinks.length === 0) {
+        merged.servicesLinks = defaultData.servicesLinks;
+    }
+    if (!Array.isArray(merged.resortsLinks) || merged.resortsLinks.length === 0) {
+        merged.resortsLinks = defaultData.resortsLinks;
+    }
+    merged.resortsTitle = merged.resortsTitle || defaultData.resortsTitle;
     return merged;
 }
 
@@ -166,6 +207,7 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
 
     const address = settings?.address || footerData.contactAddress || "123 Travel Plaza, Suite 456\nDhaka, Bangladesh";
     const mapsHref = settings?.googleMapsUrl?.trim() || null;
+    const mapEmbedSrc = resolveMapsEmbedSrc(mapsHref) || OFFICE_MAP_EMBED;
     const bio = footerData.bio || defaultData.bio;
 
     const socialLinks = resolveSocialLinks(
@@ -187,7 +229,7 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
             <div className="container mx-auto px-6 pt-16 pb-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
 
-                    {/* Column 1: Brand & Bio */}
+                    {/* Column 1: Brand & contact */}
                     <div className="space-y-6">
                         <Link href="/" prefetch={false} className="inline-block hover:opacity-80 transition-opacity">
                             <Logo
@@ -224,6 +266,52 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                                 </Link>
                             ))}
                         </div>
+
+                        <div>
+                            <h2 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-base-content">{footerData.contactTitle}</h2>
+                            <ul className="space-y-4 text-sm font-medium">
+                                <li className="flex items-start gap-3">
+                                    <MapPin size={18} className="text-primary shrink-0" />
+                                    {mapsHref ? (
+                                        <a
+                                            href={mapsHref}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-base-content/70 whitespace-pre-line hover:text-primary transition-colors"
+                                        >
+                                            {address}
+                                        </a>
+                                    ) : (
+                                        <span className="text-base-content/70 whitespace-pre-line">{address}</span>
+                                    )}
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <Phone size={18} className="mt-2.5 text-primary shrink-0" />
+                                    <div className="flex flex-col">
+                                        {contactPhones.map((phone, i) => (
+                                            <a
+                                                key={`phone-${i}`}
+                                                href={`tel:${phone.replace(/\s/g, "")}`}
+                                                className="inline-flex items-center min-h-11 py-2.5 text-base-content/70 hover:text-primary transition-colors"
+                                            >
+                                                {phone}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </li>
+                                {contactEmails.map((email, i) => (
+                                    <li key={`email-${i}`} className="flex items-center gap-3 min-h-11">
+                                        <Mail size={18} className="text-primary shrink-0" />
+                                        <a
+                                            href={`mailto:${email}`}
+                                            className="inline-flex items-center min-h-11 py-2.5 text-base-content/70 hover:text-primary transition-colors break-all"
+                                        >
+                                            {email}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
 
                     {/* Column 2: Quick Links */}
@@ -244,45 +332,18 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                         </ul>
                     </div>
 
-                    {/* Column 3: Contact Info */}
                     <div>
-                        <h2 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-base-content">{footerData.contactTitle}</h2>
-                        <ul className="space-y-4 text-sm font-medium">
-                            <li className="flex items-start gap-3">
-                                <MapPin size={18} className="text-primary shrink-0" />
-                                {mapsHref ? (
-                                    <a
-                                        href={mapsHref}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-base-content/70 whitespace-pre-line hover:text-primary transition-colors"
+                        <h2 className="mb-6 text-sm font-bold tracking-[0.2em] text-base-content uppercase">{footerData.resortsTitle}</h2>
+                        <ul className="space-y-1 text-sm font-medium">
+                            {footerData.resortsLinks?.map((link) => (
+                                <li key={link.url}>
+                                    <Link
+                                        href={link.url}
+                                        prefetch={false}
+                                        className="inline-flex min-h-11 items-center py-2.5 transition-colors hover:text-primary"
                                     >
-                                        {address}
-                                    </a>
-                                ) : (
-                                    <span className="text-base-content/70 whitespace-pre-line">{address}</span>
-                                )}
-                            </li>
-                            {contactPhones.map((phone, i) => (
-                                <li key={`phone-${i}`} className="flex items-center gap-3 min-h-11">
-                                    <Phone size={18} className="text-primary shrink-0" />
-                                    <a
-                                        href={`tel:${phone.replace(/\s/g, "")}`}
-                                        className="inline-flex items-center min-h-11 py-2.5 text-base-content/70 hover:text-primary transition-colors"
-                                    >
-                                        {phone}
-                                    </a>
-                                </li>
-                            ))}
-                            {contactEmails.map((email, i) => (
-                                <li key={`email-${i}`} className="flex items-center gap-3 min-h-11">
-                                    <Mail size={18} className="text-primary shrink-0" />
-                                    <a
-                                        href={`mailto:${email}`}
-                                        className="inline-flex items-center min-h-11 py-2.5 text-base-content/70 hover:text-primary transition-colors break-all"
-                                    >
-                                        {email}
-                                    </a>
+                                        {link.label}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
@@ -307,6 +368,17 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                                     <Send size={14} className="text-white" />
                                 </button>
                             </form>
+                        </div>
+                        <div className="mt-6 h-72 overflow-hidden rounded-2xl border border-base-300">
+                            <iframe
+                                src={mapEmbedSrc}
+                                title="Google Map Office Location"
+                                className="h-full w-full"
+                                style={{ border: 0 }}
+                                loading="lazy"
+                                allowFullScreen
+                                referrerPolicy="no-referrer-when-downgrade"
+                            />
                         </div>
                     </div>
                 </div>
@@ -345,7 +417,7 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
 
                 {/* Bottom Legal Section */}
                 <div className="mt-12 pt-8 border-t border-base-300 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-base-content/70">
-                    <p>© {currentYear} {footerData.copyrightText}</p>
+                    <p>© {currentYear} {renderCopyright(footerData.copyrightText || defaultData.copyrightText || "")}</p>
                     <div className="flex flex-wrap gap-x-6 gap-y-1">
                         <Link href="/privacy" prefetch={false} className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors">Privacy Policy</Link>
                         <Link href="/terms" prefetch={false} className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors">Terms of Service</Link>

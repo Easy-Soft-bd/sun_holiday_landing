@@ -1,8 +1,10 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../lib/db";
+import { RESORT_SECTION_KEYS } from "../lib/data/sunvia-eco-resort";
 
 class SunviaEcoResortPage extends Model {
   declare id: number;
+  /** Legacy guest-page columns. Kept so sync does not drop stored history. Not read by the investor page. */
   declare seo: unknown;
   declare hero: unknown;
   declare about: unknown;
@@ -14,6 +16,29 @@ class SunviaEcoResortPage extends Model {
   declare gallery: unknown;
   declare services: unknown;
   declare contact: unknown;
+  declare investor_seo: unknown;
+  declare investor_hero: unknown;
+  declare master_plan: unknown;
+  declare investment_model: unknown;
+  declare investment: unknown;
+  declare demand: unknown;
+  declare roadmap: unknown;
+  declare why_sunvia: unknown;
+  declare terms: unknown;
+  declare faq: unknown;
+  declare lead: unknown;
+  /** Earlier investor-page columns. Kept so sync does not drop stored history. Not read by the page. */
+  declare vision: unknown;
+  declare business_model: unknown;
+  declare revenue: unknown;
+  declare understand: unknown;
+  declare profit: unknown;
+  declare payment_example: unknown;
+  declare project_status: unknown;
+  declare features: unknown;
+  declare people: unknown;
+  declare documents: unknown;
+  declare journey: unknown;
 }
 
 function jsonColumn(fieldName: string) {
@@ -30,6 +55,41 @@ function jsonColumn(fieldName: string) {
   };
 }
 
+const legacyColumns = [
+  "seo",
+  "hero",
+  "about",
+  "accommodations",
+  "dining",
+  "activities",
+  "eco",
+  "events",
+  "gallery",
+  "services",
+  "contact",
+] as const;
+
+const retiredColumns = [
+  "vision",
+  "business_model",
+  "revenue",
+  "understand",
+  "profit",
+  "payment_example",
+  "project_status",
+  "features",
+  "people",
+  "documents",
+  "journey",
+] as const;
+
+const attributes = Object.fromEntries(
+  [...legacyColumns, ...RESORT_SECTION_KEYS, ...retiredColumns].map((fieldName) => [
+    fieldName,
+    jsonColumn(fieldName),
+  ]),
+);
+
 SunviaEcoResortPage.init(
   {
     id: {
@@ -37,17 +97,7 @@ SunviaEcoResortPage.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    seo: jsonColumn("seo"),
-    hero: jsonColumn("hero"),
-    about: jsonColumn("about"),
-    accommodations: jsonColumn("accommodations"),
-    dining: jsonColumn("dining"),
-    activities: jsonColumn("activities"),
-    eco: jsonColumn("eco"),
-    events: jsonColumn("events"),
-    gallery: jsonColumn("gallery"),
-    services: jsonColumn("services"),
-    contact: jsonColumn("contact"),
+    ...attributes,
   },
   {
     tableName: "page_sunvia_eco_resort",

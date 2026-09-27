@@ -44,7 +44,7 @@ const defaultData: ResortCtaData = {
     titlePart2: "BLISS",
     description: "A state-of-the-art luxury escape by Sun Tourism Ltd. Nestled adjacent to the serene Inani Beach, we offer a world of sophistication and coastal tranquility.",
     ctaButtonText: "Details & Booking",
-    ctaButtonLink: "/hotel/grandeur-bliss",
+    ctaButtonLink: "/contact",
     roomDetails: [
         { label: "Deluxe Rooms", count: 200, size: "425 sq. ft." },
         { label: "Suite Rooms", count: 30, size: "550 sq. ft." },

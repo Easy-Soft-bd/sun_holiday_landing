@@ -129,17 +129,17 @@ export const defaultResortsListingPageData: ResortsListingPageData = {
     },
     {
       id: "sunvia-eco-resort",
-      name: "Sunvia Eco Resort",
-      tagline: "5-Star Luxury Resort",
+      name: "Sunvia Hotel & Resort",
+      tagline: "Planned Hospitality Project",
       location: "Manikganj, Bangladesh",
       category: "city",
       rating: 5,
       image:
-        "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop",
       description:
-        "A state-of-the-art luxury escape nestled adjacent to the serene Inani Beach. Experience sophistication and coastal tranquility.",
-      features: ["250 Luxury Rooms", "Spa & Gym", "Conference Facilities", "Multiple Restaurants"],
-      established: "Coming Soon",
+        "A planned hospitality destination in Manikganj. Explore the project and the investment opportunity. Returns are not guaranteed.",
+      features: ["50 Bigha Planned", "Hotel & Villas", "Investment Opportunity", "Not Yet Operating"],
+      established: "In Planning",
       href: "/sunvia-eco-resort",
       status: "coming-soon",
     },
@@ -154,15 +154,26 @@ export function mergeResortsListingPageData(
     return { ...d, resorts: d.resorts.map((r) => ({ ...r, features: [...r.features] })) };
   }
 
+  const sunviaDefault = d.resorts.find((resort) => resort.id === "sunvia-eco-resort");
   const resorts: ResortsListingResort[] =
     partial.resorts && partial.resorts.length > 0
-      ? partial.resorts.map((r) => ({
-          ...r,
-          features: Array.isArray(r.features) && r.features.length > 0 ? [...r.features] : [],
-          category: r.category === "city" ? ("city" as const) : ("beach" as const),
-          status: r.status === "available" ? ("available" as const) : ("coming-soon" as const),
-          rating: Math.min(5, Math.max(1, Number(r.rating) || 5)),
-        }))
+      ? partial.resorts.map((r) => {
+          const next = {
+            ...r,
+            features: Array.isArray(r.features) && r.features.length > 0 ? [...r.features] : [],
+            category: r.category === "city" ? ("city" as const) : ("beach" as const),
+            status: r.status === "available" ? ("available" as const) : ("coming-soon" as const),
+            rating: Math.min(5, Math.max(1, Number(r.rating) || 5)),
+          };
+          if (
+            next.id === "sunvia-eco-resort" &&
+            sunviaDefault &&
+            /inani beach/i.test(next.description)
+          ) {
+            return { ...sunviaDefault, features: [...sunviaDefault.features] };
+          }
+          return next;
+        })
       : d.resorts.map((r) => ({ ...r, features: [...r.features] }));
 
   return {

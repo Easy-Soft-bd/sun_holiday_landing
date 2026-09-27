@@ -21,6 +21,8 @@ interface FooterData {
     bio: string;
     servicesTitle: string;
     servicesLinks: QuickLink[];
+    resortsTitle: string;
+    resortsLinks: QuickLink[];
     contactTitle: string;
     newsletterTitle: string;
     newsletterDescription: string;
@@ -35,10 +37,15 @@ const defaultData: FooterData = {
     servicesTitle: "Services",
     servicesLinks: [
         { label: "Visa Processing", url: "/visa" },
-        { label: "Air Ticketing", url: "/tickets" },
-        { label: "Resort Bookings", url: "/resorts" },
-        { label: "Custom Tour Packages", url: "/tours" },
+        { label: "Ticket", url: "/tickets" },
+        { label: "Tour", url: "/tours" },
         { label: "News & Blog", url: "/blog" },
+    ],
+    resortsTitle: "Resorts",
+    resortsLinks: [
+        { label: "Sailor Moon Beach Resort", url: "/sailor-moon-resorts" },
+        { label: "Sunvia Hotel Resort", url: "/sunvia-eco-resort" },
+        { label: "Grandeur Bliss", url: "/resort/grandeur-bliss" },
     ],
     contactTitle: "Get In Touch",
     newsletterTitle: "Newsletter",
@@ -80,6 +87,15 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
             const mergedData: FooterData = {
                 ...defaultData,
                 ...initialData,
+                servicesLinks:
+                    Array.isArray(initialData?.servicesLinks) && initialData.servicesLinks.length > 0
+                        ? initialData.servicesLinks
+                        : defaultData.servicesLinks,
+                resortsLinks:
+                    Array.isArray(initialData?.resortsLinks) && initialData.resortsLinks.length > 0
+                        ? initialData.resortsLinks
+                        : defaultData.resortsLinks,
+                resortsTitle: initialData?.resortsTitle || defaultData.resortsTitle,
                 certifications: mergedCertifications,
             };
             form.setFieldsValue(mergedData);
@@ -92,7 +108,10 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
             const response = await fetch('/api/home-page', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ section: 'footer', data: values }),
+                body: JSON.stringify({
+                    section: 'footer',
+                    data: { ...initialData, ...values },
+                }),
             });
 
             if (response.ok) {
@@ -156,6 +175,29 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
                                         </Space>
                                     ))}
                                     <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>Add Service Link</Button>
+                                </>
+                            )}
+                        </Form.List>
+
+                        <Divider titlePlacement="left">Resorts</Divider>
+                        <Form.Item label="Resorts Title" name="resortsTitle" rules={[{ required: true }]}>
+                            <Input />
+                        </Form.Item>
+                        <Form.List name="resortsLinks">
+                            {(fields, { add, remove }) => (
+                                <>
+                                    {fields.map(({ key, name, ...restField }) => (
+                                        <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
+                                            <Form.Item {...restField} name={[name, "label"]} rules={[{ required: true, message: "Label" }]}>
+                                                <Input placeholder="Resort" style={{ width: 160 }} />
+                                            </Form.Item>
+                                            <Form.Item {...restField} name={[name, "url"]} rules={[{ required: true, message: "Path/URL" }]}>
+                                                <Input placeholder="/sunvia-eco-resort" style={{ width: 180 }} />
+                                            </Form.Item>
+                                            <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
+                                        </Space>
+                                    ))}
+                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>Add Resort Link</Button>
                                 </>
                             )}
                         </Form.List>

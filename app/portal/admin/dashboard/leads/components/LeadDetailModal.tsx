@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { App, Descriptions, Form, Input, Modal, Select, Tag } from "antd";
-import { LEAD_STATUS_OPTIONS, LeadRecord, LeadStatus } from "../types";
+import { LEAD_STATUS_OPTIONS, LeadRecord, LeadStatus, inquiryMeta, leadEmail } from "../types";
 
 const { TextArea } = Input;
 
@@ -61,6 +61,9 @@ export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props)
 
     if (!lead) return null;
 
+    const email = leadEmail(lead.email);
+    const meta = inquiryMeta(lead.message);
+
     return (
         <Modal
             title={`Lead from ${lead.name || "—"}`}
@@ -74,13 +77,21 @@ export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props)
             <Descriptions column={1} size="small" bordered className="mb-4">
                 <Descriptions.Item label="Name">{lead.name}</Descriptions.Item>
                 <Descriptions.Item label="Email">
-                    <a href={`mailto:${lead.email}`}>{lead.email}</a>
+                    {email ? <a href={`mailto:${email}`}>{email}</a> : "Not collected"}
                 </Descriptions.Item>
                 <Descriptions.Item label="Phone">
                     <a href={`tel:${lead.phone}`}>{lead.phone}</a>
                 </Descriptions.Item>
+                {meta.preferred ? (
+                    <Descriptions.Item label="Preferred contact">{meta.preferred}</Descriptions.Item>
+                ) : null}
+                {meta.interest ? (
+                    <Descriptions.Item label="Investment interest">{meta.interest}</Descriptions.Item>
+                ) : null}
                 <Descriptions.Item label="Source">
-                    <Tag color="blue">{lead.source}</Tag>
+                    <Tag color={lead.source?.toLowerCase().includes("sunvia") ? "volcano" : "blue"}>
+                        {lead.source}
+                    </Tag>
                     {lead.pageUrl ? (
                         <a
                             href={lead.pageUrl}

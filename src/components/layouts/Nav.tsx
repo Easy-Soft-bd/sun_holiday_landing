@@ -43,12 +43,10 @@ const Nav = ({ branding, admin = false }: NavProps) => {
         { name: "Contact", href: "/contact", icon: Mail },
         {
             name: "Resort",
-            href: "/resorts",
             icon: Hotel,
             submenu: [
                 { name: "Sailor Moon Resorts", href: "/sailor-moon-resorts" },
-                { name: "Sunvia Eco Resort", href: "/sunvia-eco-resort" },
-                { name: "Grandeur Bliss", href: "/resort/grandeur-bliss" },
+                { name: "Sunvia Hotel & Resort", href: "/sunvia-eco-resort" },
             ]
         },
     ];
@@ -78,27 +76,59 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                         <div className="hidden lg:flex items-center gap-1">
                             {navLinks.map((link) => {
                                 const Icon = link.icon;
+                                const isSubmenuOpen = openSubmenu === link.name;
+                                const itemClassName = "flex items-center gap-2 px-3 py-2 text-sm font-semibold text-base-content/80 hover:text-primary transition-colors rounded-lg hover:bg-base-200";
+                                const label = (
+                                    <>
+                                        <Icon size={18} className="opacity-70 group-hover:text-primary group-hover:opacity-100" />
+                                        {link.name}
+                                        {link.submenu && (
+                                            <ChevronDown
+                                                size={14}
+                                                className={`transition-transform duration-300 ${isSubmenuOpen ? "rotate-180" : "group-hover:rotate-180"}`}
+                                            />
+                                        )}
+                                    </>
+                                );
+
                                 return (
-                                    <div key={link.name} className="relative group">
-                                        <Link
-                                            href={link.href}
-                                            prefetch={false}
-                                            className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-base-content/80 hover:text-primary transition-colors rounded-lg hover:bg-base-200"
-                                        >
-                                            <Icon size={18} className="opacity-70 group-hover:text-primary group-hover:opacity-100" />
-                                            {link.name}
-                                            {link.submenu && <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />}
-                                        </Link>
+                                    <div
+                                        key={link.name}
+                                        className="relative group"
+                                        onMouseLeave={() => {
+                                            if (openSubmenu === link.name) setOpenSubmenu(null);
+                                        }}
+                                    >
+                                        {link.href ? (
+                                            <Link
+                                                href={link.href}
+                                                prefetch={false}
+                                                className={itemClassName}
+                                            >
+                                                {label}
+                                            </Link>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={() => link.submenu && toggleSubmenu(link.name)}
+                                                className={itemClassName}
+                                                aria-expanded={link.submenu ? isSubmenuOpen : undefined}
+                                                aria-haspopup={link.submenu ? "true" : undefined}
+                                            >
+                                                {label}
+                                            </button>
+                                        )}
 
                                         {/* Desktop Submenu */}
                                         {link.submenu && (
-                                            <div className="absolute left-0 top-full pt-2 w-52 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                            <div className={`absolute left-0 top-full pt-2 w-52 transition-all duration-200 ${isSubmenuOpen ? "visible opacity-100" : "invisible opacity-0 group-hover:visible group-hover:opacity-100"}`}>
                                                 <div className="bg-base-100 rounded-xl shadow-2xl border border-base-200 py-2 overflow-hidden">
                                                     {link.submenu.map((sublink) => (
                                                         <Link
                                                             key={sublink.name}
                                                             href={sublink.href}
                                                             prefetch={false}
+                                                            onClick={() => setOpenSubmenu(null)}
                                                             className="block px-4 py-2.5 text-sm text-base-content hover:bg-primary hover:text-primary-content transition-colors"
                                                         >
                                                             {sublink.name}

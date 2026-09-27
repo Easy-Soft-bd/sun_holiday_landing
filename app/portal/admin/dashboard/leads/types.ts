@@ -80,6 +80,21 @@ export const LEAD_STATUS_OPTIONS: LeadStatus[] = [
   'Closed',
 ];
 
+/** Phone-only inquiries (Sunvia investment form) store no real email. */
+export function leadEmail(email: string | null | undefined) {
+  const value = (email || '').trim();
+  if (!value) return null;
+  if (/@sunvia-inquiry\.local$/i.test(value) || /^no-email\+/i.test(value)) return null;
+  return value;
+}
+
+export function inquiryMeta(message: string | null | undefined) {
+  const text = message || '';
+  const preferred = text.match(/^Preferred contact:\s*(.+)$/m)?.[1]?.trim() || '';
+  const interest = text.match(/^Investment interest:\s*(.+)$/m)?.[1]?.trim() || '';
+  return { preferred, interest };
+}
+
 export type BookingActivityType =
   | 'note'
   | 'status_change'

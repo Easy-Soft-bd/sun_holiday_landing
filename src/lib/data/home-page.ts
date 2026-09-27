@@ -11,7 +11,7 @@ const getHomePageDataFromDb = unstable_cache(
     const pageDataRaw = await HomePage.findOne();
     return pageDataRaw ? pageDataRaw.get({ plain: true }) : null;
   },
-  ['home-page'],
+  ['home-page-footer-v2'],
   {
     tags: [TAG_HOME_PAGE],
   }

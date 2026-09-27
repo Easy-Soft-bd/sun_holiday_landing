@@ -20,7 +20,7 @@ const adminLoaders = {
         const Control = mod.default;
         return (
           <Control
-            section="hero"
+            section="investor_hero"
             title="Edit Resort Hero"
             data={data as never}
           />

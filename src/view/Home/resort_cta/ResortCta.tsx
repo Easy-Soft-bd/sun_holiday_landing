@@ -45,7 +45,7 @@ const defaultData = {
     titlePart2: "BLISS",
     description: "A state-of-the-art luxury escape by Sun Tourism Ltd. Nestled adjacent to the serene Inani Beach, we offer a world of sophistication and coastal tranquility.",
     ctaButtonText: "Details & Booking",
-    ctaButtonLink: "/hotel/grandeur-bliss",
+    ctaButtonLink: "/contact",
     roomDetails: [
         { label: "Deluxe Rooms", count: 200, size: "425 sq. ft." },
         { label: "Suite Rooms", count: 30, size: "550 sq. ft." },
@@ -83,6 +83,14 @@ const ResortCta = async ({ data }: ResortCtaProps) => {
                 : defaultData.amenities,
     };
     const imageUrl = optimizeRemoteImageUrl(resortData.imageUrl, 1200);
+    const resortName = `${resortData.titlePart1} ${resortData.titlePart2}`.replace(/\s+/g, " ").trim();
+    const storedLink = (resortData.ctaButtonLink || "/contact").trim();
+    const contactHref = storedLink === "/contact" || storedLink.startsWith("/contact?") || storedLink.startsWith("/contact#")
+        ? `/contact?${new URLSearchParams({
+            resort: resortName.slice(0, 80),
+            location: resortData.locationText.slice(0, 120),
+        }).toString()}`
+        : storedLink;
 
     return (
         <section className="relative bg-base-200 py-20 lg:py-28 overflow-hidden group/resort">
@@ -177,7 +185,7 @@ const ResortCta = async ({ data }: ResortCtaProps) => {
 
                         {/* CTA Button */}
                         <div className="pt-6">
-                            <Link href={resortData.ctaButtonLink} className="btn btn-primary btn-lg rounded-full px-10 text-primary-content shadow-xl shadow-primary/20 group">
+                            <Link href={contactHref} className="btn btn-primary btn-lg rounded-full px-10 text-primary-content shadow-xl shadow-primary/20 group">
                                 {resortData.ctaButtonText}
                                 <ChevronRight className="size-5 group-hover:translate-x-1 transition-transform" />
                             </Link>

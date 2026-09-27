@@ -57,12 +57,24 @@ export default async function HomeDeferred() {
       </Suspense>
       <Suspense
         fallback={
-          <section className="container mx-auto px-4 py-4">
-            <div className="skeleton min-h-[280px] w-full rounded-3xl md:min-h-[360px]" />
+          <section className="bg-base-200 py-20 lg:py-28">
+            <div className="container mx-auto grid gap-12 px-4 lg:grid-cols-2 lg:px-8">
+              <div className="skeleton h-[400px] w-full rounded-4xl md:h-[600px]" />
+              <div className="space-y-6">
+                <div className="skeleton h-4 w-48" />
+                <div className="skeleton h-16 w-full max-w-md" />
+                <div className="skeleton h-20 w-full" />
+                <div className="grid grid-cols-2 gap-4">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="skeleton h-20 w-full rounded-xl" />
+                  ))}
+                </div>
+              </div>
+            </div>
           </section>
         }
       >
-        <SunviaEcoResort data={resortPageData?.hero} />
+        <SunviaEcoResort data={resortPageData?.investor_hero} />
       </Suspense>
       <Suspense
         fallback={

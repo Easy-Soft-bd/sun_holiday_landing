@@ -47,6 +47,8 @@ import {
     LEAD_STATUS_OPTIONS,
     LeadRecord,
     LeadStatus,
+    inquiryMeta,
+    leadEmail,
 } from "./types";
 
 function bookingTourLabel(record: BookingRecord): string | null {
@@ -122,6 +124,11 @@ function leadStatusColor(status: LeadStatus): string {
         default:
             return "blue";
     }
+}
+
+function sourceTagColor(source: string | null | undefined) {
+    if ((source || "").toLowerCase().includes("sunvia")) return "volcano";
+    return "blue";
 }
 
 function useBookings() {
@@ -639,16 +646,30 @@ function LeadsPanel() {
             title: "Name",
             dataIndex: "name",
             key: "name",
-            render: (_text, record) => (
-                <div>
-                    <div className="font-medium text-gray-800">{record.name}</div>
-                    <div className="text-xs text-gray-500">
-                        <a href={`mailto:${record.email}`} className="hover:underline">
-                            {record.email}
-                        </a>
+            render: (_text, record) => {
+                const email = leadEmail(record.email);
+                const meta = inquiryMeta(record.message);
+                return (
+                    <div>
+                        <div className="font-medium text-gray-800">{record.name}</div>
+                        {email ? (
+                            <div className="text-xs text-gray-500">
+                                <a href={`mailto:${email}`} className="hover:underline">
+                                    {email}
+                                </a>
+                            </div>
+                        ) : (
+                            <div className="text-xs text-gray-500">Phone inquiry</div>
+                        )}
+                        {meta.preferred || meta.interest ? (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                                {meta.preferred ? <Tag>{meta.preferred}</Tag> : null}
+                                {meta.interest ? <Tag color="gold">{meta.interest}</Tag> : null}
+                            </div>
+                        ) : null}
                     </div>
-                </div>
-            ),
+                );
+            },
         },
         {
             title: "Phone",
@@ -667,7 +688,7 @@ function LeadsPanel() {
             key: "source",
             render: (source: string, record) => (
                 <div className="space-y-1">
-                    <Tag color="blue">{source}</Tag>
+                    <Tag color={sourceTagColor(source)}>{source}</Tag>
                     {record.pageUrl ? (
                         <div className="max-w-[220px] truncate text-[11px] text-gray-400">
                             {record.pageUrl}
@@ -830,8 +851,10 @@ function LeadsPanel() {
                                 { value: "all", label: "All sources" },
                                 ...sources.map((s) => ({ value: s, label: s })),
                             ]}
-                            style={{ width: 200 }}
+                            style={{ width: 280 }}
                             placeholder="Filter by source"
+                            showSearch
+                            optionFilterProp="label"
                             disabled={sources.length === 0}
                         />
                     </Space>
@@ -880,18 +903,8 @@ export default function LeadsPage() {
             </div>
 
             <Tabs
-                defaultActiveKey="bookings"
+                defaultActiveKey="leads"
                 items={[
-                    {
-                        key: "bookings",
-                        label: (
-                            <span>
-                                <CalendarOutlined className="mr-2" />
-                                Booking Management
-                            </span>
-                        ),
-                        children: <BookingsPanel />,
-                    },
                     {
                         key: "leads",
                         label: (
@@ -901,6 +914,16 @@ export default function LeadsPage() {
                             </span>
                         ),
                         children: <LeadsPanel />,
+                    },
+                    {
+                        key: "bookings",
+                        label: (
+                            <span>
+                                <CalendarOutlined className="mr-2" />
+                                Booking Management
+                            </span>
+                        ),
+                        children: <BookingsPanel />,
                     },
                 ]}
             />

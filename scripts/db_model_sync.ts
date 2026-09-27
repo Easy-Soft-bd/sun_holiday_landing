@@ -29,6 +29,10 @@ async function syncModels() {
     await sequelize.sync({ alter: true });
 
     const { ensureJsonColumn } = await import('./ensure-json-column');
+    const { RESORT_SECTION_KEYS } = await import('../src/lib/data/sunvia-eco-resort');
+    for (const column of RESORT_SECTION_KEYS) {
+      await ensureJsonColumn(sequelize, 'page_sunvia_eco_resort', column);
+    }
     await ensureJsonColumn(sequelize, 'page_home', 'sailor_moon_resorts_page');
     await ensureJsonColumn(sequelize, 'page_home', 'resorts_listing_page');
     await ensureJsonColumn(sequelize, 'page_home', 'award_certificate_page');

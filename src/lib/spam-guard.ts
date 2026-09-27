@@ -112,10 +112,8 @@ export async function isDuplicateLead(input: {
   message?: string | null;
 }): Promise<boolean> {
   const since = new Date(Date.now() - DUP_WINDOW_MS);
-  const orClauses: Array<Record<string, unknown>> = [
-    { email: input.email },
-    { phone: input.phone },
-  ];
+  const orClauses: Array<Record<string, unknown>> = [{ phone: input.phone }];
+  if (input.email.trim()) orClauses.push({ email: input.email });
   if (input.ipAddress) orClauses.push({ ipAddress: input.ipAddress });
 
   const recent = await Lead.findOne({

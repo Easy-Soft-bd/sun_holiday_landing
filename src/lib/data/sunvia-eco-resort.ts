@@ -1,527 +1,451 @@
-export const ACTIVITY_ICON_OPTIONS = [
-  "LuWaves",
-  "LuBaby",
-  "LuShip",
-  "LuSailboat",
-  "LuBike",
-  "LuZap",
-  "LuFish",
-  "LuPresentation",
-  "LuDumbbell",
-  "LuSparkles",
-  "LuTreePine",
-  "LuSquareActivity",
-] as const;
-
-export const SERVICE_ICON_OPTIONS = [
-  "LuShield",
-  "LuHeartPulse",
-  "LuWashingMachine",
-  "LuCar",
-  "LuMap",
-  "LuPlaneTakeoff",
-] as const;
-
-export type ActivityIcon = string;
-export type ServiceIcon = string;
-
-export const ACTIVITY_ICON_ALIASES: Record<string, string> = {
-  pool: "LuWaves",
-  kids: "LuBaby",
-  boat: "LuShip",
-  kayak: "LuSailboat",
-  cycling: "LuBike",
-  zipline: "LuZap",
-  fishing: "LuFish",
-  conference: "LuPresentation",
-  gym: "LuDumbbell",
-  spa: "LuSparkles",
-  nature: "LuTreePine",
-  playground: "LuSquareActivity",
-};
-
-export const SERVICE_ICON_ALIASES: Record<string, string> = {
-  security: "LuShield",
-  medical: "LuHeartPulse",
-  laundry: "LuWashingMachine",
-  car: "LuCar",
-  guide: "LuMap",
-  helipad: "LuPlaneTakeoff",
-};
-
-export interface ResortSeoData {
+export interface InvestorSeoData {
   metaTitle: string;
   metaDescription: string;
   metaKeywords: string[];
   metaImage: string;
 }
 
-export interface ResortHeroData {
-  badgeText: string;
-  badgeIcon: string;
-  locationText: string;
-  titlePart1: string;
-  titlePart2: string;
-  subtitle: string;
-  description: string;
-  stat1Value: string;
-  stat1Label: string;
-  stat1Icon: string;
-  stat2Value: string;
-  stat2Label: string;
-  stat2Icon: string;
-  stat3Value: string;
-  stat3Label: string;
-  stat3Icon: string;
+export interface InvestorHeroData {
+  projectName: string;
+  eyebrow: string;
+  headline: string;
+  supportLine: string;
+  unitLabel: string;
+  unitValue: string;
+  paymentLabel: string;
+  paymentValue: string;
   backgroundImage: string;
   ctaPrimaryText: string;
   ctaPrimaryHref: string;
   ctaSecondaryText: string;
-  ctaSecondaryHref: string;
-  ctaSecondaryIcon: string;
+  whatsappNumber: string;
+  whatsappMessage: string;
 }
 
-export interface ResortAboutHighlight {
-  label: string;
+export interface PlanHighlight {
   value: string;
-}
-
-export interface ResortAboutData {
-  badgeText: string;
-  heading: string;
-  description: string;
-  image: string;
-  floatingBadgeText: string;
-  highlights: ResortAboutHighlight[];
-}
-
-export interface ResortAccommodationItem {
-  type: string;
-  description: string;
-  image: string;
-  amenities: string[];
-}
-
-export interface ResortAccommodationData {
-  eyebrow: string;
-  titlePrefix: string;
-  titleAccent: string;
-  description: string;
-  items: ResortAccommodationItem[];
-}
-
-export interface ResortDiningExperience {
-  name: string;
-  description: string;
+  label: string;
   image: string;
 }
 
-export interface ResortDiningData {
-  eyebrow: string;
-  titlePrefix: string;
-  titleAccent: string;
-  description: string;
-  cuisines: string[];
-  experiences: ResortDiningExperience[];
-}
-
-export interface ResortActivityItem {
-  name: string;
-  icon: ActivityIcon;
-}
-
-export interface ResortActivitiesData {
-  eyebrow: string;
-  titlePrefix: string;
-  titleAccent: string;
-  description: string;
-  items: ResortActivityItem[];
-}
-
-export interface ResortEcoFeature {
+export interface PlanZone {
   title: string;
   description: string;
 }
 
-export interface ResortEcoData {
-  badgeText: string;
-  titlePrefix: string;
-  titleAccent: string;
+export interface MasterPlanData {
+  eyebrow: string;
+  heading: string;
   description: string;
   image: string;
-  floatingBadgeText: string;
-  features: ResortEcoFeature[];
+  imageAlt: string;
+  highlights: PlanHighlight[];
+  labels: string[];
+  zones: PlanZone[];
+  caption: string;
 }
 
-export interface ResortEventsData {
-  badgeText: string;
-  titlePrefix: string;
-  titleAccent: string;
-  description: string;
-  image: string;
-  maxCapacity: number;
-  services: string[];
-}
-
-export interface ResortGalleryItem {
-  src: string;
-  alt: string;
-}
-
-export interface ResortGalleryData {
+export interface InvestmentModelData {
   eyebrow: string;
-  titlePrefix: string;
-  titleAccent: string;
-  description: string;
-  items: ResortGalleryItem[];
+  heading: string;
+  steps: string[];
+  revenueLabel: string;
+  revenueSources: string[];
+  disclosure: string;
+  backgroundImage: string;
 }
 
-export interface ResortServiceItem {
-  name: string;
-  icon: ServiceIcon;
-}
-
-export interface ResortServicesData {
+export interface InvestmentData {
   eyebrow: string;
-  titlePrefix: string;
-  titleAccent: string;
+  heading: string;
   description: string;
-  items: ResortServiceItem[];
-}
-
-export interface ResortContactData {
-  eyebrow: string;
-  titlePrefix: string;
-  titleAccent: string;
-  description: string;
-  checkIn: string;
-  checkOut: string;
-  phones: string[];
-  emails: string[];
-  locationFull: string;
-  audience: string[];
+  unitLabel: string;
+  unitValue: string;
+  ownershipTitle: string;
+  ownershipText: string;
+  profitTitle: string;
+  profitText: string;
+  paymentLabel: string;
+  paymentValue: string;
+  note: string;
   ctaText: string;
   ctaHref: string;
-  note: string;
+}
+
+export interface DemandCard {
+  title: string;
+  description: string;
+}
+
+export interface DemandData {
+  eyebrow: string;
+  heading: string;
+  description: string;
+  items: DemandCard[];
+}
+
+export interface RoadmapData {
+  eyebrow: string;
+  heading: string;
+  steps: string[];
+}
+
+export interface WhySunviaData {
+  eyebrow: string;
+  heading: string;
+  projectName: string;
+  affiliation: string;
+  description: string;
+  ctaText: string;
+  whatsappNumber: string;
+  whatsappMessage: string;
+  backgroundImage: string;
+}
+
+export interface TermCard {
+  title: string;
+  description: string;
+}
+
+export interface TermsData {
+  eyebrow: string;
+  heading: string;
+  items: TermCard[];
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface FaqData {
+  eyebrow: string;
+  heading: string;
+  items: FaqItem[];
+}
+
+export interface LeadOption {
+  label: string;
+  value: string;
+}
+
+export interface LeadData {
+  eyebrow: string;
+  heading: string;
+  description: string;
+  namePlaceholder: string;
+  phonePlaceholder: string;
+  contactLabel: string;
+  contactOptions: LeadOption[];
+  interestLabel: string;
+  interestOptions: LeadOption[];
+  consentText: string;
+  privacyLabel: string;
+  privacyHref: string;
+  submitText: string;
+  mobileCtaText: string;
+  successMessage: string;
+  errorMessage: string;
+  whatsappLabel: string;
+  whatsappNumber: string;
+  whatsappMessage: string;
+  source: string;
 }
 
 export interface SunviaEcoResortPageData {
-  seo: ResortSeoData;
-  hero: ResortHeroData;
-  about: ResortAboutData;
-  accommodations: ResortAccommodationData;
-  dining: ResortDiningData;
-  activities: ResortActivitiesData;
-  eco: ResortEcoData;
-  events: ResortEventsData;
-  gallery: ResortGalleryData;
-  services: ResortServicesData;
-  contact: ResortContactData;
+  investor_seo: InvestorSeoData;
+  investor_hero: InvestorHeroData;
+  master_plan: MasterPlanData;
+  investment_model: InvestmentModelData;
+  investment: InvestmentData;
+  demand: DemandData;
+  roadmap: RoadmapData;
+  why_sunvia: WhySunviaData;
+  terms: TermsData;
+  faq: FaqData;
+  lead: LeadData;
 }
 
 export const RESORT_SECTION_KEYS = [
-  "seo",
-  "hero",
-  "about",
-  "accommodations",
-  "dining",
-  "activities",
-  "eco",
-  "events",
-  "gallery",
-  "services",
-  "contact",
+  "investor_seo",
+  "investor_hero",
+  "master_plan",
+  "investment_model",
+  "investment",
+  "demand",
+  "roadmap",
+  "why_sunvia",
+  "terms",
+  "faq",
+  "lead",
 ] as const;
 
 export type ResortSectionKey = (typeof RESORT_SECTION_KEYS)[number];
 
+const ARCHITECTURE_IMAGE =
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1600&auto=format&fit=crop";
+const PLAN_IMAGE =
+  "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1600&auto=format&fit=crop";
+const LAND_IMAGE =
+  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop";
+const HOTEL_IMAGE =
+  "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1600&auto=format&fit=crop";
+const ROOM_IMAGE =
+  "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1200&auto=format&fit=crop";
+const VILLA_IMAGE =
+  "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1200&auto=format&fit=crop";
+const DINING_IMAGE =
+  "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1600&auto=format&fit=crop";
+const RESORT_IMAGE =
+  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1600&auto=format&fit=crop";
+
+const WHATSAPP_NUMBER = "+88 018 73 83 83 01";
+const WHATSAPP_MESSAGE =
+  "Hello, I would like to receive investment details for Sunvia Hotel & Resort, including the project profile, current offer, payment options and applicable terms.";
+
 export const defaultSunviaEcoResortPageData: SunviaEcoResortPageData = {
-  seo: {
-    metaTitle: "Sunvia Eco Resort | 5-Star Eco-Luxury Resort in Manikganj - Sun Tourism Ltd",
+  investor_seo: {
+    metaTitle: "Sunvia Hotel & Resort | Structured Investment Opportunity",
     metaDescription:
-      "Experience sustainable luxury at Sunvia Eco Resort, a 12-acre nature-focused destination in Manikganj, Bangladesh. 100 premium accommodations, organic dining, adventure activities, and eco-friendly living.",
+      "A planned hospitality destination and a structured investment opportunity in Sunvia Hotel & Resort. Returns are not fixed or guaranteed.",
     metaKeywords: [
-      "Sunvia Eco Resort",
-      "Eco Resort Bangladesh",
-      "Manikganj Resort",
-      "Luxury Eco Resort",
-      "Nature Resort Bangladesh",
-      "Sun Tourism Resort",
-      "Sustainable Tourism Bangladesh",
+      "Sunvia Hotel & Resort",
+      "Sun Tourism Ltd",
+      "hospitality investment",
+      "Manikganj hotel project",
     ],
-    metaImage:
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop",
+    metaImage: ARCHITECTURE_IMAGE,
   },
-  hero: {
-    badgeText: "5-Star Eco-Luxury",
-    badgeIcon: "LuLeaf",
-    locationText: "Manikganj, 1 Hour from Dhaka",
-    titlePart1: "SUNVIA",
-    titlePart2: "ECO RESORT",
-    subtitle: "Where Nature Meets Luxury",
-    description:
-      "A premier 12-acre nature-focused destination with 100 luxury accommodations, curated dining, and eco-friendly adventures in the heart of Bangladesh.",
-    stat1Value: "12 Acres",
-    stat1Label: "Lush Grounds",
-    stat1Icon: "LuBedDouble",
-    stat2Value: "100+",
-    stat2Label: "Luxury Units",
-    stat2Icon: "LuUtensils",
-    stat3Value: "200-250",
-    stat3Label: "Guest Capacity",
-    stat3Icon: "LuActivity",
-    backgroundImage:
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop",
-    ctaPrimaryText: "Plan Your Escape",
-    ctaPrimaryHref: "#contact",
-    ctaSecondaryText: "Explore Gallery",
-    ctaSecondaryHref: "#gallery",
-    ctaSecondaryIcon: "LuPlay",
+  investor_hero: {
+    projectName: "Sunvia Hotel & Resort",
+    eyebrow: "Hospitality • Nature • Opportunity",
+    headline: "A Planned Hospitality Destination. A Structured Investment Opportunity.",
+    supportLine:
+      "Explore a structured investment opportunity connected to the development and future operation of Sunvia Hotel & Resort.",
+    unitLabel: "Investment Unit",
+    unitValue: "1 Share",
+    paymentLabel: "Payment Facility",
+    paymentValue: "Full Payment or Installment",
+    backgroundImage: ARCHITECTURE_IMAGE,
+    ctaPrimaryText: "Explore Investment Opportunity",
+    ctaPrimaryHref: "#opportunity",
+    ctaSecondaryText: "Talk to Investment Team",
+    whatsappNumber: WHATSAPP_NUMBER,
+    whatsappMessage: WHATSAPP_MESSAGE,
   },
-  about: {
-    badgeText: "About Our Resort",
-    heading: "A Nature-Focused Destination",
+  master_plan: {
+    eyebrow: "The vision, at a glance",
+    heading: "The Planned Resort",
     description:
-      "Spanning 12 lush acres in Manikganj, Sunvia Eco Resort is a premier 5-star destination combining sustainability with modern sophistication. Surrounded by forests, lakes, and hills, the resort offers an immersive escape into nature without compromising on luxury.",
-    image:
-      "https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?q=80&w=1200&auto=format&fit=crop",
-    floatingBadgeText: "100% Eco-Friendly",
+      "Accommodation, dining, events and recreation, thoughtfully brought together in one integrated destination.",
+    image: PLAN_IMAGE,
+    imageAlt: "Illustrative plan for Sunvia Hotel & Resort",
     highlights: [
-      { label: "Area", value: "12 Acres" },
-      { label: "Established", value: "2029" },
-      { label: "Capacity", value: "200-250 Guests" },
+      { value: "50 Bigha", label: "Planned Development", image: LAND_IMAGE },
+      { value: "2 Hotel Blocks", label: "Planned Accommodation", image: HOTEL_IMAGE },
+      { value: "Approx. 140", label: "Planned Keys", image: ROOM_IMAGE },
+      { value: "10", label: "Private Villas", image: VILLA_IMAGE },
     ],
+    labels: [
+      "Hotel Block A",
+      "Hotel Block B",
+      "Private Villas",
+      "Presidential / VIP Villa",
+      "Restaurant & Dining",
+      "Swimming Pool & Recreation",
+      "Event / Banquet Area",
+      "Central Landscape",
+      "Main Entrance",
+      "Helipad / VIP Access",
+    ],
+    zones: [
+      { title: "Stay", description: "Two hotel blocks, private villas and premium suites." },
+      { title: "Gather", description: "Dining, conference and event spaces." },
+      { title: "Unwind", description: "Pools, recreation, lake and landscape." },
+      { title: "Arrive", description: "Planned guest, event and VIP access." },
+    ],
+    caption: "Illustrative zone relationships. Final layout and facilities are subject to approved plans.",
   },
-  accommodations: {
-    eyebrow: "Stay With Us",
-    titlePrefix: "Luxury",
-    titleAccent: "Accommodations",
+  investment_model: {
+    eyebrow: "From development to participation",
+    heading: "How the Investment Model Works",
+    steps: [
+      "Project Development",
+      "Resort Operation",
+      "Multiple Revenue Sources",
+      "Deduct Operating Costs & Reserves",
+      "Distributable Profit",
+      "Investor Participation in Distributable Profit",
+    ],
+    revenueLabel: "Revenue sources",
+    revenueSources: [
+      "Rooms",
+      "Food & Dining",
+      "Events & Conferences",
+      "Recreation",
+      "Guest Services",
+      "Other Operating Income",
+    ],
+    disclosure: "Participation depends on actual distributable profit. No fixed or guaranteed return.",
+    backgroundImage: DINING_IMAGE,
+  },
+  investment: {
+    eyebrow: "Your participation",
+    heading: "Investment Opportunity",
     description:
-      "Choose from 100 thoughtfully designed units, each blending modern comfort with natural beauty.",
+      "Participate in the development and future business of Sunvia Hotel & Resort through a structured investment model.",
+    unitLabel: "Investment Unit",
+    unitValue: "1 Share",
+    ownershipTitle: "Ownership Participation",
+    ownershipText:
+      "Proportional participation in the overall resort project, as defined in the investment agreement.",
+    profitTitle: "Profit Participation",
+    profitText: "Participation in eligible distributable profit from future resort operations.",
+    paymentLabel: "Payment Facility",
+    paymentValue: "Full Payment or Installment",
+    note: "Review the project documents and applicable terms with the investment team before making a decision.",
+    ctaText: "Get Investment Details",
+    ctaHref: "#lead",
+  },
+  demand: {
+    eyebrow: "The future guest experience",
+    heading: "Planned Demand Segments",
+    description: "A destination planned around different reasons to visit, stay and return.",
     items: [
       {
-        type: "Deluxe Room",
-        description:
-          "Spacious rooms featuring modern interiors with calming earth tones, a private balcony overlooking the lake, and all essential amenities for a restful stay.",
-        image:
-          "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop",
-        amenities: ["Air Conditioning", "Smart TV", "Minibar", "Lake View", "Wi-Fi", "Balcony"],
+        title: "Leisure & Family Stays",
+        description: "Weekend stays, short leisure trips and shared family experiences.",
       },
       {
-        type: "Executive Suite",
-        description:
-          "Elegant suites with a separate living area, premium furnishings, panoramic views, and an upgraded minibar with local organic refreshments.",
-        image:
-          "https://images.unsplash.com/photo-1587061949409-02df41d5e562?q=80&w=1200&auto=format&fit=crop",
-        amenities: ["Air Conditioning", "Smart TV", "Minibar", "Lake View", "Wi-Fi", "Balcony"],
+        title: "Corporate Events & Retreats",
+        description: "Meetings, training, conferences and team retreats.",
       },
       {
-        type: "Family Cottage",
-        description:
-          "Charming standalone cottages surrounded by greenery, perfect for families. Includes multiple bedrooms, a cozy porch, and kid-friendly arrangements.",
-        image:
-          "https://images.unsplash.com/photo-1587061949409-02df41d5e562?q=80&w=1200&auto=format&fit=crop",
-        amenities: ["Air Conditioning", "Smart TV", "Minibar", "Garden View", "Wi-Fi", "Porch"],
+        title: "Weddings & Social Events",
+        description: "Weddings, receptions and private celebrations.",
       },
       {
-        type: "VIP Villa",
-        description:
-          "Ultra-luxurious private villas with a personal butler, infinity pool access, designer interiors, and an exclusive garden terrace with breathtaking views.",
-        image:
-          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop",
-        amenities: [
-          "Air Conditioning",
-          "Smart TV",
-          "Minibar",
-          "Panoramic View",
-          "Wi-Fi",
-          "Private Pool",
-        ],
+        title: "Dining & Day Visitors",
+        description: "Restaurant, recreation and day-use experiences.",
+      },
+      {
+        title: "Premium & VIP Guests",
+        description: "Private villas, suites and premium hospitality experiences.",
       },
     ],
   },
-  dining: {
-    eyebrow: "Culinary Experiences",
-    titlePrefix: "A Culinary",
-    titleAccent: "Journey",
+  roadmap: {
+    eyebrow: "A planned path to operation",
+    heading: "Development Roadmap",
+    steps: [
+      "Planning & Concept",
+      "Design & Engineering",
+      "Site Development",
+      "Construction",
+      "Interior & Hospitality Setup",
+      "Pre-Opening",
+      "Resort Operation",
+    ],
+  },
+  why_sunvia: {
+    eyebrow: "The project and the company",
+    heading: "Why Sunvia",
+    projectName: "Sunvia Hotel & Resort",
+    affiliation: "A Project of Sun Tourism Ltd. | A Concern of Sunvia Group",
     description:
-      "Savour a world of flavours with our diverse dining options, prepared with fresh local and organic ingredients.",
-    cuisines: ["Bangla", "Chinese", "Indian", "Continental", "Thai", "Bar-B-Q", "Organic / Hill Food"],
-    experiences: [
-      {
-        name: "Halal Fine Dining",
-        description: "Premium halal cuisine served in an elegant atmosphere.",
-        image:
-          "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1200&auto=format&fit=crop",
-      },
-      {
-        name: "Garden Dining",
-        description: "Al-fresco meals surrounded by lush tropical gardens.",
-        image:
-          "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop",
-      },
-      {
-        name: "Lakeside Cafe",
-        description: "Casual bites and artisan coffee with serene lake views.",
-        image:
-          "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1200&auto=format&fit=crop",
-      },
-      {
-        name: "VIP Private Dining",
-        description: "Exclusive dining with a personal chef and curated menu.",
-        image:
-          "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop",
-      },
-    ],
+      "Discuss the project plan, investment documents and participation terms directly with the investment team.",
+    ctaText: "Talk to Investment Team",
+    whatsappNumber: WHATSAPP_NUMBER,
+    whatsappMessage: WHATSAPP_MESSAGE,
+    backgroundImage: RESORT_IMAGE,
   },
-  activities: {
-    eyebrow: "Fun & Adventure",
-    titlePrefix: "Activities &",
-    titleAccent: "Entertainment",
-    description:
-      "From adrenaline-pumping adventures to peaceful spa retreats, there is something for every guest.",
-    items: [
-      { name: "Swimming Pool", icon: "LuWaves" },
-      { name: "Kids Zone", icon: "LuBaby" },
-      { name: "Boat Rides", icon: "LuShip" },
-      { name: "Kayak Rides", icon: "LuSailboat" },
-      { name: "Cycling", icon: "LuBike" },
-      { name: "Zip Line", icon: "LuZap" },
-      { name: "Fishing Zone", icon: "LuFish" },
-      { name: "Conference Hall", icon: "LuPresentation" },
-      { name: "Gym & Fitness", icon: "LuDumbbell" },
-      { name: "Spa & Wellness", icon: "LuSparkles" },
-      { name: "Nature Tours", icon: "LuTreePine" },
-      { name: "Open Playgrounds", icon: "LuSquareActivity" },
-    ],
-  },
-  eco: {
-    badgeText: "Eco-Friendly Living",
-    titlePrefix: "Living in Harmony with",
-    titleAccent: "Nature",
-    description:
-      "Sunvia Eco Resort is committed to sustainable tourism. Every aspect of our resort is designed to minimise environmental impact while maximising comfort and natural beauty.",
-    image:
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop",
-    floatingBadgeText: "Carbon Neutral",
-    features: [
-      {
-        title: "Solar Power System",
-        description: "100% renewable energy powering the entire resort through advanced solar panels.",
-      },
-      {
-        title: "Rainwater Harvesting",
-        description: "Sophisticated systems collect and purify rainwater for resort use.",
-      },
-      {
-        title: "Plastic-Free Initiative",
-        description: "Complete elimination of single-use plastics across all operations.",
-      },
-      {
-        title: "Forest Surroundings",
-        description: "Preserved natural forest canopy covering 40% of the resort grounds.",
-      },
-      {
-        title: "Lake Ecosystem",
-        description: "A natural lake supporting local biodiversity and providing scenic beauty.",
-      },
-      {
-        title: "Guided Nature Tours",
-        description: "Expert-led eco tours educating guests about local flora and fauna.",
-      },
-    ],
-  },
-  events: {
-    badgeText: "Venue & Events",
-    titlePrefix: "Events &",
-    titleAccent: "Celebrations",
-    description:
-      "From intimate gatherings to grand celebrations, our versatile event spaces are equipped with world-class facilities to make every occasion memorable.",
-    image:
-      "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
-    maxCapacity: 600,
-    services: [
-      "Weddings & Receptions",
-      "Corporate Conferences",
-      "Team Building Retreats",
-      "Picnics & Day Events",
-      "Sound & Lighting Setup",
-      "Decoration & Catering",
-    ],
-  },
-  gallery: {
-    eyebrow: "Visual Tour",
-    titlePrefix: "Photo",
-    titleAccent: "Gallery",
-    description: "Step inside the spaces, scenery, and experiences that define Sunvia Eco Resort.",
+  terms: {
+    eyebrow: "Clear terms. Informed decisions.",
+    heading: "Investor Terms & Important Information",
     items: [
       {
-        src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1200&auto=format&fit=crop",
-        alt: "Resort Aerial View",
+        title: "Return Structure",
+        description:
+          "Participation is based on actual distributable profit from resort operations. No fixed or guaranteed return. If there is no distributable profit for a period, no distribution is payable for that period.",
       },
       {
-        src: "https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?q=80&w=1200&auto=format&fit=crop",
-        alt: "Luxury Pool Area",
+        title: "Payment Facility",
+        description:
+          "Full payment or installment options are available, subject to the current approved offer and payment schedule.",
       },
       {
-        src: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop",
-        alt: "Deluxe Room Interior",
+        title: "Transfer & Exit",
+        description:
+          "Transfer and exit are subject to applicable company terms, approval and charges. Exit charges may apply.",
       },
       {
-        src: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop",
-        alt: "VIP Villa",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1200&auto=format&fit=crop",
-        alt: "Fine Dining",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop",
-        alt: "Natural Landscape",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop",
-        alt: "Garden Dining",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
-        alt: "Event Space",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop",
-        alt: "Executive Suite",
+        title: "Investment Documents",
+        description:
+          "Final rights, obligations, charges and conditions are governed by the signed investment agreement and supporting documents.",
       },
     ],
   },
-  services: {
-    eyebrow: "Guest Support",
-    titlePrefix: "Additional",
-    titleAccent: "Services",
-    description: "Everything you need for a worry-free, comfortable stay at our resort.",
+  faq: {
+    eyebrow: "Your questions, answered",
+    heading: "Investor FAQ",
     items: [
-      { name: "24/7 Security & CCTV", icon: "LuShield" },
-      { name: "Medical Support (50 Guests)", icon: "LuHeartPulse" },
-      { name: "Laundry Service", icon: "LuWashingMachine" },
-      { name: "Car Rental", icon: "LuCar" },
-      { name: "Tour Guide Assistance", icon: "LuMap" },
-      { name: "Helipad Access", icon: "LuPlaneTakeoff" },
+      {
+        question: "What is the investment unit?",
+        answer:
+          "The investment unit is 1 Share in Sunvia Hotel & Resort. The investment agreement defines the associated project rights and obligations. A project share does not make the investor a shareholder of Sun Tourism Ltd.",
+      },
+      {
+        question: "How does investor participation in distributable profit work?",
+        answer:
+          "Eligible investors participate in the resort’s distributable profit after applicable operating expenses, liabilities, costs and reserves. Entitlement and distribution follow the investment agreement and approved accounts.",
+      },
+      {
+        question: "Is any return guaranteed?",
+        answer:
+          "No. Returns depend on actual business performance and available distributable profit. No fixed or guaranteed return is promised.",
+      },
+      {
+        question: "Are installment options available?",
+        answer:
+          "Yes. Full payment and installment options are available, subject to the current approved offer. Contact the investment team for the applicable payment schedule.",
+      },
+      {
+        question: "Can an investor transfer or exit?",
+        answer:
+          "Transfer and exit are subject to company terms, approval and applicable charges. Request the detailed terms and review them before investing.",
+      },
     ],
   },
-  contact: {
-    eyebrow: "Plan Your Stay",
-    titlePrefix: "Booking",
-    titleAccent: "Information",
+  lead: {
+    eyebrow: "Take the next step",
+    heading: "Explore the Investment Opportunity",
     description:
-      "Ready to experience sustainable luxury? Get in touch with us to book your escape.",
-    checkIn: "2:00 PM",
-    checkOut: "12:00 PM",
-    phones: ["+88 018 73 83 83 01", "+88 018 73 83 83 02"],
-    emails: ["info@sunholidaysltd.com", "sunholidays07@gmail.com"],
-    locationFull: "Bhum Dokshin, Singrai, Manikganj, Bangladesh",
-    audience: ["Families", "Honeymoon Couples", "Corporate Clients"],
-    ctaText: "Book Your Escape Now",
-    ctaHref: "/contact",
-    note: "* Advance booking recommended. Conditions apply.",
+      "Request the latest investment details, current offer, payment options and project documents from our investment team.",
+    namePlaceholder: "Your full name",
+    phonePlaceholder: "Your contact number",
+    contactLabel: "Preferred Contact Method",
+    contactOptions: [
+      { label: "WhatsApp", value: "WhatsApp" },
+      { label: "Phone Call", value: "Phone Call" },
+    ],
+    interestLabel: "Investment Interest",
+    interestOptions: [
+      { label: "1 Share", value: "1 Share" },
+      { label: "Multiple Shares", value: "Multiple Shares" },
+      { label: "Need More Information", value: "Need More Information" },
+    ],
+    consentText: "I agree to be contacted about this inquiry.",
+    privacyLabel: "Privacy Policy",
+    privacyHref: "/privacy",
+    submitText: "Get Investment Details",
+    mobileCtaText: "Get Investment Details",
+    successMessage:
+      "Thank you. Your inquiry has been received. Our investment team will contact you using your preferred method.",
+    errorMessage: "We couldn’t send your inquiry. Please try again or talk to our investment team.",
+    whatsappLabel: "Talk to Investment Team",
+    whatsappNumber: WHATSAPP_NUMBER,
+    whatsappMessage: WHATSAPP_MESSAGE,
+    source: "Sunvia Hotel & Resort Investment",
   },
 };
 
@@ -539,218 +463,270 @@ function sanitizeString(value: unknown, fallback = "") {
   return typeof value === "string" ? value.trim() : fallback;
 }
 
-function normalizeIconName(
-  value: unknown,
-  aliases: Record<string, string>,
-  fallback: string,
-) {
-  const icon = sanitizeString(value);
-  return aliases[icon] || icon || fallback;
+function pickString(value: unknown, fallback: string) {
+  return typeof value === "string" ? value.trim() : fallback;
 }
 
-function sanitizeStringArray(value: unknown, min = 0, limit = 20) {
-  if (!Array.isArray(value)) {
-    return [] as string[];
-  }
+function sectionRaw(value: unknown): Record<string, unknown> {
+  return isRecord(value) ? value : {};
+}
 
+function sanitizeStringArray(value: unknown, limit = 16) {
+  if (!Array.isArray(value)) return [] as string[];
   return value
     .map((item) => sanitizeString(item))
     .filter(Boolean)
-    .slice(0, limit)
-    .filter((item, index, arr) => arr.indexOf(item) === index)
-    .slice(0, Math.max(min, limit));
+    .slice(0, limit);
 }
 
 function isSafeHref(value: string) {
   return /^(\/|#|https?:\/\/|mailto:|tel:)/i.test(value);
 }
 
-function validateRequiredString(label: string, value: string, min = 1, max = 300) {
-  if (!value || value.length < min) {
-    return `${label} is required.`;
-  }
+export function whatsappHref(number: string, message: string) {
+  const digits = number.replace(/\D/g, "");
+  if (!digits) return "";
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+}
 
-  if (value.length > max) {
-    return `${label} must be ${max} characters or fewer.`;
-  }
-
+function validateRequiredString(label: string, value: string, min = 1, max = 700) {
+  if (!value || value.length < min) return `${label} is required.`;
+  if (value.length > max) return `${label} must be ${max} characters or fewer.`;
   return null;
 }
 
-function mergeObject<T extends object>(fallback: T, value: unknown): T {
-  if (!isRecord(value)) {
-    return cloneDefault(fallback);
-  }
+function mergeList<T>(raw: unknown, fallback: T[], map: (item: Record<string, unknown>) => T | null, limit: number) {
+  if (!Array.isArray(raw)) return cloneDefault(fallback);
+  const items = raw
+    .filter(isRecord)
+    .map(map)
+    .filter((item): item is T => item !== null)
+    .slice(0, limit);
+  return items.length ? items : cloneDefault(fallback);
+}
 
-  const fallbackRecord = fallback as Record<string, unknown>;
-  const merged = cloneDefault(fallback) as Record<string, unknown>;
+function stringList(raw: unknown, fallback: string[], limit = 12) {
+  if (!Array.isArray(raw)) return cloneDefault(fallback);
+  const items = sanitizeStringArray(raw, limit);
+  return items.length ? items : cloneDefault(fallback);
+}
 
-  Object.keys(fallbackRecord).forEach((key) => {
-    const nextValue = value[key];
-    const fallbackValue = fallbackRecord[key];
+function isLegacyHero(value: unknown) {
+  return isRecord(value) && !("headline" in value) && ("stats" in value || "title" in value);
+}
 
-    if (Array.isArray(fallbackValue)) {
-      return;
-    }
+function isLegacyMasterPlan(value: unknown) {
+  return isRecord(value) && Array.isArray(value.locations) && !Array.isArray(value.zones);
+}
 
-    if (isRecord(fallbackValue) && isRecord(nextValue)) {
-      merged[key] = {
-        ...fallbackValue,
-        ...nextValue,
-      };
-      return;
-    }
+function isLegacyInvestment(value: unknown) {
+  return isRecord(value) && Array.isArray(value.rows) && typeof value.unitValue !== "string";
+}
 
-    if (nextValue !== undefined) {
-      merged[key] = nextValue;
-    }
-  });
+function isLegacyFaq(value: unknown) {
+  if (!isRecord(value) || !Array.isArray(value.items)) return false;
+  const first = value.items.find(isRecord);
+  const question = typeof first?.question === "string" ? first.question : "";
+  return /[ঀ-৿]/.test(question);
+}
 
-  return merged as T;
+function isLegacyLead(value: unknown) {
+  return isRecord(value) && Object.keys(value).length > 0 && typeof value.consentText !== "string";
 }
 
 export function mergeSunviaEcoResortPageData(
   raw?: Partial<SunviaEcoResortPageData> | null,
 ): SunviaEcoResortPageData {
   const defaults = cloneDefault(defaultSunviaEcoResortPageData);
+  if (!raw || !isRecord(raw)) return defaults;
 
-  if (!raw || !isRecord(raw)) {
-    return defaults;
-  }
+  const seoRaw = sectionRaw(raw.investor_seo);
+  const heroSource = isLegacyHero(raw.investor_hero) ? {} : sectionRaw(raw.investor_hero);
+  const planSource = isLegacyMasterPlan(raw.master_plan) ? {} : sectionRaw(raw.master_plan);
+  const modelRaw = sectionRaw(raw.investment_model);
+  const investmentSource = isLegacyInvestment(raw.investment) ? {} : sectionRaw(raw.investment);
+  const demandRaw = sectionRaw(raw.demand);
+  const roadmapRaw = sectionRaw(raw.roadmap);
+  const whyRaw = sectionRaw(raw.why_sunvia);
+  const termsRaw = sectionRaw(raw.terms);
+  const faqSource = isLegacyFaq(raw.faq) ? {} : sectionRaw(raw.faq);
+  const leadRaw = isLegacyLead(raw.lead) ? {} : sectionRaw(raw.lead);
+
+  const card = (item: Record<string, unknown>): DemandCard | null => {
+    const title = sanitizeString(item.title);
+    const description = sanitizeString(item.description);
+    if (!title || !description) return null;
+    return { title, description };
+  };
 
   return {
-    seo: {
-      ...defaults.seo,
-      ...(isRecord(raw.seo) ? raw.seo : {}),
-      metaKeywords: Array.isArray(raw.seo?.metaKeywords)
-        ? sanitizeStringArray(raw.seo.metaKeywords, 1, 12)
-        : defaults.seo.metaKeywords,
+    investor_seo: {
+      metaTitle: pickString(seoRaw.metaTitle, defaults.investor_seo.metaTitle),
+      metaDescription: pickString(seoRaw.metaDescription, defaults.investor_seo.metaDescription),
+      metaImage: pickString(seoRaw.metaImage, defaults.investor_seo.metaImage),
+      metaKeywords: Array.isArray(seoRaw.metaKeywords)
+        ? sanitizeStringArray(seoRaw.metaKeywords, 12)
+        : defaults.investor_seo.metaKeywords,
     },
-    hero: mergeObject(defaults.hero, raw.hero),
-    about: {
-      ...mergeObject(defaults.about, raw.about),
-      highlights: Array.isArray(raw.about?.highlights)
-        ? raw.about.highlights
-            .filter(isRecord)
-            .map((item) => ({
-              label: sanitizeString(item.label),
-              value: sanitizeString(item.value),
-            }))
-            .filter((item) => item.label && item.value)
-            .slice(0, 6)
-        : defaults.about.highlights,
+    investor_hero: {
+      projectName: pickString(heroSource.projectName, defaults.investor_hero.projectName),
+      eyebrow: pickString(heroSource.eyebrow, defaults.investor_hero.eyebrow),
+      headline: pickString(heroSource.headline, defaults.investor_hero.headline),
+      supportLine: pickString(heroSource.supportLine, defaults.investor_hero.supportLine),
+      unitLabel: pickString(heroSource.unitLabel, defaults.investor_hero.unitLabel),
+      unitValue: pickString(heroSource.unitValue, defaults.investor_hero.unitValue),
+      paymentLabel: pickString(heroSource.paymentLabel, defaults.investor_hero.paymentLabel),
+      paymentValue: pickString(heroSource.paymentValue, defaults.investor_hero.paymentValue),
+      backgroundImage: pickString(heroSource.backgroundImage, defaults.investor_hero.backgroundImage),
+      ctaPrimaryText: pickString(heroSource.ctaPrimaryText, defaults.investor_hero.ctaPrimaryText),
+      ctaPrimaryHref: pickString(heroSource.ctaPrimaryHref, defaults.investor_hero.ctaPrimaryHref),
+      ctaSecondaryText: pickString(heroSource.ctaSecondaryText, defaults.investor_hero.ctaSecondaryText),
+      whatsappNumber: pickString(heroSource.whatsappNumber, defaults.investor_hero.whatsappNumber),
+      whatsappMessage: pickString(heroSource.whatsappMessage, defaults.investor_hero.whatsappMessage),
     },
-    accommodations: {
-      ...mergeObject(defaults.accommodations, raw.accommodations),
-      items: Array.isArray(raw.accommodations?.items)
-        ? raw.accommodations.items
-            .filter(isRecord)
-            .map((item) => ({
-              type: sanitizeString(item.type),
-              description: sanitizeString(item.description),
-              image: sanitizeString(item.image),
-              amenities: sanitizeStringArray(item.amenities, 1, 8),
-            }))
-            .filter((item) => item.type && item.description && item.image && item.amenities.length)
-            .slice(0, 8)
-        : defaults.accommodations.items,
+    master_plan: {
+      eyebrow: pickString(planSource.eyebrow, defaults.master_plan.eyebrow),
+      heading: pickString(planSource.heading, defaults.master_plan.heading),
+      description: pickString(planSource.description, defaults.master_plan.description),
+      image: pickString(planSource.image, defaults.master_plan.image),
+      imageAlt: pickString(planSource.imageAlt, defaults.master_plan.imageAlt),
+      caption: pickString(planSource.caption, defaults.master_plan.caption),
+      highlights: mergeList(
+        planSource.highlights,
+        defaults.master_plan.highlights,
+        (item) => {
+          const value = sanitizeString(item.value);
+          const label = sanitizeString(item.label);
+          if (!value || !label) return null;
+          const fallbackImage =
+            defaults.master_plan.highlights.find((highlight) => highlight.label === label)?.image ||
+            defaults.master_plan.highlights[0].image;
+          return { value, label, image: sanitizeString(item.image) || fallbackImage };
+        },
+        8,
+      ),
+      labels: stringList(planSource.labels, defaults.master_plan.labels, 16),
+      zones: mergeList(planSource.zones, defaults.master_plan.zones, card, 8),
     },
-    dining: {
-      ...mergeObject(defaults.dining, raw.dining),
-      cuisines: Array.isArray(raw.dining?.cuisines)
-        ? sanitizeStringArray(raw.dining.cuisines, 1, 12)
-        : defaults.dining.cuisines,
-      experiences: Array.isArray(raw.dining?.experiences)
-        ? raw.dining.experiences
-            .filter(isRecord)
-            .map((item) => ({
-              name: sanitizeString(item.name),
-              description: sanitizeString(item.description),
-              image: sanitizeString(item.image),
-            }))
-            .filter((item) => item.name && item.description && item.image)
-            .slice(0, 8)
-        : defaults.dining.experiences,
+    investment_model: {
+      eyebrow: pickString(modelRaw.eyebrow, defaults.investment_model.eyebrow),
+      heading: pickString(modelRaw.heading, defaults.investment_model.heading),
+      revenueLabel: pickString(modelRaw.revenueLabel, defaults.investment_model.revenueLabel),
+      disclosure: pickString(modelRaw.disclosure, defaults.investment_model.disclosure),
+      backgroundImage: pickString(modelRaw.backgroundImage, defaults.investment_model.backgroundImage),
+      steps: stringList(modelRaw.steps, defaults.investment_model.steps, 8),
+      revenueSources: stringList(modelRaw.revenueSources, defaults.investment_model.revenueSources, 8),
     },
-    activities: {
-      ...mergeObject(defaults.activities, raw.activities),
-      items: Array.isArray(raw.activities?.items)
-        ? raw.activities.items
-            .filter(isRecord)
-            .map((item) => ({
-              name: sanitizeString(item.name),
-              icon: normalizeIconName(item.icon, ACTIVITY_ICON_ALIASES, defaults.activities.items[0].icon),
-            }))
-            .filter((item) => item.name)
-            .slice(0, 18)
-        : defaults.activities.items,
+    investment: {
+      eyebrow: pickString(investmentSource.eyebrow, defaults.investment.eyebrow),
+      heading: pickString(investmentSource.heading, defaults.investment.heading),
+      description: pickString(investmentSource.description, defaults.investment.description),
+      unitLabel: pickString(investmentSource.unitLabel, defaults.investment.unitLabel),
+      unitValue: pickString(investmentSource.unitValue, defaults.investment.unitValue),
+      ownershipTitle: pickString(investmentSource.ownershipTitle, defaults.investment.ownershipTitle),
+      ownershipText: pickString(investmentSource.ownershipText, defaults.investment.ownershipText),
+      profitTitle: pickString(investmentSource.profitTitle, defaults.investment.profitTitle),
+      profitText: pickString(investmentSource.profitText, defaults.investment.profitText),
+      paymentLabel: pickString(investmentSource.paymentLabel, defaults.investment.paymentLabel),
+      paymentValue: pickString(investmentSource.paymentValue, defaults.investment.paymentValue),
+      note: pickString(investmentSource.note, defaults.investment.note),
+      ctaText: pickString(investmentSource.ctaText, defaults.investment.ctaText),
+      ctaHref: pickString(investmentSource.ctaHref, defaults.investment.ctaHref),
     },
-    eco: {
-      ...mergeObject(defaults.eco, raw.eco),
-      features: Array.isArray(raw.eco?.features)
-        ? raw.eco.features
-            .filter(isRecord)
-            .map((item) => ({
-              title: sanitizeString(item.title),
-              description: sanitizeString(item.description),
-            }))
-            .filter((item) => item.title && item.description)
-            .slice(0, 12)
-        : defaults.eco.features,
+    demand: {
+      eyebrow: pickString(demandRaw.eyebrow, defaults.demand.eyebrow),
+      heading: pickString(demandRaw.heading, defaults.demand.heading),
+      description: pickString(demandRaw.description, defaults.demand.description),
+      items: mergeList(demandRaw.items, defaults.demand.items, card, 8),
     },
-    events: {
-      ...mergeObject(defaults.events, raw.events),
-      maxCapacity:
-        typeof raw.events?.maxCapacity === "number" && Number.isFinite(raw.events.maxCapacity)
-          ? raw.events.maxCapacity
-          : defaults.events.maxCapacity,
-      services: Array.isArray(raw.events?.services)
-        ? sanitizeStringArray(raw.events.services, 1, 12)
-        : defaults.events.services,
+    roadmap: {
+      eyebrow: pickString(roadmapRaw.eyebrow, defaults.roadmap.eyebrow),
+      heading: pickString(roadmapRaw.heading, defaults.roadmap.heading),
+      steps: stringList(roadmapRaw.steps, defaults.roadmap.steps, 10),
     },
-    gallery: {
-      ...mergeObject(defaults.gallery, raw.gallery),
-      items: Array.isArray(raw.gallery?.items)
-        ? raw.gallery.items
-            .filter(isRecord)
-            .map((item) => ({
-              src: sanitizeString(item.src),
-              alt: sanitizeString(item.alt),
-            }))
-            .filter((item) => item.src && item.alt)
-            .slice(0, 18)
-        : defaults.gallery.items,
+    why_sunvia: {
+      eyebrow: pickString(whyRaw.eyebrow, defaults.why_sunvia.eyebrow),
+      heading: pickString(whyRaw.heading, defaults.why_sunvia.heading),
+      projectName: pickString(whyRaw.projectName, defaults.why_sunvia.projectName),
+      affiliation: pickString(whyRaw.affiliation, defaults.why_sunvia.affiliation),
+      description: pickString(whyRaw.description, defaults.why_sunvia.description),
+      ctaText: pickString(whyRaw.ctaText, defaults.why_sunvia.ctaText),
+      whatsappNumber: pickString(whyRaw.whatsappNumber, defaults.why_sunvia.whatsappNumber),
+      whatsappMessage: pickString(whyRaw.whatsappMessage, defaults.why_sunvia.whatsappMessage),
+      backgroundImage: pickString(whyRaw.backgroundImage, defaults.why_sunvia.backgroundImage),
     },
-    services: {
-      ...mergeObject(defaults.services, raw.services),
-      items: Array.isArray(raw.services?.items)
-        ? raw.services.items
-            .filter(isRecord)
-            .map((item) => ({
-              name: sanitizeString(item.name),
-              icon: normalizeIconName(item.icon, SERVICE_ICON_ALIASES, defaults.services.items[0].icon),
-            }))
-            .filter((item) => item.name)
-            .slice(0, 12)
-        : defaults.services.items,
+    terms: {
+      eyebrow: pickString(termsRaw.eyebrow, defaults.terms.eyebrow),
+      heading: pickString(termsRaw.heading, defaults.terms.heading),
+      items: mergeList(termsRaw.items, defaults.terms.items, card, 8),
     },
-    contact: {
-      ...mergeObject(defaults.contact, raw.contact),
-      phones: Array.isArray(raw.contact?.phones)
-        ? sanitizeStringArray(raw.contact.phones, 1, 6)
-        : defaults.contact.phones,
-      emails: Array.isArray(raw.contact?.emails)
-        ? sanitizeStringArray(raw.contact.emails, 1, 6)
-        : defaults.contact.emails,
-      audience: Array.isArray(raw.contact?.audience)
-        ? sanitizeStringArray(raw.contact.audience, 1, 8)
-        : defaults.contact.audience,
+    faq: {
+      eyebrow: pickString(faqSource.eyebrow, defaults.faq.eyebrow),
+      heading: pickString(faqSource.heading, defaults.faq.heading),
+      items: mergeList(
+        faqSource.items,
+        defaults.faq.items,
+        (item) => {
+          const question = sanitizeString(item.question);
+          const answer = sanitizeString(item.answer);
+          if (!question || !answer) return null;
+          return { question, answer };
+        },
+        12,
+      ),
+    },
+    lead: {
+      eyebrow: pickString(leadRaw.eyebrow, defaults.lead.eyebrow),
+      heading: pickString(leadRaw.heading, defaults.lead.heading),
+      description: pickString(leadRaw.description, defaults.lead.description),
+      namePlaceholder: pickString(leadRaw.namePlaceholder, defaults.lead.namePlaceholder),
+      phonePlaceholder: pickString(leadRaw.phonePlaceholder, defaults.lead.phonePlaceholder),
+      contactLabel: pickString(leadRaw.contactLabel, defaults.lead.contactLabel),
+      interestLabel: pickString(leadRaw.interestLabel, defaults.lead.interestLabel),
+      consentText: pickString(leadRaw.consentText, defaults.lead.consentText),
+      privacyLabel: pickString(leadRaw.privacyLabel, defaults.lead.privacyLabel),
+      privacyHref: pickString(leadRaw.privacyHref, defaults.lead.privacyHref),
+      submitText: pickString(leadRaw.submitText, defaults.lead.submitText),
+      mobileCtaText: pickString(leadRaw.mobileCtaText, defaults.lead.mobileCtaText),
+      successMessage: pickString(leadRaw.successMessage, defaults.lead.successMessage),
+      errorMessage: pickString(leadRaw.errorMessage, defaults.lead.errorMessage),
+      whatsappLabel: pickString(leadRaw.whatsappLabel, defaults.lead.whatsappLabel),
+      whatsappNumber: pickString(leadRaw.whatsappNumber, defaults.lead.whatsappNumber),
+      whatsappMessage: pickString(leadRaw.whatsappMessage, defaults.lead.whatsappMessage),
+      source: pickString(leadRaw.source, defaults.lead.source),
+      contactOptions: mergeList(
+        leadRaw.contactOptions,
+        defaults.lead.contactOptions,
+        (item) => {
+          const label = sanitizeString(item.label);
+          const value = sanitizeString(item.value);
+          if (!label || !value) return null;
+          return { label, value };
+        },
+        6,
+      ),
+      interestOptions: mergeList(
+        leadRaw.interestOptions,
+        defaults.lead.interestOptions,
+        (item) => {
+          const label = sanitizeString(item.label);
+          const value = sanitizeString(item.value);
+          if (!label || !value) return null;
+          return { label, value };
+        },
+        6,
+      ),
     },
   };
 }
 
 export function isResortSectionKey(value: unknown): value is ResortSectionKey {
   return typeof value === "string" && RESORT_SECTION_KEYS.includes(value as ResortSectionKey);
+}
+
+function requireList(label: string, length: number, min: number) {
+  if (length < min) return `Add at least ${min} ${label}.`;
+  return null;
 }
 
 export function validateSunviaEcoResortSection(
@@ -760,121 +736,135 @@ export function validateSunviaEcoResortSection(
   const merged = mergeSunviaEcoResortPageData({ [section]: value } as Partial<SunviaEcoResortPageData>);
   const data = merged[section];
 
+  const check = (label: string, text: string, min = 2, max = 800) => {
+    const error = validateRequiredString(label, text, min, max);
+    return error ? ({ success: false, error } as const) : null;
+  };
+
   switch (section) {
-    case "seo": {
-      const seo = data as ResortSeoData;
-      const titleError = validateRequiredString("Meta title", seo.metaTitle, 10, 70);
-      if (titleError) return { success: false, error: titleError };
-      const descriptionError = validateRequiredString("Meta description", seo.metaDescription, 50, 170);
-      if (descriptionError) return { success: false, error: descriptionError };
+    case "investor_seo": {
+      const seo = data as InvestorSeoData;
+      const titleError = check("Meta title", seo.metaTitle, 10, 90);
+      if (titleError) return titleError;
+      const descriptionError = check("Meta description", seo.metaDescription, 40, 220);
+      if (descriptionError) return descriptionError;
       if (!seo.metaKeywords.length) return { success: false, error: "Add at least one SEO keyword." };
       return { success: true, data: seo };
     }
-    case "hero": {
-      const hero = data as ResortHeroData;
+    case "investor_hero": {
+      const hero = data as InvestorHeroData;
       const fields: Array<[string, string, number, number]> = [
-        ["Badge text", hero.badgeText, 2, 40],
-        ["Badge icon", hero.badgeIcon, 2, 80],
-        ["Location text", hero.locationText, 2, 80],
-        ["Title part 1", hero.titlePart1, 2, 40],
-        ["Title part 2", hero.titlePart2, 2, 60],
-        ["Subtitle", hero.subtitle, 2, 80],
-        ["Description", hero.description, 50, 220],
-        ["Stat 1 icon", hero.stat1Icon, 2, 80],
-        ["Stat 2 icon", hero.stat2Icon, 2, 80],
-        ["Stat 3 icon", hero.stat3Icon, 2, 80],
-        ["Primary CTA text", hero.ctaPrimaryText, 2, 30],
-        ["Secondary CTA text", hero.ctaSecondaryText, 2, 30],
-        ["Secondary CTA icon", hero.ctaSecondaryIcon, 2, 80],
+        ["Project name", hero.projectName, 2, 80],
+        ["Eyebrow", hero.eyebrow, 2, 80],
+        ["Headline", hero.headline, 12, 160],
+        ["Support line", hero.supportLine, 20, 320],
+        ["Investment unit", hero.unitValue, 1, 40],
+        ["Payment facility", hero.paymentValue, 2, 80],
+        ["Primary button", hero.ctaPrimaryText, 2, 60],
+        ["Secondary button", hero.ctaSecondaryText, 2, 60],
+        ["WhatsApp number", hero.whatsappNumber, 7, 30],
+        ["WhatsApp message", hero.whatsappMessage, 10, 400],
       ];
       for (const [label, fieldValue, min, max] of fields) {
-        const error = validateRequiredString(label, fieldValue, min, max);
-        if (error) return { success: false, error };
+        const error = check(label, fieldValue, min, max);
+        if (error) return error;
       }
-      if (!isSafeHref(hero.ctaPrimaryHref) || !isSafeHref(hero.ctaSecondaryHref)) {
-        return { success: false, error: "Hero CTA links must be valid internal anchors, paths, or URLs." };
+      if (!isSafeHref(hero.ctaPrimaryHref)) {
+        return { success: false, error: "The primary button link must be a path, anchor, or http(s) URL." };
+      }
+      if (!whatsappHref(hero.whatsappNumber, hero.whatsappMessage)) {
+        return { success: false, error: "Enter a WhatsApp number with digits." };
       }
       return { success: true, data: hero };
     }
-    case "about": {
-      const about = data as ResortAboutData;
-      const headingError = validateRequiredString("About heading", about.heading, 5, 90);
-      if (headingError) return { success: false, error: headingError };
-      const descriptionError = validateRequiredString("About description", about.description, 80, 450);
-      if (descriptionError) return { success: false, error: descriptionError };
-      if (about.highlights.length < 2) {
-        return { success: false, error: "Add at least two about highlights." };
-      }
-      return { success: true, data: about };
+    case "master_plan": {
+      const plan = data as MasterPlanData;
+      const error = check("Master plan heading", plan.heading, 4, 120) || check("Caption", plan.caption, 10, 240);
+      if (error) return error;
+      const highlights = requireList("highlights", plan.highlights.length, 3);
+      if (highlights) return { success: false, error: highlights };
+      const zones = requireList("zones", plan.zones.length, 3);
+      if (zones) return { success: false, error: zones };
+      const labels = requireList("plan labels", plan.labels.length, 4);
+      if (labels) return { success: false, error: labels };
+      return { success: true, data: plan };
     }
-    case "accommodations": {
-      const accommodations = data as ResortAccommodationData;
-      const titleError = validateRequiredString("Accommodation title", accommodations.titleAccent, 2, 40);
-      if (titleError) return { success: false, error: titleError };
-      if (accommodations.items.length < 1) {
-        return { success: false, error: "Add at least one accommodation item." };
-      }
-      return { success: true, data: accommodations };
+    case "investment_model": {
+      const model = data as InvestmentModelData;
+      const error = check("Model heading", model.heading, 4, 140) || check("Disclosure", model.disclosure, 20, 300);
+      if (error) return error;
+      const steps = requireList("model steps", model.steps.length, 4);
+      if (steps) return { success: false, error: steps };
+      const sources = requireList("revenue sources", model.revenueSources.length, 4);
+      if (sources) return { success: false, error: sources };
+      return { success: true, data: model };
     }
-    case "dining": {
-      const dining = data as ResortDiningData;
-      if (!dining.cuisines.length) {
-        return { success: false, error: "Add at least one cuisine tag." };
+    case "investment": {
+      const investment = data as InvestmentData;
+      const error =
+        check("Opportunity heading", investment.heading, 4, 120) ||
+        check("Ownership text", investment.ownershipText, 20, 400) ||
+        check("Profit text", investment.profitText, 20, 400);
+      if (error) return error;
+      if (!isSafeHref(investment.ctaHref)) {
+        return { success: false, error: "The opportunity button link must be a path, anchor, or http(s) URL." };
       }
-      if (!dining.experiences.length) {
-        return { success: false, error: "Add at least one dining experience." };
-      }
-      return { success: true, data: dining };
+      return { success: true, data: investment };
     }
-    case "activities": {
-      const activities = data as ResortActivitiesData;
-      if (activities.items.length < 4) {
-        return { success: false, error: "Add at least four activities." };
-      }
-      return { success: true, data: activities };
+    case "demand": {
+      const demand = data as DemandData;
+      const error = check("Demand heading", demand.heading, 4, 120);
+      if (error) return error;
+      const listError = requireList("demand segments", demand.items.length, 3);
+      if (listError) return { success: false, error: listError };
+      return { success: true, data: demand };
     }
-    case "eco": {
-      const eco = data as ResortEcoData;
-      const descError = validateRequiredString("Eco description", eco.description, 60, 400);
-      if (descError) return { success: false, error: descError };
-      if (eco.features.length < 2) {
-        return { success: false, error: "Add at least two eco features." };
-      }
-      return { success: true, data: eco };
+    case "roadmap": {
+      const roadmap = data as RoadmapData;
+      const error = check("Roadmap heading", roadmap.heading, 4, 120);
+      if (error) return error;
+      const listError = requireList("roadmap stages", roadmap.steps.length, 4);
+      if (listError) return { success: false, error: listError };
+      return { success: true, data: roadmap };
     }
-    case "events": {
-      const events = data as ResortEventsData;
-      if (events.maxCapacity < 1 || events.maxCapacity > 50000) {
-        return { success: false, error: "Event capacity must be between 1 and 50000." };
+    case "why_sunvia": {
+      const why = data as WhySunviaData;
+      const error = check("Why Sunvia heading", why.heading, 2, 80) || check("Affiliation", why.affiliation, 8, 160);
+      if (error) return error;
+      if (!whatsappHref(why.whatsappNumber, why.whatsappMessage)) {
+        return { success: false, error: "Enter a WhatsApp number with digits." };
       }
-      if (!events.services.length) {
-        return { success: false, error: "Add at least one event service." };
-      }
-      return { success: true, data: events };
+      return { success: true, data: why };
     }
-    case "gallery": {
-      const gallery = data as ResortGalleryData;
-      if (gallery.items.length < 4) {
-        return { success: false, error: "Add at least four gallery images." };
-      }
-      return { success: true, data: gallery };
+    case "terms": {
+      const terms = data as TermsData;
+      const error = check("Terms heading", terms.heading, 4, 140);
+      if (error) return error;
+      const listError = requireList("terms", terms.items.length, 3);
+      if (listError) return { success: false, error: listError };
+      return { success: true, data: terms };
     }
-    case "services": {
-      const services = data as ResortServicesData;
-      if (services.items.length < 3) {
-        return { success: false, error: "Add at least three services." };
-      }
-      return { success: true, data: services };
+    case "faq": {
+      const faq = data as FaqData;
+      const error = check("FAQ heading", faq.heading, 4, 80);
+      if (error) return error;
+      const listError = requireList("questions", faq.items.length, 3);
+      if (listError) return { success: false, error: listError };
+      return { success: true, data: faq };
     }
-    case "contact": {
-      const contact = data as ResortContactData;
-      if (!contact.phones.length) return { success: false, error: "Add at least one phone number." };
-      if (!contact.emails.length) return { success: false, error: "Add at least one email address." };
-      if (!contact.audience.length) return { success: false, error: "Add at least one target audience." };
-      if (!isSafeHref(contact.ctaHref)) {
-        return { success: false, error: "Contact CTA link must be a valid path, anchor, or URL." };
+    case "lead": {
+      const lead = data as LeadData;
+      const error =
+        check("Form heading", lead.heading, 4, 140) ||
+        check("Success message", lead.successMessage, 20, 400) ||
+        check("Error message", lead.errorMessage, 10, 240) ||
+        check("Consent", lead.consentText, 8, 200);
+      if (error) return error;
+      if (!lead.contactOptions.length) return { success: false, error: "Add at least one contact method." };
+      if (!isSafeHref(lead.privacyHref)) {
+        return { success: false, error: "The privacy link must be a path or http(s) URL." };
       }
-      return { success: true, data: contact };
+      return { success: true, data: lead };
     }
     default:
       return { success: false, error: "Unsupported section." };
