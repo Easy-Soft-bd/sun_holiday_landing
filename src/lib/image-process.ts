@@ -61,3 +61,36 @@ export async function processUploadedImage(
   const buffer = await pipeline.webp({ quality: WEBP_QUALITY }).toBuffer();
   return { buffer, extension: "webp", contentType: "image/webp" };
 }
+
+/** Square PNG (or original SVG/ICO) sized for browser tab icons. */
+export async function processFaviconImage(
+  input: Buffer,
+  mimeType: string,
+): Promise<ProcessedImage> {
+  if (mimeType === "image/svg+xml") {
+    return {
+      buffer: input,
+      extension: "svg",
+      contentType: "image/svg+xml",
+    };
+  }
+
+  if (mimeType === "image/x-icon" || mimeType === "image/vnd.microsoft.icon") {
+    return {
+      buffer: input,
+      extension: "ico",
+      contentType: "image/x-icon",
+    };
+  }
+
+  const buffer = await sharp(input)
+    .rotate()
+    .resize(192, 192, {
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+
+  return { buffer, extension: "png", contentType: "image/png" };
+}

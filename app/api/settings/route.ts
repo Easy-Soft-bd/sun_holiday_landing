@@ -56,6 +56,12 @@ export async function PUT(request: Request) {
     if ('address' in body) {
       payload.address = String(body.address ?? '').trim();
     }
+    if ('favicon' in body) {
+      payload.favicon = String(body.favicon ?? '').trim();
+    }
+    if ('siteLogo' in body) {
+      payload.siteLogo = String(body.siteLogo ?? '').trim();
+    }
     if ('socialLinks' in body) {
       payload.socialLinks = normalizeSocialLinks(body.socialLinks);
     }

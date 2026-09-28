@@ -4,7 +4,7 @@ import path from 'path';
 import { existsSync } from 'fs';
 import { revalidateTag } from 'next/cache';
 import { verifyAuth } from '@/src/lib/auth';
-import { buildProcessedFilename, processUploadedImage } from '@/src/lib/image-process';
+import { buildProcessedFilename, processFaviconImage, processUploadedImage } from '@/src/lib/image-process';
 import { TAG_BLOG_LIST, TAG_GENERAL_SETTINGS, TAG_HOME_PAGE, TAG_SUNVIA_ECO_RESORT } from '@/src/lib/revalidate-tags';
 
 export async function POST(request: NextRequest) {
@@ -25,9 +25,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    // Validate file type
+    const type = String(formData.get('type') || '');
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-    if (!validTypes.includes(file.type)) {
+    const faviconTypes = [...validTypes, 'image/svg+xml', 'image/x-icon', 'image/vnd.microsoft.icon'];
+    const faviconByName = type === 'favicon' && /\.(png|jpe?g|webp|gif|svg|ico)$/i.test(file.name);
+    const allowed = type === 'favicon' ? faviconTypes.includes(file.type) || faviconByName : validTypes.includes(file.type);
+    if (!allowed) {
       return NextResponse.json({ error: 'Invalid file type. Only images are allowed.' }, { status: 400 });
     }
 
@@ -39,8 +42,6 @@ export async function POST(request: NextRequest) {
 
     const timestamp = Date.now();
     const originalName = file.name.replace(/\s+/g, '-');
-    
-    const type = formData.get('type') as string;
     
     // Determine directory and URL based on type
     let uploadSubDir = 'uploads';
@@ -58,6 +59,9 @@ export async function POST(request: NextRequest) {
     } else if (type === 'blog') {
       uploadSubDir = 'uploads/blog';
       urlPrefix = '/uploads/blog';
+    } else if (type === 'favicon') {
+      uploadSubDir = 'uploads/favicon';
+      urlPrefix = '/uploads/favicon';
     }
 
     // Ensure upload directory exists
@@ -68,7 +72,9 @@ export async function POST(request: NextRequest) {
 
     const bytes = await file.arrayBuffer();
     const rawBuffer = Buffer.from(bytes);
-    const processed = await processUploadedImage(rawBuffer, file.type);
+    const processed = type === 'favicon'
+      ? await processFaviconImage(rawBuffer, file.type || 'image/png')
+      : await processUploadedImage(rawBuffer, file.type);
     const processedName = buildProcessedFilename(originalName, processed.extension);
     const filename = `${timestamp}-${processedName}`;
     const filepath = path.join(uploadDir, filename);

@@ -11,6 +11,8 @@ export function parseMultiValue(value: unknown): string[] {
 export type NormalizedSettings = {
   siteName?: string | null;
   siteLogo?: string | null;
+  favicon?: string | null;
+  updatedAt?: string | Date | null;
   metaImage?: string | null;
   contactEmail: string;
   contactPhone: string;

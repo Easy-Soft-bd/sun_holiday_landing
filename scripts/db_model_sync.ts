@@ -41,12 +41,13 @@ async function syncModels() {
 
     // Contact multi-value storage + Google Maps link (idempotent if sync alter missed them)
     for (const [col, ddl] of [
+      ['favicon', 'VARCHAR(512) NULL'],
       ['googleMapsUrl', 'TEXT NULL'],
       ['contactEmail', 'TEXT NULL'],
       ['contactPhone', 'TEXT NULL'],
     ] as const) {
       try {
-        if (col === 'googleMapsUrl') {
+        if (col === 'googleMapsUrl' || col === 'favicon') {
           await sequelize.query(
             `ALTER TABLE \`general_settings\` ADD COLUMN \`${col}\` ${ddl}`,
           );
@@ -61,9 +62,9 @@ async function syncModels() {
         const e = err as { parent?: { errno?: number; sqlMessage?: string }; message?: string };
         const errno = e?.parent?.errno;
         const sqlMsg = String(e?.parent?.sqlMessage ?? e?.message ?? '');
-        if (col === 'googleMapsUrl' && (errno === 1060 || sqlMsg.includes('Duplicate column name'))) {
+        if ((col === 'googleMapsUrl' || col === 'favicon') && (errno === 1060 || sqlMsg.includes('Duplicate column name'))) {
           // already exists
-        } else if (col !== 'googleMapsUrl') {
+        } else if (col !== 'googleMapsUrl' && col !== 'favicon') {
           console.warn(`Could not modify general_settings.${col}:`, sqlMsg);
         } else {
           throw err;

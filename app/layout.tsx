@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { getCachedSettings } from "@/src/lib/data/home-page";
 import { getSiteUrl } from "@/src/lib/site";
 
 const magmaWave = localFont({
@@ -21,19 +22,33 @@ const gillieQuest = localFont({
   preload: false,
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(getSiteUrl()),
-  title: "Sun Tour LTD - Your Gateway to Amazing Holidays",
-  description: "Discover amazing holiday destinations with Sun Tour LTD. Book your dream vacation today!",
-  openGraph: {
+function iconHref(url: string, updatedAt?: string | Date | null) {
+  const time = updatedAt ? new Date(updatedAt).getTime() : 0;
+  if (!time || Number.isNaN(time)) return url;
+  return `${url}${url.includes("?") ? "&" : "?"}v=${time}`;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getCachedSettings().catch(() => null);
+  const faviconPath = settings?.favicon?.trim() || "/logo/logo.png";
+  const icon = iconHref(faviconPath, settings?.updatedAt);
+
+  return {
+    metadataBase: new URL(getSiteUrl()),
     title: "Sun Tour LTD - Your Gateway to Amazing Holidays",
     description: "Discover amazing holiday destinations with Sun Tour LTD. Book your dream vacation today!",
-    images: ["/logo/logo.png"],
-  },
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
+    openGraph: {
+      title: "Sun Tour LTD - Your Gateway to Amazing Holidays",
+      description: "Discover amazing holiday destinations with Sun Tour LTD. Book your dream vacation today!",
+      images: ["/logo/logo.png"],
+    },
+    icons: {
+      icon: [{ url: icon }],
+      shortcut: [{ url: icon }],
+      apple: [{ url: icon }],
+    },
+  };
+}
 
 export default function RootLayout({
   children,

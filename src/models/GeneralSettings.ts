@@ -6,6 +6,7 @@ class GeneralSettings extends Model {
   declare id: number;
   declare siteName: string;
   declare siteLogo: string;
+  declare favicon: string;
   declare metaImage: string;
   declare contactEmail: string;
   declare contactPhone: string;
@@ -35,6 +36,10 @@ GeneralSettings.init(
     },
     siteLogo: {
       type: DataTypes.STRING,
+      allowNull: true,
+    },
+    favicon: {
+      type: DataTypes.STRING(512),
       allowNull: true,
     },
     metaImage: {

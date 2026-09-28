@@ -30,7 +30,9 @@ export default function SettingsPage() {
   const [updateSettings, { isLoading: isUpdating }] = useUpdateSettingsMutation();
   const [uploadFile] = useUploadFileMutation();
   const [logoLoading, setLogoLoading] = useState(false);
+  const [faviconLoading, setFaviconLoading] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string>();
+  const [faviconUrl, setFaviconUrl] = useState<string>();
 
   useEffect(() => {
     if (settingsData?.data) {
@@ -56,6 +58,7 @@ export default function SettingsPage() {
         socialLinks: Array.isArray(d.socialLinks) ? d.socialLinks : [],
       });
       setLogoUrl(d.siteLogo || '');
+      setFaviconUrl(d.favicon || '');
     }
   }, [settingsData, form]);
 
@@ -83,6 +86,29 @@ export default function SettingsPage() {
     return false;
   };
 
+  const handleFaviconUpload = async (file: FileType) => {
+    setFaviconLoading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', 'favicon');
+    try {
+      const response = await uploadFile(formData).unwrap();
+      if (response?.success && response?.url) {
+        setFaviconUrl(response.url);
+        form.setFieldValue('favicon', response.url);
+        await updateSettings({ favicon: response.url }).unwrap();
+        message.success('Favicon updated on the website');
+      } else {
+        message.error('Upload failed');
+      }
+    } catch {
+      message.error('Upload failed');
+    } finally {
+      setFaviconLoading(false);
+    }
+    return false;
+  };
+
   const onFinish = async (values: any) => {
     const contactEmails = (values.contactEmails || []).map((v: string) => String(v).trim()).filter(Boolean);
     const contactPhones = (values.contactPhones || []).map((v: string) => String(v).trim()).filter(Boolean);
@@ -96,6 +122,7 @@ export default function SettingsPage() {
     const payload = {
       ...values,
       siteLogo: String(values.siteLogo || logoUrl || '').trim(),
+      favicon: String(values.favicon || faviconUrl || '').trim(),
       address: String(values.address || '').trim(),
       googleMapsUrl: String(values.googleMapsUrl || '').trim(),
       contactEmails,
@@ -142,7 +169,7 @@ export default function SettingsPage() {
             Global settings
           </Title>
           <Text type="secondary">
-            The name, logo, contact details, and social links used across the public site.
+            The name, logo, favicon, contact details, and social links used across the public site.
           </Text>
         </div>
         <Button
@@ -164,7 +191,7 @@ export default function SettingsPage() {
               <GlobalOutlined className="mr-2 text-primary" />
               Brand
             </Title>
-            <Text type="secondary">Site name and the logo shown in the navbar and footer.</Text>
+            <Text type="secondary">Site name, the logo in the navbar and footer, and the browser tab icon.</Text>
           </div>
           <Form.Item
             label="Site name"
@@ -200,6 +227,43 @@ export default function SettingsPage() {
                       form.setFieldValue('siteLogo', e.target.value);
                     }}
                     placeholder="Or paste a logo URL"
+                    className="mt-3"
+                  />
+                </Form.Item>
+              </div>
+            </div>
+          </Form.Item>
+          <Form.Item
+            label="Favicon"
+            extra="Uploading saves immediately. The browser tab icon updates after the settings cache refreshes."
+          >
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-2xl border border-base-300 bg-base-200">
+                {faviconUrl ? (
+                  <img src={faviconUrl} alt="Current favicon" className="h-12 w-12 object-contain" />
+                ) : (
+                  <span className="px-2 text-center text-xs text-base-content/50">Site logo</span>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <Upload
+                  name="favicon"
+                  accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.ico"
+                  showUploadList={false}
+                  beforeUpload={handleFaviconUpload}
+                >
+                  <Button icon={faviconLoading ? <LoadingOutlined /> : <PlusOutlined />} loading={faviconLoading}>
+                    Upload favicon
+                  </Button>
+                </Upload>
+                <Form.Item name="favicon" noStyle>
+                  <Input
+                    value={faviconUrl}
+                    onChange={(e) => {
+                      setFaviconUrl(e.target.value);
+                      form.setFieldValue('favicon', e.target.value);
+                    }}
+                    placeholder="Or paste a favicon URL"
                     className="mt-3"
                   />
                 </Form.Item>

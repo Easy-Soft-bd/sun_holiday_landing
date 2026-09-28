@@ -30,13 +30,16 @@ const getSettingsFromDb = unstable_cache(
     if (settings.siteLogo) {
       settings.siteLogo = resolvePublicAssetPath(String(settings.siteLogo));
     }
+    if (settings.favicon && !/^https?:\/\//i.test(String(settings.favicon))) {
+      settings.favicon = resolvePublicAssetPath(String(settings.favicon));
+    }
     if (settings.metaImage) {
       settings.metaImage = resolvePublicAssetPath(String(settings.metaImage), '/hero/hero.jpg');
     }
 
     return settings;
   },
-  ['general-settings'],
+  ['general-settings-v2'],
   {
     tags: [TAG_GENERAL_SETTINGS],
   }

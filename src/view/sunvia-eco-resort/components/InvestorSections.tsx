@@ -157,7 +157,12 @@ export function FaqSection({ data, admin = false }: { data: FaqData; admin?: boo
       <div className="space-y-3">
         {data.items.map((item) => (
           <details key={item.question} className="group rounded-3xl border border-base-300 bg-base-100 px-6 py-5">
-            <summary className="cursor-pointer list-none text-lg font-black marker:content-none">{item.question}</summary>
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-black marker:content-none">
+              <span>{item.question}</span>
+              <span className="text-primary transition-transform group-open:rotate-180" aria-hidden="true">
+                ▾
+              </span>
+            </summary>
             <p className="mt-3 text-sm leading-relaxed text-base-content/75">{item.answer}</p>
           </details>
         ))}
