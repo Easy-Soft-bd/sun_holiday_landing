@@ -7,19 +7,21 @@ import {
 } from "@/src/lib/get-page-data";
 import { absoluteUrl, buildPageMetadata } from "@/src/lib/site";
 
+const PAGE_PATH = "/sunvia-hotel-resort";
+
 export async function generateMetadata(): Promise<Metadata> {
   const pageData = await getCachedSunviaEcoResortPageData();
 
   return buildPageMetadata({
     title: pageData.investor_seo.metaTitle,
     description: pageData.investor_seo.metaDescription,
-    path: "/sunvia-eco-resort",
+    path: PAGE_PATH,
     keywords: pageData.investor_seo.metaKeywords,
     image: pageData.investor_seo.metaImage || pageData.investor_hero.backgroundImage,
   });
 }
 
-export default async function SunviaEcoResortPage() {
+export default async function SunviaHotelResortPage() {
   const [admin, pageData] = await Promise.all([
     getCachedAdminStatus(),
     getCachedSunviaEcoResortPageData(),
@@ -30,7 +32,7 @@ export default async function SunviaEcoResortPage() {
     "@type": "WebPage",
     name: pageData.investor_hero.headline,
     description: pageData.investor_seo.metaDescription,
-    url: absoluteUrl("/sunvia-eco-resort"),
+    url: absoluteUrl(PAGE_PATH),
     image: absoluteUrl(pageData.investor_seo.metaImage || pageData.investor_hero.backgroundImage),
     about: {
       "@type": "Project",
@@ -43,7 +45,7 @@ export default async function SunviaEcoResortPage() {
   return (
     <>
       <Script
-        id="sunvia-eco-resort-jsonld"
+        id="sunvia-hotel-resort-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(resortJsonLd) }}
       />

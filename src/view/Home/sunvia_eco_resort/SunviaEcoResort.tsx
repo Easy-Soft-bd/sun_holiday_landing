@@ -63,7 +63,7 @@ export default function SunviaEcoResort({ data }: SunviaEcoResortProps) {
 
             <div className="pt-6">
               <Link
-                href="/sunvia-eco-resort"
+                href="/sunvia-hotel-resort"
                 className="btn btn-primary btn-lg group rounded-full px-10 text-primary-content shadow-xl shadow-primary/20"
               >
                 {hero.ctaPrimaryText}

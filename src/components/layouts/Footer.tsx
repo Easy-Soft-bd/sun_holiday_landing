@@ -67,7 +67,7 @@ const defaultData: FooterData = {
     resortsTitle: "Resorts",
     resortsLinks: [
         { label: "Sailor Moon Beach Resort", url: "/sailor-moon-resorts" },
-        { label: "Sunvia Hotel Resort", url: "/sunvia-eco-resort" },
+        { label: "Sunvia Hotel Resort", url: "/sunvia-hotel-resort" },
         { label: "Grandeur Bliss", url: "/resort/grandeur-bliss" },
     ],
     contactTitle: "Get In Touch",
@@ -160,6 +160,9 @@ function mergeFooterData(data?: FooterData): FooterData {
     if (!Array.isArray(merged.resortsLinks) || merged.resortsLinks.length === 0) {
         merged.resortsLinks = defaultData.resortsLinks;
     }
+    merged.resortsLinks = merged.resortsLinks?.map((link) =>
+        link.url === "/sunvia-eco-resort" ? { ...link, url: "/sunvia-hotel-resort" } : link
+    );
     merged.resortsTitle = merged.resortsTitle || defaultData.resortsTitle;
     return merged;
 }

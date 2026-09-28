@@ -39,6 +39,7 @@ export async function POST(request: Request) {
     // 'max' keeps serving stale data (stale-while-revalidate) on the first refresh.
     revalidateTag(TAG_SUNVIA_ECO_RESORT, { expire: 0 });
     revalidatePath("/");
+    revalidatePath("/sunvia-hotel-resort");
     revalidatePath("/sunvia-eco-resort");
 
     return NextResponse.json({ success: true });

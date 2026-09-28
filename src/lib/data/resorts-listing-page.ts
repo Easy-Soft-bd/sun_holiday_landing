@@ -140,7 +140,7 @@ export const defaultResortsListingPageData: ResortsListingPageData = {
         "A planned hospitality destination in Manikganj. Explore the project and the investment opportunity. Returns are not guaranteed.",
       features: ["50 Bigha Planned", "Hotel & Villas", "Investment Opportunity", "Not Yet Operating"],
       established: "In Planning",
-      href: "/sunvia-eco-resort",
+      href: "/sunvia-hotel-resort",
       status: "coming-soon",
     },
   ],
@@ -165,6 +165,9 @@ export function mergeResortsListingPageData(
             status: r.status === "available" ? ("available" as const) : ("coming-soon" as const),
             rating: Math.min(5, Math.max(1, Number(r.rating) || 5)),
           };
+          if (next.id === "sunvia-eco-resort" && next.href === "/sunvia-eco-resort") {
+            next.href = "/sunvia-hotel-resort";
+          }
           if (
             next.id === "sunvia-eco-resort" &&
             sunviaDefault &&

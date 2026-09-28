@@ -44,7 +44,7 @@ const defaultData: FooterData = {
     resortsTitle: "Resorts",
     resortsLinks: [
         { label: "Sailor Moon Beach Resort", url: "/sailor-moon-resorts" },
-        { label: "Sunvia Hotel Resort", url: "/sunvia-eco-resort" },
+        { label: "Sunvia Hotel Resort", url: "/sunvia-hotel-resort" },
         { label: "Grandeur Bliss", url: "/resort/grandeur-bliss" },
     ],
     contactTitle: "Get In Touch",
@@ -192,7 +192,7 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
                                                 <Input placeholder="Resort" style={{ width: 160 }} />
                                             </Form.Item>
                                             <Form.Item {...restField} name={[name, "url"]} rules={[{ required: true, message: "Path/URL" }]}>
-                                                <Input placeholder="/sunvia-eco-resort" style={{ width: 180 }} />
+                                                <Input placeholder="/sunvia-hotel-resort" style={{ width: 180 }} />
                                             </Form.Item>
                                             <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
                                         </Space>

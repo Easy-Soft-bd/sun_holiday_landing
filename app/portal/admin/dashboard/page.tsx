@@ -62,7 +62,7 @@ const cmsLinks: { title: string; href: string; description: string }[] = [
     { title: "Home", href: "/", description: "Hero, featured tours, CTAs, footer." },
     { title: "Sailor Moon Resorts", href: "/sailor-moon-resorts", description: "Hero, gallery, facilities, CTA." },
     { title: "Resorts Listing", href: "/resorts", description: "Hero, beach & city sections, listings." },
-    { title: "Sunvia Hotel & Resort", href: "/sunvia-eco-resort", description: "Investor page sections and lead form." },
+    { title: "Sunvia Hotel & Resort", href: "/sunvia-hotel-resort", description: "Investor page sections and lead form." },
     { title: "About", href: "/about", description: "Story, teams, milestones." },
     { title: "Tours", href: "/tours", description: "Active tour catalog." },
     { title: "Blog", href: "/blog", description: "Published travel stories and guides." },

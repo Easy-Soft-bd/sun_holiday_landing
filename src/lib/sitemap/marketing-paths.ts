@@ -21,7 +21,7 @@ export const MARKETING_STATIC_PATHNAMES: readonly string[] = [
   '/terms',
   '/cookies',
   '/destinations',
-  '/sunvia-eco-resort',
+  '/sunvia-hotel-resort',
 ] as const;
 
 /** Priority hints for well-known marketing paths. */
@@ -30,7 +30,7 @@ export const MARKETING_PATH_PRIORITY: Record<string, number> = {
   '/tours': 0.95,
   '/blog': 0.9,
   '/resorts': 0.88,
-  '/sunvia-eco-resort': 0.88,
+  '/sunvia-hotel-resort': 0.88,
   '/sailor-moon-resorts': 0.85,
   '/about': 0.8,
   '/contact': 0.8,

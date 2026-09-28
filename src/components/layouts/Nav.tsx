@@ -46,7 +46,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             icon: Hotel,
             submenu: [
                 { name: "Sailor Moon Resorts", href: "/sailor-moon-resorts" },
-                { name: "Sunvia Hotel & Resort", href: "/sunvia-eco-resort" },
+                { name: "Sunvia Hotel & Resort", href: "/sunvia-hotel-resort" },
             ]
         },
     ];
