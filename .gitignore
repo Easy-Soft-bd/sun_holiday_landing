@@ -46,3 +46,29 @@ next-env.d.ts
 # dynamic uploads
 /public/logo/main/
 /public/uploads/
+# Admin logo/favicon uploads are saved as <timestamp>-<name>
+/public/logo/[0-9]*-*
+
+# Server copies of shipped media. Kept on disk, not tracked.
+/public/hero/hero-video.mp4
+/public/hero/hero.jpg
+/public/hero/hero.original.jpg
+/public/logo/IATA_logo.png
+/public/logo/logo.png
+/public/logo/association-of-travel-agents-of-bangladesh-atab-seeklogo.com.png
+/public/logo/airline/airlinelogo*.png
+/public/sailor/SHA_6244 copy.jpg
+/public/sailor/SHA_6251.JPG
+/public/sailor/Sailor_Room_1.jpg
+/public/sailor/sailor_ (16).jpg
+/public/sailor/sailor_ (17).jpg
+/public/sailor/sailor_ (2).jpg
+/public/sailor/sailor_ (21).jpg
+/public/sailor/sailor_ (26).jpg
+/public/sailor/sailor_ (28).jpg
+/public/sailor/sailor_ (31).jpg
+/public/sailor/sailor_ (5).jpg
+/public/sailor/sailor_-(11).jpg
+/public/sailor/sailor_-(30).jpg
+/public/sailor/sailor_-(8).jpg
+/public/sailor/sunholiday-w.jpg
