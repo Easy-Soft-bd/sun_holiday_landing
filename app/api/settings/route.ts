@@ -11,7 +11,7 @@ export async function GET() {
     let settings = await GeneralSettings.findOne();
     if (!settings) {
       settings = await GeneralSettings.create({
-        siteName: 'Sun Tourism',
+        siteName: 'Sun Tourism Ltd',
         contactEmail: 'info@sunholidaysltd.com',
       });
     }

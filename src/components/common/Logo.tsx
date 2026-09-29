@@ -1,6 +1,7 @@
 "use client";
 
 import AppImage from "@/src/components/common/AppImage";
+import { DEFAULT_SITE_LOGO, DEFAULT_SITE_NAME, resolveBrandAsset } from "@/src/lib/brand";
 import { cn } from "@/lib/utils";
 
 interface LogoProps {
@@ -13,18 +14,15 @@ interface LogoProps {
     logoUrl?: string | null;
 }
 
-const DEFAULT_LOGO_URL = '/logo/logo.png';
-const DEFAULT_SITE_NAME = 'Sun Tourism Ltd';
-
 const Logo = ({
     className,
     width,
     height = 40,
     showText = true,
     siteName = DEFAULT_SITE_NAME,
-    logoUrl = DEFAULT_LOGO_URL,
+    logoUrl = DEFAULT_SITE_LOGO,
 }: LogoProps) => {
-    const resolvedLogoUrl = logoUrl || DEFAULT_LOGO_URL;
+    const resolvedLogoUrl = resolveBrandAsset(logoUrl);
     const autoWidth = width == null;
 
     return (
@@ -37,7 +35,7 @@ const Logo = ({
                 <img
                     key={resolvedLogoUrl}
                     src={resolvedLogoUrl}
-                    alt="Company Logo"
+                    alt={siteName || DEFAULT_SITE_NAME}
                     height={height}
                     className="object-contain"
                     style={{ width: "auto", height }}
@@ -48,7 +46,7 @@ const Logo = ({
                     <AppImage
                         key={resolvedLogoUrl}
                         src={resolvedLogoUrl}
-                        alt="Company Logo"
+                        alt={siteName || DEFAULT_SITE_NAME}
                         fill
                         sizes={`${Math.max(width, height) * 3}px`}
                         quality={95}

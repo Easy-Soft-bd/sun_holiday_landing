@@ -253,12 +253,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             style={{ borderColor: colorBorderSecondary }}
         >
             <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary text-sm font-black text-primary-content">
-                SH
+                ST
             </span>
             {collapsedView ? null : (
                 <span className="min-w-0">
                     <span className="block text-[10px] font-bold tracking-[0.22em] text-primary uppercase">Admin</span>
-                    <span className="block truncate text-base font-black tracking-tight text-base-content">Sun Holidays</span>
+                    <span className="block truncate text-base font-black tracking-tight text-base-content">Sun Tourism Ltd</span>
                 </span>
             )}
         </Link>

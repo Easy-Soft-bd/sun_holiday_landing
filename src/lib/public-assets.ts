@@ -1,7 +1,8 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
+import { DEFAULT_SITE_LOGO } from '@/src/lib/brand';
 
-export const DEFAULT_SITE_LOGO = '/logo/logo.png';
+export { DEFAULT_SITE_LOGO };
 
 /** Resolve a public asset path, falling back when the file is missing on disk. */
 export function resolvePublicAssetPath(

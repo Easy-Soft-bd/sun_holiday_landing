@@ -198,7 +198,7 @@ export default function SettingsPage() {
             name="siteName"
             rules={[{ required: true, message: 'Please enter site name' }]}
           >
-            <Input placeholder="Sun Tourism" />
+            <Input placeholder="Sun Tourism Ltd" />
           </Form.Item>
           <Form.Item label="Website logo" extra="Uploading saves immediately and updates the navbar and footer.">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">

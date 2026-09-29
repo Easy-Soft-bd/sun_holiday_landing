@@ -6,9 +6,9 @@ import HomeDeferred from "@/src/view/Home/HomeDeferred";
 import HomeSectionsSkeleton from "@/src/view/Home/HomeSectionsSkeleton";
 
 export const metadata = buildPageMetadata({
-  title: "Sun Holidays Ltd | Best Travel Agency in Bangladesh",
+  title: "Sun Tourism Ltd | Best Travel Agency in Bangladesh",
   description:
-    "Discover exclusive holiday packages, luxury resorts, and seamless travel experiences with Sun Holidays Ltd — your trusted travel partner in Bangladesh.",
+    "Discover exclusive holiday packages, luxury resorts, and seamless travel experiences with Sun Tourism Ltd — your trusted travel partner in Bangladesh.",
   path: "/",
 });
 

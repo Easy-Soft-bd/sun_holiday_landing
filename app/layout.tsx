@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { DEFAULT_FAVICON, DEFAULT_SITE_LOGO, DEFAULT_SITE_NAME } from "@/src/lib/brand";
 import { getCachedSettings } from "@/src/lib/data/home-page";
 import { getSiteUrl } from "@/src/lib/site";
 
@@ -30,17 +31,19 @@ function iconHref(url: string, updatedAt?: string | Date | null) {
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getCachedSettings().catch(() => null);
-  const faviconPath = settings?.favicon?.trim() || "/logo/logo.png";
+  const faviconPath = settings?.favicon?.trim() || DEFAULT_FAVICON;
   const icon = iconHref(faviconPath, settings?.updatedAt);
+  const title = `${DEFAULT_SITE_NAME} - Your Gateway to Amazing Holidays`;
+  const description = `Discover amazing holiday destinations with ${DEFAULT_SITE_NAME}. Book your dream vacation today!`;
 
   return {
     metadataBase: new URL(getSiteUrl()),
-    title: "Sun Tour LTD - Your Gateway to Amazing Holidays",
-    description: "Discover amazing holiday destinations with Sun Tour LTD. Book your dream vacation today!",
+    title,
+    description,
     openGraph: {
-      title: "Sun Tour LTD - Your Gateway to Amazing Holidays",
-      description: "Discover amazing holiday destinations with Sun Tour LTD. Book your dream vacation today!",
-      images: ["/logo/logo.png"],
+      title,
+      description,
+      images: [DEFAULT_SITE_LOGO],
     },
     icons: {
       icon: [{ url: icon }],

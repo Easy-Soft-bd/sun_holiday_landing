@@ -1,3 +1,4 @@
+import { resolveBrandAsset, resolveSiteName, DEFAULT_FAVICON } from '@/src/lib/brand';
 import { resolveSocialLinks, type SocialLink } from '@/src/lib/social-links';
 
 export function parseMultiValue(value: unknown): string[] {
@@ -51,6 +52,9 @@ export function normalizeSettingsPlain(
 
   return {
     ...settings,
+    siteName: resolveSiteName(settings.siteName as string | null | undefined),
+    siteLogo: resolveBrandAsset(settings.siteLogo as string | null | undefined),
+    favicon: resolveBrandAsset(settings.favicon as string | null | undefined, DEFAULT_FAVICON),
     contactEmails,
     contactPhones,
     contactEmail: contactEmails[0] || '',

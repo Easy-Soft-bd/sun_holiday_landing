@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import type { TourRecord } from '@/src/lib/data/tours';
 import type { BlogPostRecord } from '@/src/lib/data/blog';
+import { DEFAULT_SITE_NAME } from '@/src/lib/brand';
 import { stripHtml } from '@/src/lib/html';
 
 const DEFAULT_SITE_URL = 'https://sunholidaysltd.com';
-const DEFAULT_SITE_NAME = 'Sun Tourism Ltd';
 const DEFAULT_DESCRIPTION =
   'Book your dream holiday with Sun Tourism Ltd. Specialists in tours, Hajj, Umrah, visa support, and curated travel experiences.';
 const DEFAULT_OG_IMAGE = '/hero/hero.jpg';
