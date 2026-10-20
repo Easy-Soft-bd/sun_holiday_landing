@@ -1,51 +1,33 @@
+type BlogHeroProps = {
+  eyebrow?: string;
+  heading?: string;
+  headingHighlight?: string;
+  intro?: string;
+};
 
-import { Sparkles, Search } from "lucide-react";
-
-export default function BlogHero() {
-    return (
-        <section className="relative pt-32 pb-20 overflow-hidden">
-            {/* Background Orbs */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl -z-10 opacity-30">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] animate-pulse" />
-                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/20 rounded-full blur-[100px] animate-pulse delay-700" />
-            </div>
-
-            <div className="container mx-auto px-4 relative">
-                <div className="max-w-4xl mx-auto text-center space-y-8">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-[0.2em]">
-                        <Sparkles size={14} className="animate-spin-slow" />
-                        Explore Our Stories
-                    </div>
-                    
-                    <h1 className="text-5xl md:text-8xl font-magmawave leading-tight text-base-content">
-                        News & <span className="text-primary italic">Travel</span> Insights
-                    </h1>
-                    
-                    <p className="text-xl text-base-content/60 max-w-2xl mx-auto leading-relaxed">
-                        Stay updated with the latest travel trends, visa guides, and inspiring destination stories from across the globe.
-                    </p>
-
-                    {/* Search / Filter Bar */}
-                    <div className="max-w-2xl mx-auto pt-8">
-                        <div className="relative group">
-                            <div className="absolute inset-0 bg-primary/5 rounded-[2rem] blur-xl group-hover:bg-primary/10 transition-all" />
-                            <div className="relative bg-white border border-base-200 rounded-[2rem] p-2 flex items-center shadow-2xl shadow-primary/5">
-                                <div className="pl-6 text-base-content/30">
-                                    <Search size={20} />
-                                </div>
-                                <input 
-                                    type="text" 
-                                    placeholder="Search stories, destinations, tips..." 
-                                    className="w-full bg-transparent px-4 py-2 focus:outline-none text-base-content font-medium"
-                                />
-                                <button className="px-8 py-3 bg-slate-900 text-white rounded-full font-bold hover:bg-primary transition-all active:scale-95 text-sm">
-                                    Search
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
+export default function BlogHero({
+  eyebrow = "Media",
+  heading = "Travel",
+  headingHighlight = "Stories",
+  intro = "Stories, destination guides, and practical notes for your next journey.",
+}: BlogHeroProps) {
+  return (
+    <div className="border-b border-base-200 bg-base-100">
+      <div className="container mx-auto px-4 pt-24 pb-8 text-center sm:pt-28 md:pt-32 md:pb-10 lg:pt-36 lg:pb-12">
+        <p className="mb-3 inline-flex items-center justify-center gap-2 text-xs font-bold tracking-[0.18em] text-primary uppercase sm:text-sm">
+          <span className="h-0.5 w-8 bg-primary" aria-hidden />
+          {eyebrow}
+        </p>
+        <h1 className="font-magmawave text-3xl leading-tight tracking-tighter sm:text-4xl md:text-5xl">
+          {heading}{" "}
+          <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            {headingHighlight}
+          </span>
+        </h1>
+        <p className="mx-auto mt-3 max-w-2xl text-base font-light text-base-content/70 sm:text-lg">
+          {intro}
+        </p>
+      </div>
+    </div>
+  );
 }

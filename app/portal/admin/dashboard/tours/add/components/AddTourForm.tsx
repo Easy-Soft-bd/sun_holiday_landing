@@ -18,9 +18,9 @@ const INITIAL_VALUES: Partial<TourFormValues> = {
   homeSortOrder: 0,
 };
 
-const cardClass = "!rounded-2xl border border-slate-200/90 bg-white shadow-sm shadow-slate-900/5";
-const cardHeadClass = "!border-b !border-slate-100 !py-4 !px-6";
-const cardBodyClass = "!px-6 !pb-6 !pt-2";
+const cardClass = "!rounded-2xl !border !border-base-300 !bg-base-100 shadow-sm";
+const cardHeadClass = "!border-b !border-base-300 !bg-base-100 !py-4 !px-6";
+const cardBodyClass = "!bg-base-100 !px-6 !pb-6 !pt-4";
 
 type AddTourFormProps = {
   /** When set, form loads this tour and submits a PUT. */
@@ -137,7 +137,7 @@ export default function AddTourForm({ tourId }: AddTourFormProps) {
           <p className="text-sm text-slate-500">Loading tour…</p>
         </div>
       ) : (
-        <>
+        <div className="flex w-full flex-col gap-8">
           <Card
             title="Basic information"
             className={cardClass}
@@ -148,7 +148,7 @@ export default function AddTourForm({ tourId }: AddTourFormProps) {
 
           <Card
             title="Media & description"
-            className={`${cardClass} mt-6`}
+            className={cardClass}
             classNames={{ header: cardHeadClass, body: cardBodyClass }}
           >
             <MediaDescriptionSection form={form} />
@@ -156,7 +156,7 @@ export default function AddTourForm({ tourId }: AddTourFormProps) {
 
           <Card
             title="Image gallery"
-            className={`${cardClass} mt-6`}
+            className={cardClass}
             classNames={{ header: cardHeadClass, body: cardBodyClass }}
           >
             <GallerySection form={form} />
@@ -164,7 +164,7 @@ export default function AddTourForm({ tourId }: AddTourFormProps) {
 
           <Card
             title="Highlights & inclusions"
-            className={`${cardClass} mt-6`}
+            className={cardClass}
             classNames={{ header: cardHeadClass, body: cardBodyClass }}
           >
             <HighlightsIncludesSection />
@@ -172,18 +172,18 @@ export default function AddTourForm({ tourId }: AddTourFormProps) {
 
           <Card
             title="Itinerary"
-            className={`${cardClass} mt-6`}
+            className={cardClass}
             classNames={{ header: cardHeadClass, body: cardBodyClass }}
           >
             <ItinerarySection />
           </Card>
 
-          <div className="sticky bottom-0 z-10 mt-10 flex justify-end border-t border-slate-200 bg-gradient-to-t from-white via-white to-transparent pt-6">
+          <div className="sticky bottom-0 z-10 flex justify-end border-t border-base-300 bg-base-200 py-4">
             <Button type="primary" htmlType="submit" loading={loading} size="large" className="min-w-[160px]">
               {isEdit ? "Save changes" : "Create tour"}
             </Button>
           </div>
-        </>
+        </div>
       )}
     </Form>
   );

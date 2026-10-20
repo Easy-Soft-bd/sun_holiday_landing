@@ -9,6 +9,7 @@ import {
 import { absoluteUrl } from '@/src/lib/site';
 import { getTourSlugOnlyPath } from '@/src/lib/tours/public-path';
 import { getBlogPublicPath } from '@/src/lib/blog/public-path';
+import { MEDIA_LISTINGS, postsForListing, type MediaListingKey } from '@/src/lib/blog/categories';
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
@@ -56,11 +57,27 @@ export async function buildFullSitemap(): Promise<MetadataRoute.Sitemap> {
     entries.push(item);
   };
 
+  const listingLastModified = (key: MediaListingKey) => {
+    const dates = postsForListing(blogPosts, key)
+      .map((post) => post.updatedAt ?? post.publishedAt)
+      .filter((value): value is string | Date => Boolean(value))
+      .map((value) => new Date(value))
+      .filter((date) => !Number.isNaN(date.getTime()));
+    if (dates.length === 0) return now;
+    return new Date(Math.max(...dates.map((date) => date.getTime())));
+  };
+
   for (const path of MARKETING_STATIC_PATHNAMES) {
+    const listing = MEDIA_LISTINGS.find((item) => item.path === path);
     push(
       entry(path, {
-        lastModified: now,
-        changeFrequency: path === '/' ? 'weekly' : path === '/blog' || path === '/tours' ? 'daily' : 'monthly',
+        lastModified: listing ? listingLastModified(listing.key) : now,
+        changeFrequency:
+          path === '/'
+            ? 'weekly'
+            : path === '/blog' || path === '/news' || path === '/events' || path === '/csr' || path === '/tours'
+              ? 'daily'
+              : 'monthly',
         priority: MARKETING_PATH_PRIORITY[path] ?? 0.7,
       })
     );

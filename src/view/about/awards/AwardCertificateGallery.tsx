@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Award, BadgeCheck, Medal, Sparkles, X } from "lucide-react";
-import AppImage from "@/src/components/common/AppImage";
+import { useEffect, useState } from "react";
+import { Award, BadgeCheck, Sparkles, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import ClientOnly from "@/src/components/common/ClientOnly";
 import { mergeAwardCertificatePageData, type AwardCertificatePageData, type AwardCertificateItem } from "@/src/lib/data/award-certificate-page";
@@ -14,7 +13,7 @@ const AwardCertificateAdminControl = dynamic(() => import("./AwardCertificateAdm
 
 function CategoryBadge({ category }: { category: AwardCertificateItem["category"] }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-white/40 bg-black/35 px-3 py-1 text-xs font-semibold tracking-wide text-white backdrop-blur-sm">
+    <span className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
       {category === "Award" ? <Award className="size-3.5" /> : <BadgeCheck className="size-3.5" />}
       {category}
     </span>
@@ -30,8 +29,20 @@ export default function AwardCertificateGallery({ data, admin = false }: Props) 
   const page = mergeAwardCertificatePageData(data);
   const items = page.items;
   const [previewImage, setPreviewImage] = useState<AwardCertificateItem | null>(null);
-  const awardCount = items.filter((x) => x.category === "Award").length;
-  const certCount = items.filter((x) => x.category === "Certificate").length;
+
+  useEffect(() => {
+    if (!previewImage) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPreviewImage(null);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [previewImage]);
 
   return (
     <main className="group/award-certificate min-h-screen bg-base-100">
@@ -57,105 +68,86 @@ export default function AwardCertificateGallery({ data, admin = false }: Props) 
               {page.heroDescription}
             </p>
           </div>
-
-          <div className="mx-auto mt-12 grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-base-300 bg-base-100 p-5 text-center">
-              <div className="mx-auto mb-2 w-fit rounded-xl bg-primary/10 p-3 text-primary">
-                <Award className="size-5" />
-              </div>
-              <p className="text-2xl font-extrabold text-primary">{awardCount}</p>
-              <p className="text-xs uppercase tracking-wider text-base-content/55">Awards</p>
-            </div>
-            <div className="rounded-2xl border border-base-300 bg-base-100 p-5 text-center">
-              <div className="mx-auto mb-2 w-fit rounded-xl bg-primary/10 p-3 text-primary">
-                <BadgeCheck className="size-5" />
-              </div>
-              <p className="text-2xl font-extrabold text-primary">{certCount}</p>
-              <p className="text-xs uppercase tracking-wider text-base-content/55">Certificates</p>
-            </div>
-            <div className="rounded-2xl border border-base-300 bg-base-100 p-5 text-center">
-              <div className="mx-auto mb-2 w-fit rounded-xl bg-primary/10 p-3 text-primary">
-                <Medal className="size-5" />
-              </div>
-              <p className="text-2xl font-extrabold text-primary">{items.length}</p>
-              <p className="text-xs uppercase tracking-wider text-base-content/55">Total Highlights</p>
-            </div>
-          </div>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-16 md:py-20">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((item) => (
-            <article
-              key={item.id}
-              className="group overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-            >
-              <button
-                type="button"
-                onClick={() => setPreviewImage(item)}
-                className="relative block h-64 w-full overflow-hidden text-left"
-                aria-label={`Open full preview for ${item.title}`}
+      <section className="bg-base-200/40">
+        <div className="container mx-auto px-4 py-12 md:py-16">
+          <div
+            className={
+              items.length === 1
+                ? "mx-auto w-full max-w-md"
+                : "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3"
+            }
+          >
+            {items.map((item) => (
+              <article
+                key={item.id}
+                className="flex h-full flex-col overflow-hidden rounded-3xl border border-base-200 bg-base-100 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
-                <AppImage
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  loading="lazy"
-                  quality={55}
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className="absolute left-4 top-4">
-                  <CategoryBadge category={item.category} />
+                <button
+                  type="button"
+                  onClick={() => setPreviewImage(item)}
+                  className="block w-full bg-base-200 p-3 text-left sm:p-4"
+                  aria-label={`Open full page view for ${item.title}`}
+                >
+                  <span className="flex h-80 items-center justify-center sm:h-[26rem]">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="max-h-full max-w-full rounded-lg object-contain shadow-lg"
+                    />
+                  </span>
+                </button>
+                <div className="flex flex-1 flex-col border-t border-base-200 px-4 py-4 sm:px-5">
+                  <div className="flex items-center justify-between gap-2">
+                    <CategoryBadge category={item.category} />
+                    {item.year ? (
+                      <span className="shrink-0 text-xs font-bold tracking-wide text-base-content/50">
+                        {item.year}
+                      </span>
+                    ) : null}
+                  </div>
+                  <h2 className="mt-3 text-base font-semibold leading-snug text-base-content sm:text-lg">
+                    {item.title}
+                  </h2>
                 </div>
-                <span className="absolute bottom-4 right-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-base-content">
-                  {item.year}
-                </span>
-              </button>
-              <div className="p-5">
-                <h2 className="line-clamp-2 text-lg font-bold text-base-content">{item.title}</h2>
-                <p className="mt-2 text-sm text-base-content/60">
-                  Click image to preview full size.
-                </p>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
       {previewImage ? (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-3 md:p-8"
+          className="fixed inset-0 z-[100] flex flex-col bg-black"
+          role="dialog"
+          aria-modal="true"
+          aria-label={previewImage.title}
           onClick={() => setPreviewImage(null)}
         >
-          <button
-            type="button"
-            onClick={() => setPreviewImage(null)}
-            className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30"
-            aria-label="Close preview"
-          >
-            <X className="size-5" />
-          </button>
-          <div className="w-full max-w-5xl rounded-2xl bg-base-100 p-2 md:p-4" onClick={(e) => e.stopPropagation()}>
-            <div className="relative mx-auto min-h-[50vh] w-full max-w-full">
-              <AppImage
-                src={previewImage.image}
-                alt={previewImage.title}
-                fill
-                quality={75}
-                sizes="(max-width: 768px) 100vw, 1024px"
-                className="rounded-xl object-contain"
-              />
-            </div>
-            <div className="mt-3 px-1 pb-1">
-              <p className="text-sm font-semibold text-base-content">{previewImage.title}</p>
-              <p className="text-xs text-base-content/60">
-                {previewImage.category} · {previewImage.year}
+          <div className="flex shrink-0 items-center justify-between gap-3 px-4 py-3 text-white">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold sm:text-base">{previewImage.title}</p>
+              <p className="text-xs text-white/70">
+                {previewImage.category}
+                {previewImage.year ? ` · ${previewImage.year}` : ""}
               </p>
             </div>
+            <button
+              type="button"
+              onClick={() => setPreviewImage(null)}
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30"
+              aria-label="Close preview"
+            >
+              <X className="size-5" />
+            </button>
           </div>
+          <img
+            src={previewImage.image}
+            alt={previewImage.title}
+            className="min-h-0 w-full flex-1 object-contain"
+          />
         </div>
       ) : null}
     </main>

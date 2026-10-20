@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import sequelize from '@/src/lib/db';
 import { verifyAuth } from '@/src/lib/auth';
 import BlogPost from '@/src/models/BlogPost';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { getCachedBlogPosts, mapBlogRow } from '@/src/lib/data/blog';
+import { ensureBlogPostsReady, getCachedBlogPosts, mapBlogRow } from '@/src/lib/data/blog';
 import { TAG_BLOG_LIST } from '@/src/lib/revalidate-tags';
 import { allocateUniqueBlogSlug } from '@/src/lib/blog/slug';
+import { isMediaCategory, MEDIA_LISTINGS } from '@/src/lib/blog/categories';
+import { readEventFields } from '@/src/lib/blog/event-fields';
 
 export async function GET() {
   try {
@@ -35,6 +36,18 @@ export async function POST(request: NextRequest) {
         ? body.status
         : 'Draft';
 
+    if (!isMediaCategory(category)) {
+      return NextResponse.json(
+        { error: 'Category must be News, Event, Blog, or CSR.' },
+        { status: 400 }
+      );
+    }
+
+    const event = readEventFields(category, body);
+    if (event.error) {
+      return NextResponse.json({ error: event.error }, { status: 400 });
+    }
+
     if (!title || !excerpt || !category || !image || !content.trim()) {
       return NextResponse.json(
         { error: 'Title, excerpt, category, image, and content are required.' },
@@ -42,8 +55,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await sequelize.authenticate();
-    await BlogPost.sync();
+    await ensureBlogPostsReady();
 
     const slug = await allocateUniqueBlogSlug(
       title,
@@ -75,10 +87,15 @@ export async function POST(request: NextRequest) {
         typeof body.metaDescription === 'string' && body.metaDescription.trim()
           ? body.metaDescription.trim()
           : null,
+      eventDate: event.fields.eventDate,
+      eventLocation: event.fields.eventLocation,
     });
 
     revalidateTag(TAG_BLOG_LIST, 'max');
     revalidatePath('/sitemap.xml');
+    for (const listing of MEDIA_LISTINGS) {
+      revalidatePath(listing.path);
+    }
 
     return NextResponse.json(mapBlogRow(post), { status: 201 });
   } catch (error) {

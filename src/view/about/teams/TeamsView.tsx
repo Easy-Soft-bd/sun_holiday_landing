@@ -69,11 +69,15 @@ export default async function TeamsView({ data, admin = false }: Props) {
                     <div className="mx-auto mt-5 flex flex-wrap items-center justify-center gap-2 sm:mt-8 sm:gap-3">
                         <div className="flex items-center gap-1.5 rounded-full border border-base-200 bg-base-100/80 px-3 py-1.5 text-[11px] font-semibold shadow-sm backdrop-blur-sm sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
                             <Crown className="size-3.5 text-primary sm:size-4" />
-                            <span>{directorCount} Leaders</span>
+                            <span>
+                                {directorCount} {teamsData.leadersStatLabel}
+                            </span>
                         </div>
                         <div className="flex items-center gap-1.5 rounded-full border border-base-200 bg-base-100/80 px-3 py-1.5 text-[11px] font-semibold shadow-sm backdrop-blur-sm sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
                             <Users2 className="size-3.5 text-secondary sm:size-4" />
-                            <span>{teamCount}+ Members</span>
+                            <span>
+                                {teamCount}+ {teamsData.membersStatLabel}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -84,9 +88,10 @@ export default async function TeamsView({ data, admin = false }: Props) {
                 <div className="container mx-auto px-3 py-10 sm:px-4 sm:py-16 lg:py-20">
                     <LeadersRow
                         directors={teamsData.directors}
-                        eyebrow="Leadership"
-                        title="Our Top Leaders"
-                        description="Meet the visionaries steering Sun Tourism Ltd."
+                        eyebrow={teamsData.leadershipEyebrow}
+                        title={teamsData.leadershipTitle}
+                        description={teamsData.leadershipDescription}
+                        messageLabel={teamsData.leaderMessageLabel}
                     />
                 </div>
             </section>
@@ -95,7 +100,7 @@ export default async function TeamsView({ data, admin = false }: Props) {
             <section id="team" className="relative bg-base-200/40">
                 <div className="relative z-10 container mx-auto px-3 py-10 sm:px-4 sm:py-16 lg:py-20">
                     <SectionHeader
-                        eyebrow="Our Team"
+                        eyebrow={teamsData.teamSectionEyebrow}
                         title={teamsData.teamSectionTitle}
                         description={teamsData.teamSectionDescription}
                         icon={<Users2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
@@ -112,26 +117,26 @@ export default async function TeamsView({ data, admin = false }: Props) {
                 <div className="mx-auto max-w-2xl rounded-3xl border border-primary/10 bg-primary/5 px-5 py-8 text-center sm:rounded-4xl sm:p-12">
                     <Sparkles className="mx-auto mb-4 size-8 text-primary sm:mb-6 sm:size-12" />
                     <h2 className="font-gilliequest mb-2 text-2xl uppercase tracking-tighter sm:mb-4 sm:text-4xl">
-                        Ready to{" "}
-                        <span className="italic text-primary">Travel</span> With Us?
+                        {teamsData.ctaTitleMain}{" "}
+                        <span className="italic text-primary">{teamsData.ctaTitleAccent}</span>{" "}
+                        {teamsData.ctaTitleEnd}
                     </h2>
                     <p className="mb-6 text-sm leading-relaxed text-base-content/65 sm:mb-8 sm:text-lg">
-                        Our team is here to plan your next journey — from first enquiry to a
-                        seamless return home.
+                        {teamsData.ctaDescription}
                     </p>
                     <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4">
                         <Link
-                            href="/contact"
+                            href={teamsData.ctaPrimaryHref || "/contact"}
                             className="btn btn-primary w-full rounded-full px-8 text-white shadow-lg shadow-primary/20 sm:w-auto"
                         >
-                            Contact Us
+                            {teamsData.ctaPrimaryLabel}
                             <ArrowRight className="ml-1 size-4" />
                         </Link>
                         <Link
-                            href="/tours"
+                            href={teamsData.ctaSecondaryHref || "/tours"}
                             className="btn btn-ghost w-full rounded-full border border-base-300 px-8 hover:bg-base-100 sm:w-auto"
                         >
-                            Explore Tours
+                            {teamsData.ctaSecondaryLabel}
                         </Link>
                     </div>
                 </div>

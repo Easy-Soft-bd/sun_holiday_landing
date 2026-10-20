@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import AntdProviders from "@/src/components/providers/AntdProviders";
 import type { TeamsPageData } from "./teams-page-data";
 
 const TeamsEditButton = dynamic(() => import("./TeamsEditButton"), {
@@ -9,5 +10,9 @@ const TeamsEditButton = dynamic(() => import("./TeamsEditButton"), {
 });
 
 export default function TeamsAdminControl({ data }: { data?: Partial<TeamsPageData> }) {
-  return <TeamsEditButton data={data} />;
+  return (
+    <AntdProviders>
+      <TeamsEditButton data={data} />
+    </AntdProviders>
+  );
 }

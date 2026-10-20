@@ -26,6 +26,8 @@ export interface BlogPost {
   updatedAt?: string;
   metaTitle?: string | null;
   metaDescription?: string | null;
+  eventDate?: string | null;
+  eventLocation?: string | null;
 }
 
 export const SEED_BLOG_POSTS: SeedBlogPost[] = [

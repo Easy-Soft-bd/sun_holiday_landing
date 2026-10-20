@@ -3,7 +3,6 @@ import MainChrome from "@/src/components/layouts/MainChrome";
 import Footer from "@/src/components/layouts/Footer";
 import { getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
 import { isDevelopmentModeBannerEnabled } from "@/src/lib/env";
-import HomeDeferredGate from "@/src/view/Home/HomeDeferredGate";
 
 async function DeferredFooter() {
   const [pageData, settings] = await Promise.all([
@@ -47,9 +46,7 @@ export default async function MainLayout({
     >
       {children}
       <Suspense fallback={null}>
-        <HomeDeferredGate>
-          <DeferredFooter />
-        </HomeDeferredGate>
+        <DeferredFooter />
       </Suspense>
     </MainChrome>
   );

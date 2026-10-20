@@ -1,11 +1,13 @@
 import AppImage from "@/src/components/common/AppImage";
 import Link from "next/link";
 import Logo from "../common/Logo";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import PublicIconRenderer from "../common/PublicIconRenderer";
 import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
-import { resolveSocialLinks, type SocialLink } from "@/src/lib/social-links";
+import { normalizeSocialLinks, resolveSocialLinks, type SocialLink } from "@/src/lib/social-links";
 import { parseMultiValue, resolveMapsEmbedSrc } from "@/src/lib/settings-normalize";
+import { DEFAULT_SITE_NAME } from "@/src/lib/brand";
+import { getSiteUrl } from "@/src/lib/site";
 
 /** Footer CMS entries predate the settings editor and may not carry a label. */
 interface CmsSocialLink {
@@ -31,6 +33,8 @@ interface FooterData {
     servicesLinks?: QuickLink[];
     resortsTitle?: string;
     resortsLinks?: QuickLink[];
+    mediaTitle?: string;
+    mediaLinks?: QuickLink[];
     contactTitle?: string;
     contactAddress?: string;
     /** Preferred: one or more numbers shown in the footer */
@@ -41,8 +45,6 @@ interface FooterData {
     contactPhone?: string;
     /** @deprecated use contactEmails */
     contactEmail?: string;
-    newsletterTitle?: string;
-    newsletterDescription?: string;
     certificationsTitle?: string;
     certifications?: Certification[];
     paymentsTitle?: string;
@@ -70,12 +72,17 @@ const defaultData: FooterData = {
         { label: "Sunvia Hotel Resort", url: "/sunvia-hotel-resort" },
         { label: "Grandeur Bliss", url: "/resort/grandeur-bliss" },
     ],
+    mediaTitle: "Media",
+    mediaLinks: [
+        { label: "News", url: "/news" },
+        { label: "Event", url: "/events" },
+        { label: "Blog", url: "/blog" },
+        { label: "CSR", url: "/csr" },
+    ],
     contactTitle: "Get In Touch",
     contactAddress: "123 Travel Plaza, Suite 456\nDhaka, Bangladesh",
     contactPhones: ["+880 1234 567 890"],
     contactEmails: ["support@sunholidays.com"],
-    newsletterTitle: "Newsletter",
-    newsletterDescription: "Subscribe for exclusive travel deals and updates.",
     certificationsTitle: "Authorized By & Certified Member",
     certifications: [
         { name: "IATA", image: "/certs/iata.png" },
@@ -142,6 +149,22 @@ function resolveSettingsContactList(
     return parseMultiValue(legacySingle);
 }
 
+function httpSocialLinks(links: SocialLink[]): SocialLink[] {
+    return links.filter((link) => /^https?:\/\//i.test(link.url));
+}
+
+/** Footer profiles win when they have real URLs. Otherwise the site settings list is used. */
+function resolveFooterSocialLinks(
+    footerLinks: unknown,
+    settings: FooterProps["settings"],
+): SocialLink[] {
+    const fromFooter = httpSocialLinks(normalizeSocialLinks(footerLinks));
+    if (fromFooter.length > 0) {
+        return fromFooter;
+    }
+    return httpSocialLinks(resolveSocialLinks(settings));
+}
+
 function mergeFooterData(data?: FooterData): FooterData {
     const merged: FooterData = { ...defaultData, ...data };
     merged.contactPhones = normalizeContactList(
@@ -160,6 +183,10 @@ function mergeFooterData(data?: FooterData): FooterData {
     if (!Array.isArray(merged.resortsLinks) || merged.resortsLinks.length === 0) {
         merged.resortsLinks = defaultData.resortsLinks;
     }
+    if (!Array.isArray(merged.mediaLinks) || merged.mediaLinks.length === 0) {
+        merged.mediaLinks = defaultData.mediaLinks;
+    }
+    merged.mediaTitle = merged.mediaTitle || defaultData.mediaTitle;
     merged.resortsLinks = merged.resortsLinks?.map((link) =>
         link.url === "/sunvia-eco-resort" ? { ...link, url: "/sunvia-hotel-resort" } : link
     );
@@ -188,6 +215,39 @@ interface FooterProps {
     };
 }
 
+function FooterHeading({ children }: { children: string }) {
+    return (
+        <h2 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-base-content/55">
+            <span aria-hidden className="size-1.5 rounded-full bg-primary" />
+            {children}
+        </h2>
+    );
+}
+
+function FooterLinkColumn({ title, links }: { title?: string; links?: QuickLink[] }) {
+    if (!title) return null;
+
+    return (
+        <nav aria-label={title}>
+            <FooterHeading>{title}</FooterHeading>
+            <ul>
+                {links?.map((link) => (
+                    <li key={`${link.label}-${link.url}`}>
+                        <Link
+                            href={link.url}
+                            prefetch={false}
+                            className="group inline-flex min-h-11 items-center gap-2.5 py-2 text-sm font-medium text-base-content/80 transition-colors hover:text-primary"
+                        >
+                            <span aria-hidden className="h-px w-3 bg-primary/35 transition-all duration-300 group-hover:w-5 group-hover:bg-primary" />
+                            {link.label}
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+    );
+}
+
 const Footer = async ({ data, settings, branding }: FooterProps) => {
     const footerData = mergeFooterData(data);
     const currentYear = new Date().getFullYear();
@@ -213,28 +273,58 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
     const mapEmbedSrc = resolveMapsEmbedSrc(mapsHref) || OFFICE_MAP_EMBED;
     const bio = footerData.bio || defaultData.bio;
 
-    const socialLinks = resolveSocialLinks(
-        settings,
-        footerData.socialLinks ?? defaultData.socialLinks,
+    const socialLinks = resolveFooterSocialLinks(footerData.socialLinks, settings);
+    const siteName = branding?.siteName || DEFAULT_SITE_NAME;
+    const organizationJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "TravelAgency",
+        name: siteName,
+        url: getSiteUrl(),
+        description: bio,
+        ...(contactPhones[0] ? { telephone: contactPhones } : {}),
+        ...(contactEmails[0] ? { email: contactEmails[0] } : {}),
+        address: {
+            "@type": "PostalAddress",
+            streetAddress: address.replace(/\s*\n\s*/g, ", "),
+            addressCountry: "BD",
+        },
+        ...(socialLinks.length > 0 ? { sameAs: socialLinks.map((link) => link.url) } : {}),
+    };
+
+    const addressNode = mapsHref ? (
+        <a
+            href={mapsHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="whitespace-pre-line text-sm leading-relaxed text-base-content/75 transition-colors hover:text-primary"
+        >
+            {address}
+        </a>
+    ) : (
+        <span className="whitespace-pre-line text-sm leading-relaxed text-base-content/75">{address}</span>
     );
 
     return (
-        <footer className="relative bg-base-200 text-base-content border-t border-base-300 group/footer">
+        <footer className="group/footer relative border-t border-base-300 bg-base-200 text-base-content">
+            <div aria-hidden className="h-1 w-full bg-primary" />
 
-            {/* Admin Edit Controls */}
-            <DeferredAdmin
-                name="footer"
-                data={footerData}
-                className="absolute top-4 left-4 z-50"
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
+                }}
             />
 
-            {/* Main Footer Content */}
-            <div className="container mx-auto px-6 pt-16 pb-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <DeferredAdmin
+                name="footer"
+                data={{ ...footerData, socialLinks }}
+                className="absolute top-5 right-4 z-20"
+            />
 
-                    {/* Column 1: Brand & contact */}
-                    <div className="space-y-6">
-                        <Link href="/" prefetch={false} className="inline-block hover:opacity-80 transition-opacity">
+            <div className="container mx-auto px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+                <div className="grid gap-12 lg:grid-cols-12 lg:items-start lg:gap-10">
+                    <div className="space-y-6 lg:col-span-3">
+                        <Link href="/" prefetch={false} className="inline-block transition-opacity hover:opacity-80">
                             <Logo
                                 showText={false}
                                 height={60}
@@ -242,60 +332,65 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                                 logoUrl={branding?.siteLogo}
                             />
                         </Link>
-                        <p className="text-base-content/70 leading-relaxed text-sm">
+                        <p className="max-w-md text-sm leading-relaxed text-base-content/70">
                             {bio}
                         </p>
-                        <div className="flex flex-wrap gap-3">
-                            {socialLinks.map((social, i) => (
-                                <Link
-                                    key={`${social.icon}-${social.url}-${i}`}
-                                    href={social.url}
-                                    prefetch={false}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    aria-label={social.label || undefined}
-                                    title={social.label || undefined}
-                                    className="group/social relative grid size-11 place-items-center overflow-hidden rounded-full bg-base-content/6 text-base-content/65 transition-[transform,background-color,color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:bg-primary hover:text-white hover:shadow-[0_14px_28px_-12px] hover:shadow-primary/45 focus-visible:-translate-y-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:translate-y-0 active:scale-[0.96] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-                                >
-                                    <span
-                                        aria-hidden
-                                        className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-b from-white/25 to-transparent opacity-0 transition-opacity duration-300 group-hover/social:opacity-100"
-                                    />
-                                    <PublicIconRenderer
-                                        iconName={social.icon}
-                                        size={20}
-                                        className="relative fill-current stroke-current transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/social:scale-110 group-hover/social:text-white motion-reduce:transition-none motion-reduce:group-hover/social:scale-100"
-                                    />
-                                </Link>
-                            ))}
-                        </div>
+                        {socialLinks.length > 0 ? (
+                            <nav aria-label="Social media">
+                                <h2 className="sr-only">Social media</h2>
+                                <ul className="flex flex-wrap gap-3">
+                                    {socialLinks.map((social) => (
+                                        <li key={`${social.icon}-${social.url}`}>
+                                            <a
+                                                href={social.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                aria-label={social.label ? `${social.label} (opens in a new tab)` : "Social profile (opens in a new tab)"}
+                                                title={social.label || undefined}
+                                                className="group/social relative grid size-11 place-items-center overflow-hidden rounded-full bg-base-100 text-base-content/65 shadow-sm ring-1 ring-base-300 transition-[transform,background-color,color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:bg-primary hover:text-white hover:shadow-[0_14px_28px_-12px] hover:shadow-primary/45 focus-visible:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:translate-y-0 active:scale-[0.96] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                                            >
+                                                <PublicIconRenderer
+                                                    iconName={social.icon}
+                                                    size={18}
+                                                    className="relative fill-current stroke-current transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/social:scale-110 group-hover/social:text-white motion-reduce:transition-none motion-reduce:group-hover/social:scale-100"
+                                                />
+                                                <span className="sr-only">{social.label || "Social profile"}</span>
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </nav>
+                        ) : null}
+                    </div>
 
-                        <div>
-                            <h2 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-base-content">{footerData.contactTitle}</h2>
-                            <ul className="space-y-4 text-sm font-medium">
+                    <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-10 lg:col-span-9 lg:pt-2">
+                        <FooterLinkColumn title={footerData.servicesTitle} links={footerData.servicesLinks} />
+                        <FooterLinkColumn title={footerData.resortsTitle} links={footerData.resortsLinks} />
+                        <FooterLinkColumn title={footerData.mediaTitle} links={footerData.mediaLinks} />
+                    </div>
+                </div>
+
+                <section className="mt-12 overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-sm">
+                    <div className="grid lg:grid-cols-2">
+                        <div className="flex flex-col justify-center gap-6 p-6 sm:p-8">
+                            <FooterHeading>{footerData.contactTitle || "Get In Touch"}</FooterHeading>
+                            <ul className="space-y-4">
                                 <li className="flex items-start gap-3">
-                                    <MapPin size={18} className="text-primary shrink-0" />
-                                    {mapsHref ? (
-                                        <a
-                                            href={mapsHref}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-base-content/70 whitespace-pre-line hover:text-primary transition-colors"
-                                        >
-                                            {address}
-                                        </a>
-                                    ) : (
-                                        <span className="text-base-content/70 whitespace-pre-line">{address}</span>
-                                    )}
+                                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                                        <MapPin size={18} aria-hidden />
+                                    </span>
+                                    {addressNode}
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <Phone size={18} className="mt-2.5 text-primary shrink-0" />
-                                    <div className="flex flex-col">
+                                    <span className="mt-0.5 grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                                        <Phone size={18} aria-hidden />
+                                    </span>
+                                    <div className="flex flex-col justify-center py-1">
                                         {contactPhones.map((phone, i) => (
                                             <a
                                                 key={`phone-${i}`}
                                                 href={`tel:${phone.replace(/\s/g, "")}`}
-                                                className="inline-flex items-center min-h-11 py-2.5 text-base-content/70 hover:text-primary transition-colors"
+                                                className="inline-flex items-center py-0.5 text-sm font-medium leading-5 text-base-content/80 transition-colors hover:text-primary"
                                             >
                                                 {phone}
                                             </a>
@@ -303,11 +398,13 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                                     </div>
                                 </li>
                                 {contactEmails.map((email, i) => (
-                                    <li key={`email-${i}`} className="flex items-center gap-3 min-h-11">
-                                        <Mail size={18} className="text-primary shrink-0" />
+                                    <li key={`email-${i}`} className="flex items-center gap-3">
+                                        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                                            <Mail size={18} aria-hidden />
+                                        </span>
                                         <a
                                             href={`mailto:${email}`}
-                                            className="inline-flex items-center min-h-11 py-2.5 text-base-content/70 hover:text-primary transition-colors break-all"
+                                            className="inline-flex min-h-11 items-center py-2 text-sm font-medium break-all text-base-content/80 transition-colors hover:text-primary"
                                         >
                                             {email}
                                         </a>
@@ -315,68 +412,11 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                                 ))}
                             </ul>
                         </div>
-                    </div>
-
-                    {/* Column 2: Quick Links */}
-                    <div>
-                        <h2 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-base-content">{footerData.servicesTitle}</h2>
-                        <ul className="space-y-1 text-sm font-medium">
-                            {footerData.servicesLinks?.map((link, i) => (
-                                <li key={i}>
-                                    <Link
-                                        href={link.url}
-                                        prefetch={false}
-                                        className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h2 className="mb-6 text-sm font-bold tracking-[0.2em] text-base-content uppercase">{footerData.resortsTitle}</h2>
-                        <ul className="space-y-1 text-sm font-medium">
-                            {footerData.resortsLinks?.map((link) => (
-                                <li key={link.url}>
-                                    <Link
-                                        href={link.url}
-                                        prefetch={false}
-                                        className="inline-flex min-h-11 items-center py-2.5 transition-colors hover:text-primary"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Column 4: Newsletter */}
-                    <div>
-                        <h2 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-base-content">{footerData.newsletterTitle}</h2>
-                        <p className="text-sm text-base-content/70 mb-4">{footerData.newsletterDescription}</p>
-                        <div className="form-control">
-                            <form className="relative group">
-                                <input
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    className="input input-bordered w-full rounded-full bg-base-100 focus:border-primary pr-12 text-sm"
-                                />
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary btn-circle btn-sm absolute right-1.5 top-1.5 shadow-lg shadow-primary/20"
-                                    aria-label="Subscribe"
-                                >
-                                    <Send size={14} className="text-white" />
-                                </button>
-                            </form>
-                        </div>
-                        <div className="mt-6 h-72 overflow-hidden rounded-2xl border border-base-300">
+                        <div className="min-h-72 border-t border-base-300 lg:border-t-0 lg:border-l">
                             <iframe
                                 src={mapEmbedSrc}
                                 title="Google Map Office Location"
-                                className="h-full w-full"
+                                className="h-72 w-full lg:h-full lg:min-h-80"
                                 style={{ border: 0 }}
                                 loading="lazy"
                                 allowFullScreen
@@ -384,51 +424,53 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                             />
                         </div>
                     </div>
-                </div>
+                </section>
 
-                {/* Certification & Authorization Section */}
-                <div className="mt-16 pt-8 border-t border-base-300">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                        <div className="text-center md:text-left">
-                            <h3 className="text-xs font-bold uppercase tracking-widest text-base-content/70 mb-4">{footerData.certificationsTitle}</h3>
-                            <div className="flex flex-wrap justify-center md:justify-start gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                                {footerData.certifications?.map((cert, i) => (
-                                    <AppImage
-                                        key={i}
-                                        src={cert.image}
-                                        alt={cert.name}
-                                        width={120}
-                                        height={40}
-                                        loading="lazy"
-                                        className="h-10 w-auto object-contain"
-                                    />
-                                ))}
-                            </div>
+                <div className="mt-10 grid gap-8 border-t border-base-300 pt-8 md:grid-cols-2 md:items-center">
+                    <div>
+                        <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-base-content/55">
+                            {footerData.certificationsTitle}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-5">
+                            {footerData.certifications?.map((cert, i) => (
+                                <AppImage
+                                    key={`${cert.name}-${i}`}
+                                    src={cert.image}
+                                    alt={cert.name}
+                                    width={120}
+                                    height={40}
+                                    loading="lazy"
+                                    className="h-10 w-auto object-contain opacity-70 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0"
+                                />
+                            ))}
                         </div>
-
-                        {/* Payment Methods */}
-                        <div className="text-center md:text-right">
-                            <h3 className="text-xs font-bold uppercase tracking-widest text-base-content/70 mb-4">{footerData.paymentsTitle}</h3>
-                            <div className="flex gap-3 justify-center md:justify-end opacity-70">
-                                <div className="bg-white px-2 py-1 rounded border border-base-300 text-[10px] font-bold text-black">VISA</div>
-                                <div className="bg-white px-2 py-1 rounded border border-base-300 text-[10px] font-bold text-black">MasterCard</div>
-                                <div className="bg-white px-2 py-1 rounded border border-base-300 text-[10px] font-bold text-black">Bkash</div>
-                            </div>
+                    </div>
+                    <div className="md:text-right">
+                        <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-base-content/55">
+                            {footerData.paymentsTitle}
+                        </h3>
+                        <div className="flex flex-wrap gap-2 md:justify-end">
+                            {["VISA", "MasterCard", "Bkash"].map((method) => (
+                                <span
+                                    key={method}
+                                    className="rounded-full bg-base-100 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-base-content ring-1 ring-base-300"
+                                >
+                                    {method}
+                                </span>
+                            ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Bottom Legal Section */}
-                <div className="mt-12 pt-8 border-t border-base-300 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-base-content/70">
+                <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-base-300 pt-6 text-center text-xs font-medium text-base-content/60 sm:flex-row sm:text-left">
                     <p>© {currentYear} {renderCopyright(footerData.copyrightText || defaultData.copyrightText || "")}</p>
-                    <div className="flex flex-wrap gap-x-6 gap-y-1">
-                        <Link href="/privacy" prefetch={false} className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors">Privacy Policy</Link>
-                        <Link href="/terms" prefetch={false} className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors">Terms of Service</Link>
-                        <Link href="/cookies" prefetch={false} className="inline-flex items-center min-h-11 py-2.5 hover:text-primary transition-colors">Cookie Policy</Link>
+                    <div className="flex flex-wrap justify-center gap-x-5 gap-y-1">
+                        <Link href="/privacy" prefetch={false} className="inline-flex min-h-11 items-center py-2 transition-colors hover:text-primary">Privacy Policy</Link>
+                        <Link href="/terms" prefetch={false} className="inline-flex min-h-11 items-center py-2 transition-colors hover:text-primary">Terms of Service</Link>
+                        <Link href="/cookies" prefetch={false} className="inline-flex min-h-11 items-center py-2 transition-colors hover:text-primary">Cookie Policy</Link>
                     </div>
                 </div>
             </div>
-
         </footer>
     );
 };

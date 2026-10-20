@@ -18,6 +18,10 @@ interface BlogPostAttributes {
   /** Optional SEO overrides (fall back to title / excerpt). */
   metaTitle: string | null;
   metaDescription: string | null;
+  /** Calendar date for Event posts (YYYY-MM-DD). */
+  eventDate: string | null;
+  /** Venue or city for Event posts. */
+  eventLocation: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -25,7 +29,14 @@ interface BlogPostAttributes {
 interface BlogPostCreationAttributes
   extends Optional<
     BlogPostAttributes,
-    'id' | 'status' | 'publishedAt' | 'metaTitle' | 'metaDescription' | 'slug'
+    | 'id'
+    | 'status'
+    | 'publishedAt'
+    | 'metaTitle'
+    | 'metaDescription'
+    | 'slug'
+    | 'eventDate'
+    | 'eventLocation'
   > {}
 
 class BlogPost
@@ -43,6 +54,8 @@ class BlogPost
   declare publishedAt: Date | null;
   declare metaTitle: string | null;
   declare metaDescription: string | null;
+  declare eventDate: string | null;
+  declare eventLocation: string | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -70,7 +83,7 @@ BlogPost.init(
     category: {
       type: DataTypes.STRING(120),
       allowNull: false,
-      defaultValue: 'Travel Tips',
+      defaultValue: 'Blog',
     },
     image: {
       type: DataTypes.TEXT,
@@ -95,6 +108,14 @@ BlogPost.init(
     },
     metaDescription: {
       type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    eventDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    eventLocation: {
+      type: DataTypes.STRING(200),
       allowNull: true,
     },
   },

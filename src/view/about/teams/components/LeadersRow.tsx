@@ -7,6 +7,7 @@ type Props = {
     eyebrow?: string;
     title?: string;
     description?: string;
+    messageLabel?: string;
 };
 
 export default function LeadersRow({
@@ -14,6 +15,7 @@ export default function LeadersRow({
     eyebrow = "Leadership",
     title = "Our Top Leaders",
     description = "Meet the visionaries steering Sun Tourism Ltd.",
+    messageLabel = "Message",
 }: Props) {
     const safeDirectors = (directors || []).filter(Boolean);
     if (safeDirectors.length === 0) return null;
@@ -49,6 +51,7 @@ export default function LeadersRow({
                     <LeaderPhotoCard
                         key={`${director.name}-${index}`}
                         director={director}
+                        messageLabel={messageLabel}
                     />
                 ))}
             </div>
@@ -56,7 +59,13 @@ export default function LeadersRow({
     );
 }
 
-function LeaderPhotoCard({ director }: { director: DirectorItem }) {
+function LeaderPhotoCard({
+    director,
+    messageLabel,
+}: {
+    director: DirectorItem;
+    messageLabel: string;
+}) {
     const name = (director.name || "").trim() || "Team Member";
     const title = (director.title || "").trim() || "Director";
     const message =
@@ -80,16 +89,9 @@ function LeaderPhotoCard({ director }: { director: DirectorItem }) {
                 />
                 <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
 
-                <div className="absolute left-3 top-3">
-                    <span className="inline-flex items-center gap-1 rounded-full border border-white/35 bg-white/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-primary shadow-sm backdrop-blur-md sm:text-[11px]">
-                        <Sparkles className="size-3" />
-                        {title}
-                    </span>
-                </div>
-
                 <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-5">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70 sm:text-xs">
-                        Leadership
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary sm:text-xs">
+                        {title}
                     </p>
                     <h3 className="mt-0.5 text-lg font-bold leading-tight text-white drop-shadow sm:text-2xl">
                         {name}
@@ -101,7 +103,7 @@ function LeaderPhotoCard({ director }: { director: DirectorItem }) {
                 <div className="mb-1.5 flex items-center gap-1.5">
                     <Quote className="size-3.5 text-primary/50" strokeWidth={2} />
                     <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-base-content/45">
-                        Message
+                        {messageLabel}
                     </span>
                 </div>
                 <p className="line-clamp-4 whitespace-pre-line text-sm leading-relaxed text-base-content/70 sm:line-clamp-5">

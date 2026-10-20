@@ -4,12 +4,15 @@ import sequelize from '@/src/lib/db';
 import { verifyAuth } from '@/src/lib/auth';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import {
+  ensureBlogPostsReady,
   getCachedBlogPostById,
   mapBlogRow,
   type BlogPostRecord,
 } from '@/src/lib/data/blog';
 import { TAG_BLOG_LIST, blogDetailTag, blogRouteTag } from '@/src/lib/revalidate-tags';
 import { allocateUniqueBlogSlug } from '@/src/lib/blog/slug';
+import { isMediaCategory, MEDIA_LISTINGS } from '@/src/lib/blog/categories';
+import { readEventFields } from '@/src/lib/blog/event-fields';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -30,6 +33,15 @@ function revalidateBlogCaches(prev: BlogPostRecord, next?: BlogPostRecord) {
     }
   }
   revalidatePath('/sitemap.xml');
+  for (const listing of MEDIA_LISTINGS) {
+    revalidatePath(listing.path);
+  }
+  if (prev.slug?.trim()) {
+    revalidatePath(`/blog/${prev.slug.trim()}`);
+  }
+  if (next?.slug?.trim()) {
+    revalidatePath(`/blog/${next.slug.trim()}`);
+  }
 }
 
 export async function GET(_: Request, { params }: Params) {
@@ -57,7 +69,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
     const { id } = await params;
     const body = (await request.json()) as Record<string, unknown>;
-    await sequelize.authenticate();
+    await ensureBlogPostsReady();
 
     const post = await BlogPost.findByPk(id);
 
@@ -77,6 +89,16 @@ export async function PUT(request: NextRequest, { params }: Params) {
       typeof body.category === 'string' && body.category.trim()
         ? body.category.trim()
         : prev.category;
+    if (!isMediaCategory(category) && category !== prev.category) {
+      return NextResponse.json(
+        { error: 'Category must be News, Event, Blog, or CSR.' },
+        { status: 400 }
+      );
+    }
+    const event = readEventFields(category, body);
+    if (event.error) {
+      return NextResponse.json({ error: event.error }, { status: 400 });
+    }
     const image =
       typeof body.image === 'string' && body.image.trim() ? body.image.trim() : prev.image;
     const content =
@@ -130,6 +152,8 @@ export async function PUT(request: NextRequest, { params }: Params) {
       publishedAt,
       metaTitle,
       metaDescription,
+      eventDate: event.fields.eventDate,
+      eventLocation: event.fields.eventLocation,
     });
     await post.reload();
     const next = mapBlogRow(post);

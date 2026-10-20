@@ -12,8 +12,8 @@ type TourFormPageShellProps = {
 
 export default function TourFormPageShell({ title, subtitle, children }: TourFormPageShellProps) {
   return (
-    <div className="mx-auto max-w-4xl space-y-8 px-4 pb-16 sm:px-6 lg:px-0">
-      <header className="flex flex-col gap-4 border-b border-slate-200/80 bg-gradient-to-b from-slate-50/80 to-transparent pb-8 sm:flex-row sm:items-start sm:justify-between">
+    <div className="w-full space-y-8 pb-8">
+      <header className="flex flex-col gap-4 border-b border-base-300 pb-5 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <Link
             href="/portal/admin/dashboard/tours"

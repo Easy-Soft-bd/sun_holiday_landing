@@ -54,10 +54,30 @@ export default function TeamsEditModal({ isOpen, onClose, initialData }: Props) 
     <Modal
       open={isOpen}
       onCancel={onClose}
-      footer={null}
       width={1080}
+      centered
       title="Edit Teams Page"
-      styles={{ body: { maxHeight: "80vh", overflowY: "auto", paddingTop: 16 } }}
+      styles={{
+        container: {
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: "calc(100vh - 32px)",
+        },
+        body: {
+          flex: "1 1 auto",
+          minHeight: 0,
+          overflowY: "auto",
+        },
+        footer: { flexShrink: 0, marginTop: 0 },
+      }}
+      footer={
+        <div className="flex justify-end gap-2">
+          <Button onClick={onClose}>Cancel</Button>
+          <Button type="primary" loading={saving} icon={<SaveOutlined />} onClick={() => form.submit()}>
+            Save Changes
+          </Button>
+        </div>
+      }
     >
       <Form form={form} layout="vertical" onFinish={onFinish} initialValues={defaultTeamsPageData}>
         <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 md:p-5">
@@ -86,6 +106,86 @@ export default function TeamsEditModal({ isOpen, onClose, initialData }: Props) 
               </Form.Item>
               <Form.Item label="Team Section Description" name="teamSectionDescription" rules={[{ required: true }]}>
                 <TextArea rows={4} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item label="Leaders Stat Label" name="leadersStatLabel" rules={[{ required: true }]}>
+                <Input placeholder="Leaders" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Members Stat Label" name="membersStatLabel" rules={[{ required: true }]}>
+                <Input placeholder="Members" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item label="Leadership Eyebrow" name="leadershipEyebrow" rules={[{ required: true }]}>
+                <Input placeholder="Leadership" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item label="Leadership Title" name="leadershipTitle" rules={[{ required: true }]}>
+                <Input placeholder="Our Top Leaders" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item label="Team Eyebrow" name="teamSectionEyebrow" rules={[{ required: true }]}>
+                <Input placeholder="Our Team" />
+              </Form.Item>
+            </Col>
+            <Col xs={24}>
+              <Form.Item label="Leadership Description" name="leadershipDescription" rules={[{ required: true }]}>
+                <TextArea rows={3} />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Leader Message Label" name="leaderMessageLabel" rules={[{ required: true }]}>
+                <Input placeholder="Message" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <h4 className="mb-4 mt-2 text-base font-semibold text-slate-900">Closing Section</h4>
+          <Row gutter={16}>
+            <Col xs={24} md={8}>
+              <Form.Item label="CTA Title Start" name="ctaTitleMain" rules={[{ required: true }]}>
+                <Input placeholder="Ready to" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item label="CTA Title Highlight" name="ctaTitleAccent" rules={[{ required: true }]}>
+                <Input placeholder="Travel" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item label="CTA Title End" name="ctaTitleEnd">
+                <Input placeholder="With Us?" />
+              </Form.Item>
+            </Col>
+            <Col xs={24}>
+              <Form.Item label="CTA Description" name="ctaDescription" rules={[{ required: true }]}>
+                <TextArea rows={3} />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Primary Button Text" name="ctaPrimaryLabel" rules={[{ required: true }]}>
+                <Input placeholder="Contact Us" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Primary Button Link" name="ctaPrimaryHref" rules={[{ required: true }]}>
+                <Input placeholder="/contact" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Secondary Button Text" name="ctaSecondaryLabel" rules={[{ required: true }]}>
+                <Input placeholder="Explore Tours" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Secondary Button Link" name="ctaSecondaryHref" rules={[{ required: true }]}>
+                <Input placeholder="/tours" />
               </Form.Item>
             </Col>
           </Row>
@@ -162,30 +262,18 @@ export default function TeamsEditModal({ isOpen, onClose, initialData }: Props) 
                         </Form.Item>
                       </Col>
                     </Row>
-                    <Form.Item className="mt-3" label="Description" name={[field.name, "description"]} rules={[{ required: true }]}>
-                      <TextArea rows={3} />
-                    </Form.Item>
                     <Button danger icon={<DeleteOutlined />} onClick={() => remove(field.name)}>
                       Remove card
                     </Button>
                   </div>
                 ))}
-                <Button icon={<PlusOutlined />} onClick={() => add({ name: "", position: "", image: "", description: "" })}>
+                <Button icon={<PlusOutlined />} onClick={() => add({ name: "", position: "", image: "" })}>
                   Add team card
                 </Button>
               </div>
             )}
           </Form.List>
         </div>
-
-        <Form.Item className="mb-0 mt-6">
-          <div className="flex justify-end gap-2">
-            <Button onClick={onClose}>Cancel</Button>
-            <Button type="primary" htmlType="submit" loading={saving} icon={<SaveOutlined />}>
-              Save Changes
-            </Button>
-          </div>
-        </Form.Item>
       </Form>
     </Modal>
   );

@@ -5,6 +5,7 @@ import sequelize from '@/src/lib/db';
 import { TAG_BLOG_LIST, blogDetailTag, blogRouteTag } from '@/src/lib/revalidate-tags';
 import { allocateUniqueBlogSlug } from '@/src/lib/blog/slug';
 import { SEED_BLOG_POSTS } from '@/src/view/blog/data/blogData';
+import { MEDIA_SAMPLE_POSTS } from '@/src/lib/blog/sample-posts';
 
 export type BlogPostRecord = {
   id: number;
@@ -18,6 +19,8 @@ export type BlogPostRecord = {
   publishedAt?: string | Date | null;
   metaTitle?: string | null;
   metaDescription?: string | null;
+  eventDate?: string | null;
+  eventLocation?: string | null;
   createdAt?: string | Date;
   updatedAt?: string | Date;
 };
@@ -36,6 +39,8 @@ export type BlogPostView = {
   updatedAt?: string;
   metaTitle?: string | null;
   metaDescription?: string | null;
+  eventDate?: string | null;
+  eventLocation?: string | null;
 };
 
 function toIso(value: unknown): string | undefined {
@@ -64,6 +69,8 @@ export function mapBlogRow(post: BlogPost): BlogPostRecord {
     metaTitle: plain.metaTitle ?? null,
     metaDescription: plain.metaDescription ?? null,
     publishedAt: plain.publishedAt ?? null,
+    eventDate: plain.eventDate ? String(plain.eventDate).slice(0, 10) : null,
+    eventLocation: plain.eventLocation?.trim() ? plain.eventLocation.trim() : null,
   };
 }
 
@@ -83,7 +90,31 @@ export function toBlogPostView(post: BlogPostRecord): BlogPostView {
     updatedAt: toIso(post.updatedAt),
     metaTitle: post.metaTitle ?? null,
     metaDescription: post.metaDescription ?? null,
+    eventDate: post.eventDate ?? null,
+    eventLocation: post.eventLocation ?? null,
   };
+}
+
+async function seedMediaSamples() {
+  for (const sample of MEDIA_SAMPLE_POSTS) {
+    const existing = await BlogPost.findOne({ where: { slug: sample.slug } });
+    if (existing) continue;
+    const publishedAt = new Date(`${sample.publishedAt}T00:00:00`);
+    await BlogPost.create({
+      title: sample.title,
+      slug: sample.slug,
+      excerpt: sample.excerpt,
+      category: sample.category,
+      image: sample.image,
+      content: sample.content.trim(),
+      status: 'Active',
+      publishedAt: Number.isNaN(publishedAt.getTime()) ? new Date() : publishedAt,
+      metaTitle: null,
+      metaDescription: null,
+      eventDate: sample.eventDate ?? null,
+      eventLocation: sample.eventLocation ?? null,
+    });
+  }
 }
 
 async function seedBlogPostsIfEmpty() {
@@ -108,15 +139,30 @@ async function seedBlogPostsIfEmpty() {
   }
 }
 
-async function ensureBlogTable() {
+async function ensureBlogColumn(column: string, ddl: string) {
+  try {
+    await sequelize.query(`ALTER TABLE \`blog_posts\` ADD COLUMN \`${column}\` ${ddl}`);
+  } catch (err: unknown) {
+    const e = err as { parent?: { errno?: number; sqlMessage?: string }; message?: string };
+    const errno = e?.parent?.errno;
+    const sqlMsg = String(e?.parent?.sqlMessage ?? e?.message ?? "");
+    if (errno === 1060 || sqlMsg.includes("Duplicate column name")) return;
+    throw err;
+  }
+}
+
+export async function ensureBlogPostsReady() {
   await sequelize.authenticate();
   await BlogPost.sync();
+  await ensureBlogColumn("eventDate", "DATE NULL");
+  await ensureBlogColumn("eventLocation", "VARCHAR(200) NULL");
   await seedBlogPostsIfEmpty();
+  await seedMediaSamples();
 }
 
 const getBlogPostsFromDb = unstable_cache(
   async () => {
-    await ensureBlogTable();
+    await ensureBlogPostsReady();
 
     const posts = await BlogPost.findAll({
       order: [
@@ -127,7 +173,7 @@ const getBlogPostsFromDb = unstable_cache(
 
     return posts.map((post) => mapBlogRow(post));
   },
-  ['blog', 'all'],
+  ['blog', 'all', 'media-samples'],
   {
     tags: [TAG_BLOG_LIST],
   }
@@ -160,7 +206,7 @@ export const getCachedBlogPostById = cache(async (id: string) => {
 });
 
 async function loadBlogByPublicParam(param: string): Promise<BlogPostRecord | null> {
-  await ensureBlogTable();
+  await ensureBlogPostsReady();
   const key = decodeURIComponent(param).trim();
   if (!key) {
     return null;

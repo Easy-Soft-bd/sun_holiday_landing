@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Home, Info, FileText, Ticket, MapPin, Mail, Hotel, ChevronDown, LayoutDashboard } from 'lucide-react';
+import { Menu, X, Home, Info, Briefcase, Mail, Hotel, ChevronDown, LayoutDashboard } from 'lucide-react';
 import Logo from '../common/Logo';
 
 interface NavProps {
@@ -30,17 +30,14 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             ]
         },
         {
-            name: "Visa",
-            href: "/visa",
-            icon: FileText,
+            name: "Service",
+            icon: Briefcase,
+            submenu: [
+                { name: "Visa", href: "/visa" },
+                { name: "Ticket", href: "/tickets" },
+                { name: "Tour", href: "/tours" },
+            ]
         },
-        { name: "Ticket", href: "/tickets", icon: Ticket },
-        {
-            name: "Tour",
-            href: "/tours",
-            icon: MapPin,
-        },
-        { name: "Contact", href: "/contact", icon: Mail },
         {
             name: "Resort",
             icon: Hotel,
@@ -155,11 +152,12 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                                 </Link>
                             ) : (
                                 <Link
-                                    href="/services"
+                                    href="/contact"
                                     prefetch={false}
-                                    className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-primary-content border-none"
+                                    className="btn btn-primary btn-sm md:btn-md rounded-full px-6 shadow-lg shadow-primary/20 text-primary-content border-none flex items-center gap-2"
                                 >
-                                    Our Services
+                                    <Mail size={18} />
+                                    Contact
                                 </Link>
                             )}
 
@@ -263,11 +261,12 @@ const Nav = ({ branding, admin = false }: NavProps) => {
                             </Link>
                         ) : (
                             <Link
-                                href="/services"
-                                className="btn btn-primary w-full rounded-full text-primary-content"
+                                href="/contact"
+                                className="btn btn-primary w-full rounded-full text-primary-content flex items-center justify-center gap-2"
                                 onClick={toggleDrawer}
                             >
-                                Our Services
+                                <Mail size={18} />
+                                Contact
                             </Link>
                         )}
                     </div>

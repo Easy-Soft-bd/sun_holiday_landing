@@ -1,6 +1,7 @@
 import type { BlogPostRecord } from '@/src/lib/data/blog';
 import { absoluteUrl, getDefaultSeo } from '@/src/lib/site';
 import { getBlogPublicPath } from '@/src/lib/blog/public-path';
+import { listingForCategory } from '@/src/lib/blog/categories';
 import { stripHtml } from '@/src/lib/html';
 
 type BlogJsonLdProps = {
@@ -21,9 +22,11 @@ export default function BlogJsonLd({ post }: BlogJsonLdProps) {
         : undefined;
   const modified = post.updatedAt ? new Date(post.updatedAt).toISOString() : published;
 
+  const listing = listingForCategory(post.category);
+
   const articleLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
+    '@type': listing.schemaType,
     headline: post.title,
     description,
     image: [absoluteUrl(post.image)],
@@ -52,6 +55,26 @@ export default function BlogJsonLd({ post }: BlogJsonLdProps) {
   if (published) articleLd.datePublished = published;
   if (modified) articleLd.dateModified = modified;
 
+  if (post.category === 'Event' && post.eventDate) {
+    articleLd['@type'] = 'Event';
+    articleLd.name = post.title;
+    articleLd.startDate = post.eventDate;
+    articleLd.eventAttendanceMode = 'https://schema.org/OfflineEventAttendanceMode';
+    articleLd.eventStatus = 'https://schema.org/EventScheduled';
+    articleLd.organizer = {
+      '@type': 'Organization',
+      name: siteName,
+      url: absoluteUrl('/'),
+    };
+    if (post.eventLocation) {
+      articleLd.location = {
+        '@type': 'Place',
+        name: post.eventLocation,
+        address: post.eventLocation,
+      };
+    }
+  }
+
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -65,8 +88,8 @@ export default function BlogJsonLd({ post }: BlogJsonLdProps) {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Blog',
-        item: absoluteUrl('/blog'),
+        name: listing.label,
+        item: absoluteUrl(listing.path),
       },
       {
         '@type': 'ListItem',
@@ -82,12 +105,12 @@ export default function BlogJsonLd({ post }: BlogJsonLdProps) {
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd).replace(/</g, '\\u003c') }}
       />
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd).replace(/</g, '\\u003c') }}
       />
     </>
   );

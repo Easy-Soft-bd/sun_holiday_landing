@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { App, Table, Button, Space, Input, Tag, Popconfirm, Card, Row, Col, Statistic } from 'antd';
+import { App, Table, Button, Space, Input, Tag, Popconfirm, Card, Row, Col, Statistic, Select } from 'antd';
 import {
   PlusOutlined,
   SearchOutlined,
@@ -26,11 +26,14 @@ interface BlogRow {
   status: string;
   image: string;
   publishedAt?: string | null;
+  eventDate?: string | null;
+  eventLocation?: string | null;
 }
 
 export default function BlogManagementPage() {
   const { message } = App.useApp();
   const [searchText, setSearchText] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('All');
   const [posts, setPosts] = useState<BlogRow[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +52,8 @@ export default function BlogManagementPage() {
           status: String(post.status ?? 'Draft'),
           image: String(post.image ?? ''),
           publishedAt: post.publishedAt ? String(post.publishedAt) : null,
+          eventDate: post.eventDate ? String(post.eventDate).slice(0, 10) : null,
+          eventLocation: post.eventLocation ? String(post.eventLocation) : null,
         }));
         setPosts(formattedData);
       } else {
@@ -89,12 +94,19 @@ export default function BlogManagementPage() {
       dataIndex: 'title',
       key: 'title',
       render: (text, record) => (
-        <Link
-          href={`/portal/admin/dashboard/blog/${record.id}/edit`}
-          className="font-medium hover:underline"
-        >
-          {text}
-        </Link>
+        <div>
+          <Link
+            href={`/portal/admin/dashboard/blog/${record.id}/edit`}
+            className="font-medium hover:underline"
+          >
+            {text}
+          </Link>
+          {record.category === 'Event' && (record.eventDate || record.eventLocation) ? (
+            <div className="mt-1 text-xs text-slate-500">
+              {[record.eventDate, record.eventLocation].filter(Boolean).join(' · ')}
+            </div>
+          ) : null}
+        </div>
       ),
     },
     {
@@ -183,21 +195,28 @@ export default function BlogManagementPage() {
 
   const filteredPosts = useMemo(() => {
     const q = searchText.trim().toLowerCase();
-    if (!q) return posts;
-    return posts.filter(
-      (p) =>
+    return posts.filter((p) => {
+      const matchesCategory =
+        categoryFilter === 'All' ||
+        (categoryFilter === 'Other'
+          ? !['News', 'Event', 'Blog', 'CSR'].includes(p.category)
+          : p.category === categoryFilter);
+      if (!matchesCategory) return false;
+      if (!q) return true;
+      return (
         p.title.toLowerCase().includes(q) ||
         p.slug.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q)
-    );
-  }, [posts, searchText]);
+      );
+    });
+  }, [posts, searchText, categoryFilter]);
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Blog Management</h1>
-          <p className="text-sm text-gray-500">Write, edit, and publish travel stories.</p>
+          <p className="text-sm text-gray-500">Write and publish News, Events, Blog posts, and CSR stories.</p>
         </div>
         <Link href="/portal/admin/dashboard/blog/add">
           <Button type="primary" icon={<PlusOutlined />} size="large" className="bg-primary">
@@ -248,13 +267,26 @@ export default function BlogManagementPage() {
       </Row>
 
       <div className="rounded-lg bg-white p-4 shadow-sm">
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row">
           <Input
             placeholder="Search posts by title, slug, or category…"
             prefix={<SearchOutlined className="text-gray-400" />}
             className="max-w-md"
             allowClear
             onChange={(e) => setSearchText(e.target.value)}
+          />
+          <Select
+            value={categoryFilter}
+            onChange={setCategoryFilter}
+            className="w-full sm:w-44"
+            options={[
+              { value: 'All', label: 'All categories' },
+              { value: 'News', label: 'News' },
+              { value: 'Event', label: 'Event' },
+              { value: 'Blog', label: 'Blog' },
+              { value: 'CSR', label: 'CSR' },
+              { value: 'Other', label: 'Older categories' },
+            ]}
           />
         </div>
 

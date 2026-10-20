@@ -5,7 +5,7 @@ import { BlogPost } from "./data/blogData";
 
 export default function BlogDetailView({ post }: { post: BlogPost }) {
     return (
-        <main className="bg-base-100 min-h-screen">
+        <main className="min-h-screen bg-base-200/40">
             <BlogDetailHero post={post} />
             <BlogContent post={post} />
         </main>

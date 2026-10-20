@@ -24,14 +24,7 @@ import { uploadImage } from "@/app/portal/admin/dashboard/tours/add/components/u
 const { Text } = Typography;
 const { TextArea } = Input;
 
-const CATEGORY_OPTIONS = [
-  "Travel Tips",
-  "Hajj & Umrah",
-  "International",
-  "Visa Guide",
-  "Resorts",
-  "Domestic",
-];
+const CATEGORY_OPTIONS = ["News", "Event", "Blog", "CSR"] as const;
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 
@@ -44,18 +37,27 @@ type BlogFormValues = {
   content: string;
   status: "Draft" | "Active" | "Inactive";
   publishedAt?: Dayjs | null;
+  eventDate?: Dayjs | null;
+  eventLocation?: string;
   metaTitle?: string;
   metaDescription?: string;
 };
 
-const INITIAL_VALUES: Partial<BlogFormValues> = {
-  status: "Draft",
-  category: "Travel Tips",
+const CATEGORY_HINTS: Record<(typeof CATEGORY_OPTIONS)[number], string> = {
+  News: "Announcements",
+  Event: "Date and place",
+  Blog: "Stories",
+  CSR: "Community",
 };
 
-const cardClass = "!rounded-2xl border border-slate-200/90 bg-white shadow-sm shadow-slate-900/5";
-const cardHeadClass = "!border-b !border-slate-100 !py-4 !px-6";
-const cardBodyClass = "!px-6 !pb-6 !pt-2";
+const INITIAL_VALUES: Partial<BlogFormValues> = {
+  status: "Draft",
+  category: "Blog",
+};
+
+const cardClass = "!rounded-2xl !border !border-base-300 !bg-base-100 shadow-sm";
+const cardHeadClass = "!border-b !border-base-300 !bg-base-100 !py-4 !px-6";
+const cardBodyClass = "!bg-base-100 !px-6 !pb-6 !pt-4";
 
 type BlogPostFormProps = {
   postId?: string;
@@ -74,6 +76,12 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
   const isEdit = Boolean(postId);
   const title = Form.useWatch("title", form);
   const slug = Form.useWatch("slug", form);
+  const categoryValue = Form.useWatch("category", form);
+  const imageValue = Form.useWatch("image", form);
+  const isEvent = categoryValue === "Event";
+  const categoryOptions = Array.from(
+    new Set<string>([...CATEGORY_OPTIONS, ...(categoryValue ? [categoryValue] : [])]),
+  );
 
   useEffect(() => {
     if (!postId) {
@@ -98,7 +106,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
             title: String(raw.title ?? ""),
             slug: String(raw.slug ?? ""),
             excerpt: String(raw.excerpt ?? ""),
-            category: String(raw.category ?? "Travel Tips"),
+            category: String(raw.category ?? "Blog"),
             image: String(raw.image ?? ""),
             content: String(raw.content ?? ""),
             status:
@@ -106,6 +114,8 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
                 ? raw.status
                 : "Draft",
             publishedAt: raw.publishedAt ? dayjs(String(raw.publishedAt)) : null,
+            eventDate: raw.eventDate ? dayjs(String(raw.eventDate).slice(0, 10)) : null,
+            eventLocation: raw.eventLocation ? String(raw.eventLocation) : "",
             metaTitle: raw.metaTitle ? String(raw.metaTitle) : "",
             metaDescription: raw.metaDescription ? String(raw.metaDescription) : "",
           });
@@ -198,6 +208,8 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
         content: values.content,
         status: values.status,
         publishedAt: values.publishedAt ? values.publishedAt.toISOString() : null,
+        eventDate: values.category === "Event" && values.eventDate ? values.eventDate.format("YYYY-MM-DD") : null,
+        eventLocation: values.category === "Event" ? values.eventLocation?.trim() || null : null,
         metaTitle: values.metaTitle?.trim() || null,
         metaDescription: values.metaDescription?.trim() || null,
       };
@@ -235,187 +247,237 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
           <p className="text-sm text-slate-500">Loading post…</p>
         </div>
       ) : (
-        <>
-          <Card
-            title="Post details"
-            className={cardClass}
-            classNames={{ header: cardHeadClass, body: cardBodyClass }}
-          >
-            <Form.Item
-              name="title"
-              label="Title"
-              rules={[{ required: true, message: "Please enter a title" }]}
+        <div className="grid w-full items-start gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]">
+          <div className="flex flex-col gap-8">
+            <Card
+              title="Story"
+              className={cardClass}
+              classNames={{ header: cardHeadClass, body: cardBodyClass }}
             >
-              <Input placeholder="Post title" size="large" className="!rounded-lg" />
-            </Form.Item>
-
-            <Form.Item
-              label="URL slug"
-              required
-              help={
-                slugHint === "taken"
-                  ? suggestion
-                    ? `Slug is taken. Try “${suggestion}”.`
-                    : "Slug is already in use."
-                  : slugHint === "ok"
-                    ? "Slug is available."
-                    : "Used in /blog/your-slug — keep it short and descriptive."
-              }
-              validateStatus={slugHint === "taken" ? "error" : slugHint === "ok" ? "success" : undefined}
-            >
-              <Space.Compact className="w-full">
-                <Input
-                  size="large"
-                  value="/blog/"
-                  disabled
-                  className="!w-auto !min-w-[4.5rem] !rounded-lg !bg-slate-50 !text-slate-500"
-                />
-                <Form.Item
-                  name="slug"
-                  noStyle
-                  rules={[
-                    { required: true, message: "Please enter a slug" },
-                    {
-                      pattern: SLUG_PATTERN,
-                      message: "Use lowercase letters, numbers, and hyphens only",
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder="url-friendly-slug"
-                    size="large"
-                    className="!rounded-lg font-mono"
-                    onChange={() => {
-                      slugTouchedRef.current = true;
-                    }}
-                  />
-                </Form.Item>
-              </Space.Compact>
-            </Form.Item>
-
-            <Form.Item
-              name="excerpt"
-              label="Excerpt"
-              rules={[{ required: true, message: "Please enter an excerpt" }]}
-              help="Shown on the blog listing and as the default meta description."
-            >
-              <TextArea rows={3} placeholder="Short summary for cards and SEO…" className="!rounded-lg" />
-            </Form.Item>
-
-            <div className="grid gap-4 sm:grid-cols-2">
               <Form.Item
-                name="category"
-                label="Category"
-                rules={[{ required: true, message: "Please choose a category" }]}
+                name="title"
+                label="Title"
+                rules={[{ required: true, message: "Please enter a title" }]}
               >
-                <Select
-                  size="large"
-                  showSearch
-                  allowClear={false}
-                  options={CATEGORY_OPTIONS.map((c) => ({ value: c, label: c }))}
-                  placeholder="Select category"
-                />
+                <Input placeholder="Post title" size="large" className="!rounded-lg" />
               </Form.Item>
 
               <Form.Item
-                name="status"
-                label="Status"
-                rules={[{ required: true }]}
+                label="URL slug"
+                required
+                help={
+                  slugHint === "taken"
+                    ? suggestion
+                      ? `Slug is taken. Try “${suggestion}”.`
+                      : "Slug is already in use."
+                    : slugHint === "ok"
+                      ? "Slug is available."
+                      : "Used in /blog/your-slug — keep it short and descriptive."
+                }
+                validateStatus={slugHint === "taken" ? "error" : slugHint === "ok" ? "success" : undefined}
               >
+                <Space.Compact className="w-full">
+                  <Input
+                    size="large"
+                    value="/blog/"
+                    disabled
+                    className="!w-auto !min-w-[4.5rem] !rounded-lg !bg-slate-50 !text-slate-500"
+                  />
+                  <Form.Item
+                    name="slug"
+                    noStyle
+                    rules={[
+                      { required: true, message: "Please enter a slug" },
+                      {
+                        pattern: SLUG_PATTERN,
+                        message: "Use lowercase letters, numbers, and hyphens only",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="url-friendly-slug"
+                      size="large"
+                      className="!rounded-lg font-mono"
+                      onChange={() => {
+                        slugTouchedRef.current = true;
+                      }}
+                    />
+                  </Form.Item>
+                </Space.Compact>
+              </Form.Item>
+
+              <Form.Item
+                name="excerpt"
+                label="Excerpt"
+                rules={[{ required: true, message: "Please enter an excerpt" }]}
+                help="Shown on listing cards and used as the default search description."
+              >
+                <TextArea rows={3} placeholder="Short summary for cards and search…" className="!rounded-lg" />
+              </Form.Item>
+
+              <Form.Item
+                name="content"
+                label="Content"
+                rules={[{ required: true, message: "Please write the article content" }]}
+              >
+                <RichTextEditor
+                  variant="full"
+                  placeholder="Write the article…"
+                  uploadImage={(file) => uploadImage(file, "blog")}
+                />
+              </Form.Item>
+            </Card>
+
+            <Card
+              title="Search snippet"
+              className={cardClass}
+              classNames={{ header: cardHeadClass, body: cardBodyClass }}
+            >
+              <Text type="secondary" className="mb-4 block text-sm">
+                Optional. Leave blank to use the title and excerpt.
+              </Text>
+              <Form.Item name="metaTitle" label="Meta title">
+                <Input placeholder="Custom search title" size="large" className="!rounded-lg" maxLength={70} showCount />
+              </Form.Item>
+              <Form.Item name="metaDescription" label="Meta description">
+                <TextArea
+                  rows={3}
+                  placeholder="Custom search description"
+                  className="!rounded-lg"
+                  maxLength={160}
+                  showCount
+                />
+              </Form.Item>
+            </Card>
+          </div>
+
+          <aside className="flex flex-col gap-8 lg:sticky lg:top-4">
+            <Card
+              title="Publishing"
+              className={cardClass}
+              classNames={{ header: cardHeadClass, body: cardBodyClass }}
+            >
+              <div className="mb-2 text-sm text-slate-700">Category</div>
+              <div className="mb-2 grid grid-cols-2 gap-2">
+                {categoryOptions.map((option) => {
+                  const selected = categoryValue === option;
+                  const hint = CATEGORY_HINTS[option as (typeof CATEGORY_OPTIONS)[number]];
+                  return (
+                    <button
+                      key={option}
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => form.setFieldValue("category", option)}
+                      className={`rounded-xl border px-3 py-2.5 text-left transition-colors ${
+                        selected
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-base-300 bg-base-100 text-base-content hover:border-primary/40"
+                      }`}
+                    >
+                      <span className="block text-sm font-semibold">{option}</span>
+                      {hint ? <span className="mt-0.5 block text-xs font-normal text-slate-500">{hint}</span> : null}
+                    </button>
+                  );
+                })}
+              </div>
+              <Form.Item
+                name="category"
+                className="!mb-3"
+                rules={[{ required: true, message: "Please choose a category" }]}
+              >
+                <input type="hidden" />
+              </Form.Item>
+
+              <div className={isEvent ? "mb-4 rounded-xl border border-amber-200 bg-amber-50 p-3" : "hidden"}>
+                <p className="mb-3 text-sm font-semibold text-amber-950">Event details</p>
+                <Form.Item
+                  name="eventDate"
+                  label="Event date"
+                  rules={isEvent ? [{ required: true, message: "Choose the event date" }] : []}
+                >
+                  <DatePicker className="w-full" size="large" format="MMM D, YYYY" />
+                </Form.Item>
+                <Form.Item
+                  name="eventLocation"
+                  label="Location"
+                  className="!mb-0"
+                  rules={isEvent ? [{ required: true, message: "Enter the event location" }] : []}
+                >
+                  <Input placeholder="Venue, city" size="large" className="!rounded-lg" maxLength={200} />
+                </Form.Item>
+              </div>
+
+              <Form.Item name="status" label="Status" rules={[{ required: true }]}>
                 <Select size="large">
                   <Select.Option value="Draft">Draft</Select.Option>
-                  <Select.Option value="Active">Active (published)</Select.Option>
+                  <Select.Option value="Active">Active</Select.Option>
                   <Select.Option value="Inactive">Inactive</Select.Option>
                 </Select>
               </Form.Item>
+
+              <Form.Item
+                name="publishedAt"
+                label="Publish date"
+                className="!mb-0"
+                help="When the story goes live. Defaults to now the first time it is Active."
+              >
+                <DatePicker showTime className="w-full" size="large" />
+              </Form.Item>
+            </Card>
+
+            <Card
+              title="Cover"
+              className={cardClass}
+              classNames={{ header: cardHeadClass, body: cardBodyClass }}
+            >
+              {imageValue ? (
+                <img
+                  src={imageValue}
+                  alt=""
+                  className="mb-3 h-36 w-full rounded-xl object-cover"
+                />
+              ) : (
+                <div className="mb-3 flex h-36 items-center justify-center rounded-xl border border-dashed border-base-300 bg-base-200 text-sm text-base-content/50">
+                  No cover yet
+                </div>
+              )}
+              <Upload
+                maxCount={1}
+                showUploadList={false}
+                beforeUpload={async (file) => {
+                  try {
+                    const url = await uploadImage(file as File, "blog");
+                    form.setFieldValue("image", url);
+                    message.success("Image uploaded");
+                  } catch {
+                    message.error("Failed to upload image");
+                  }
+                  return false;
+                }}
+              >
+                <Button icon={<UploadOutlined />} className="mb-3">
+                  Upload image
+                </Button>
+              </Upload>
+              <Form.Item
+                name="image"
+                className="!mb-0"
+                rules={[{ required: true, message: "Please upload or enter an image URL" }]}
+              >
+                <Input placeholder="Or paste an image URL" size="large" className="!rounded-lg" />
+              </Form.Item>
+            </Card>
+
+            <div className="flex flex-col gap-2">
+              <Button type="primary" htmlType="submit" size="large" loading={loading} block>
+                {isEdit ? "Save changes" : "Create post"}
+              </Button>
+              <Button size="large" block onClick={() => router.push("/portal/admin/dashboard/blog")}>
+                Cancel
+              </Button>
             </div>
-
-            <Form.Item
-              name="publishedAt"
-              label="Publish date"
-              help="Used for display date and SEO article timestamps. Defaults to now when first published."
-            >
-              <DatePicker showTime className="w-full" size="large" />
-            </Form.Item>
-          </Card>
-
-          <Card
-            title="Cover & content"
-            className={`${cardClass} mt-6`}
-            classNames={{ header: cardHeadClass, body: cardBodyClass }}
-          >
-            <Form.Item label="Cover image" required help="Upload an image or paste a URL">
-              <Space orientation="vertical" className="w-full">
-                <Upload
-                  maxCount={1}
-                  listType="picture-card"
-                  beforeUpload={async (file) => {
-                    try {
-                      const url = await uploadImage(file as File, "blog");
-                      form.setFieldValue("image", url);
-                      message.success("Image uploaded successfully");
-                    } catch {
-                      message.error("Failed to upload image");
-                    }
-                    return false;
-                  }}
-                >
-                  <div>
-                    <UploadOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                </Upload>
-                <Form.Item
-                  name="image"
-                  rules={[{ required: true, message: "Please upload or enter image URL" }]}
-                  noStyle
-                >
-                  <Input placeholder="Or paste image URL here" size="large" className="!rounded-lg" />
-                </Form.Item>
-              </Space>
-            </Form.Item>
-
-            <Form.Item
-              name="content"
-              label="Content"
-              rules={[{ required: true, message: "Please write the article content" }]}
-              help="Formatting in the editor matches what visitors will see."
-            >
-              <RichTextEditor placeholder="Write your travel story…" enableHeadings />
-            </Form.Item>
-          </Card>
-
-          <Card
-            title="SEO (optional)"
-            className={`${cardClass} mt-6`}
-            classNames={{ header: cardHeadClass, body: cardBodyClass }}
-          >
-            <Text type="secondary" className="mb-4 block text-sm">
-              Leave blank to use the post title and excerpt. Overrides apply to the page title, Open Graph, and Twitter cards.
-            </Text>
-            <Form.Item name="metaTitle" label="Meta title">
-              <Input placeholder="Custom SEO title" size="large" className="!rounded-lg" maxLength={70} showCount />
-            </Form.Item>
-            <Form.Item name="metaDescription" label="Meta description">
-              <TextArea
-                rows={3}
-                placeholder="Custom SEO description (≈155 characters)"
-                className="!rounded-lg"
-                maxLength={160}
-                showCount
-              />
-            </Form.Item>
-          </Card>
-
-          <div className="mt-8 flex flex-wrap items-center justify-end gap-3">
-            <Button size="large" onClick={() => router.push("/portal/admin/dashboard/blog")}>
-              Cancel
-            </Button>
-            <Button type="primary" htmlType="submit" size="large" loading={loading}>
-              {isEdit ? "Save changes" : "Create post"}
-            </Button>
-          </div>
-        </>
+          </aside>
+        </div>
       )}
     </Form>
   );

@@ -1,89 +1,86 @@
-"use client";
-
-import { useState } from "react";
+import Link from "next/link";
 import BlogHero from "./components/BlogHero";
 import BlogCard from "./components/BlogCard";
 import type { BlogPostView } from "@/src/lib/data/blog";
-import { Mail, Send } from "lucide-react";
+import { MEDIA_LISTINGS, type MediaListingKey } from "@/src/lib/blog/categories";
 
 type BlogViewProps = {
   posts: BlogPostView[];
+  listingKey: MediaListingKey;
 };
 
-export default function BlogView({ posts }: BlogViewProps) {
-  const categories = ["All", ...Array.from(new Set(posts.map((p) => p.category)))];
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  const filteredPosts =
-    activeCategory === "All" ? posts : posts.filter((p) => p.category === activeCategory);
+export default function BlogView({ posts, listingKey }: BlogViewProps) {
+  const listing = MEDIA_LISTINGS.find((item) => item.key === listingKey) ?? MEDIA_LISTINGS[2];
+  const [featured, ...rest] = posts;
 
   return (
-    <main className="bg-base-100 min-h-screen pb-24">
-      <BlogHero />
+    <main className="min-h-screen bg-base-200/40 pb-16 md:pb-20">
+      <BlogHero
+        eyebrow={listing.eyebrow}
+        heading={listing.heading}
+        headingHighlight={listing.headingHighlight}
+        intro={listing.intro}
+      />
 
-      <div className="container mx-auto px-4">
-        <div className="mb-16 flex flex-wrap justify-center gap-3">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => setActiveCategory(cat)}
-              className={`rounded-full border-2 px-8 py-3 text-sm font-bold transition-all ${
-                activeCategory === cat
-                  ? "scale-105 border-primary bg-primary text-white shadow-lg shadow-primary/20"
-                  : "border-base-200 bg-white text-base-content/60 hover:border-primary/30 hover:text-primary"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <nav aria-label="Media categories" className="-mx-4 mb-8 overflow-x-auto px-4 md:mx-0 md:mb-10 md:overflow-visible md:px-0">
+          <div className="flex w-max gap-2 md:w-auto md:flex-wrap">
+            {MEDIA_LISTINGS.map((item) => {
+              const current = item.key === listing.key;
+              return (
+                <Link
+                  key={item.key}
+                  href={item.path}
+                  aria-current={current ? "page" : undefined}
+                  className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold transition-colors ${
+                    current
+                      ? "border-primary bg-primary text-primary-content"
+                      : "border-base-300 bg-base-100 text-base-content/70 hover:border-primary/40 hover:text-primary"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
 
-        {filteredPosts.length === 0 ? (
-          <div className="mb-24 rounded-[2rem] border border-dashed border-base-300 bg-base-50 px-8 py-20 text-center">
-            <p className="text-lg font-medium text-base-content/60">
+        {posts.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-base-300 bg-base-100 px-6 py-16 text-center sm:px-8">
+            <p className="text-base font-medium text-base-content/60 sm:text-lg">
               No stories published yet. Check back soon.
             </p>
           </div>
         ) : (
-          <div className="mb-24 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {filteredPosts.map((post) => (
-              <BlogCard key={post.slug || post.id} post={post} />
-            ))}
+          <div className="space-y-6 md:space-y-8">
+            {featured ? <BlogCard post={featured} featured /> : null}
+            {rest.length > 0 ? (
+              <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
+                {rest.map((post) => (
+                  <BlogCard key={post.slug || post.id} post={post} />
+                ))}
+              </div>
+            ) : null}
           </div>
         )}
 
-        <section className="relative overflow-hidden rounded-[3rem] bg-slate-900 px-6 py-20 text-center shadow-2xl">
-          <div className="absolute inset-0 -z-10 opacity-20">
-            <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-primary blur-[100px]" />
-            <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-secondary blur-[100px]" />
-          </div>
-
-          <div className="mx-auto max-w-3xl space-y-8">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-primary backdrop-blur-md">
-              <Mail size={32} />
-            </div>
-            <h2 className="font-magmawave text-4xl text-white md:text-5xl">
-              Subscribe to Our <span className="text-secondary">Newsletter</span>
+        <section className="mt-12 rounded-3xl border border-base-200 bg-base-100 px-5 py-8 sm:px-8 sm:py-10 md:mt-16 md:flex md:items-center md:justify-between md:gap-8">
+          <div className="max-w-xl">
+            <p className="mb-2 text-xs font-bold tracking-[0.18em] text-primary uppercase">Sun Tourism Ltd</p>
+            <h2 className="font-magmawave text-2xl tracking-tight sm:text-3xl">
+              Plan the trip behind the story
             </h2>
-            <p className="text-lg text-white/60">
-              Join 10,000+ travel enthusiasts. Get the latest stories and exclusive offers delivered
-              straight to your inbox.
+            <p className="mt-2 text-sm leading-relaxed text-base-content/70 sm:text-base">
+              Ask about tours, tickets, and visas with the same team that publishes these stories.
             </p>
-
-            <div className="group relative mx-auto max-w-md pt-4">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                className="w-full rounded-full border border-white/10 bg-white/5 px-8 py-5 font-medium text-white transition-all focus:border-primary focus:bg-white/10 focus:outline-none"
-              />
-              <button
-                type="button"
-                className="absolute top-[calc(1rem+8px)] right-2 rounded-full bg-primary p-3.5 text-white shadow-lg shadow-primary/30 transition-all hover:bg-secondary active:scale-95"
-              >
-                <Send size={20} />
-              </button>
-            </div>
+          </div>
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row md:mt-0 md:shrink-0">
+            <Link href="/contact" className="btn btn-primary min-h-11 rounded-full px-6">
+              Contact
+            </Link>
+            <Link href="/tours" className="btn btn-outline min-h-11 rounded-full px-6">
+              View tours
+            </Link>
           </div>
         </section>
       </div>

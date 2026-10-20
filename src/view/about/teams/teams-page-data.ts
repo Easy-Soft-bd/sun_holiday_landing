@@ -9,7 +9,6 @@ export type TeamItem = {
   name: string;
   position: string;
   image: string;
-  description?: string;
 };
 
 export type TeamsPageData = {
@@ -18,10 +17,25 @@ export type TeamsPageData = {
   heroTitleAccent: string;
   heroTitleSub: string;
   heroDescription: string;
+  leadersStatLabel: string;
+  membersStatLabel: string;
+  leadershipEyebrow: string;
+  leadershipTitle: string;
+  leadershipDescription: string;
+  leaderMessageLabel: string;
   directors: DirectorItem[];
+  teamSectionEyebrow: string;
   teamSectionTitle: string;
   teamSectionDescription: string;
   teams: TeamItem[];
+  ctaTitleMain: string;
+  ctaTitleAccent: string;
+  ctaTitleEnd: string;
+  ctaDescription: string;
+  ctaPrimaryLabel: string;
+  ctaPrimaryHref: string;
+  ctaSecondaryLabel: string;
+  ctaSecondaryHref: string;
 };
 
 export const defaultTeamsPageData: TeamsPageData = {
@@ -31,6 +45,12 @@ export const defaultTeamsPageData: TeamsPageData = {
   heroTitleSub: "Behind Your Journey",
   heroDescription:
     "The dedicated professionals working tirelessly to craft unforgettable travel experiences just for you.",
+  leadersStatLabel: "Leaders",
+  membersStatLabel: "Members",
+  leadershipEyebrow: "Leadership",
+  leadershipTitle: "Our Top Leaders",
+  leadershipDescription: "Meet the visionaries steering Sun Tourism Ltd.",
+  leaderMessageLabel: "Message",
   directors: [
     {
       name: "Md. Ferdous",
@@ -57,6 +77,7 @@ export const defaultTeamsPageData: TeamsPageData = {
         "As the Managing Director of our Sun Tourism Ltd, I wanted to take a moment to express my gratitude for your trust and loyalty as one of our valued travelers.",
     },
   ],
+  teamSectionEyebrow: "Our Team",
   teamSectionTitle: "Our Valuable Team",
   teamSectionDescription:
     "Professionals in various designations, each playing a crucial role in ensuring exceptional service.",
@@ -66,43 +87,45 @@ export const defaultTeamsPageData: TeamsPageData = {
       position: "Head Of Marketing",
       image:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000&auto=format&fit=crop",
-      description: "Leading our marketing initiatives and brand strategy.",
     },
     {
       name: "Farzana Rahman",
       position: "Travel Consultant",
       image:
         "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1000&auto=format&fit=crop",
-      description:
-        "Specialized in curated international and domestic travel plans.",
     },
     {
       name: "Nafis Ahmed",
       position: "Tour Coordinator",
       image:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop",
-      description: "Coordinates logistics, hotels, transfers, and day plans.",
     },
     {
       name: "Sumaiya Kabir",
       position: "Customer Service Representative",
       image:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1000&auto=format&fit=crop",
-      description: "Supports travelers before, during, and after every trip.",
     },
     {
       name: "Rakib Hasan",
       position: "Operations Team",
       image:
         "https://images.unsplash.com/photo-1463453091185-61582044d556?q=80&w=1000&auto=format&fit=crop",
-      description: "Ensures smooth day-to-day travel operations.",
     },
     {
       name: "Nabila Islam",
       position: "Finance and Administration",
       image:
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000&auto=format&fit=crop",
-      description: "Handles accounting and administrative coordination.",
     },
   ],
+  ctaTitleMain: "Ready to",
+  ctaTitleAccent: "Travel",
+  ctaTitleEnd: "With Us?",
+  ctaDescription:
+    "Our team is here to plan your next journey — from first enquiry to a seamless return home.",
+  ctaPrimaryLabel: "Contact Us",
+  ctaPrimaryHref: "/contact",
+  ctaSecondaryLabel: "Explore Tours",
+  ctaSecondaryHref: "/tours",
 };
