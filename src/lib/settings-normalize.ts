@@ -66,14 +66,95 @@ export function normalizeSettingsPlain(
   } as NormalizedSettings;
 }
 
-/** Prefer an embed URL for iframes; otherwise return null so UI can fall back. */
+function mapsEmbedQuery(query: string, zoom = 16): string {
+  const z = Number.isFinite(zoom) && zoom > 0 ? Math.round(zoom) : 16;
+  return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=${z}&hl=en&output=embed`;
+}
+
+function extractMapsUrl(raw: string): string {
+  const trimmed = raw.trim();
+  const iframeSrc = trimmed.match(/<iframe[^>]*\ssrc=["']([^"']+)["']/i)?.[1];
+  return (iframeSrc ?? trimmed).replace(/&amp;/g, '&');
+}
+
+function isShortMapsLink(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, '');
+    return host === 'maps.app.goo.gl' || host === 'goo.gl';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Turn a Google Maps link into an iframe src.
+ * Accepts embed URLs, place links, and search links. Short share links need
+ * resolveMapsEmbedForIframe so the redirect can be followed first.
+ */
 export function resolveMapsEmbedSrc(url: string | null | undefined): string | null {
-  const trimmed = String(url ?? '').trim();
+  const trimmed = extractMapsUrl(String(url ?? ''));
   if (!trimmed) return null;
-  if (/\/maps\/embed/i.test(trimmed) || /google\.com\/maps\/embed/i.test(trimmed)) {
+  if (/\/maps\/embed/i.test(trimmed) || /google\.[^/]+\/maps\/embed/i.test(trimmed)) {
     return trimmed;
   }
+  if (isShortMapsLink(trimmed)) return null;
+
+  let parsed: URL;
+  try {
+    parsed = new URL(trimmed);
+  } catch {
+    return null;
+  }
+
+  const host = parsed.hostname.replace(/^www\./, '');
+  const isGoogleMaps =
+    host === 'google.com' ||
+    host.endsWith('.google.com') ||
+    host === 'maps.google.com';
+  if (!isGoogleMaps) return null;
+
+  const at = parsed.href.match(/@(-?\d{1,3}(?:\.\d+)?),(-?\d{1,3}(?:\.\d+)?)(?:,(\d+(?:\.\d+)?)z)?/);
+  if (at) {
+    const zoom = at[3] ? Number(at[3]) : 16;
+    return mapsEmbedQuery(`${at[1]},${at[2]}`, zoom);
+  }
+
+  const query =
+    parsed.searchParams.get('q') ||
+    parsed.searchParams.get('query') ||
+    parsed.searchParams.get('destination');
+  if (query) return mapsEmbedQuery(query);
+
+  const place = parsed.pathname.match(/\/maps\/(?:place|search)\/([^/]+)/);
+  if (place) {
+    return mapsEmbedQuery(decodeURIComponent(place[1].replace(/\+/g, ' ')));
+  }
+
   return null;
+}
+
+/** Resolve share links such as maps.app.goo.gl, then build an embed URL. */
+export async function resolveMapsEmbedForIframe(
+  url: string | null | undefined,
+): Promise<string | null> {
+  const trimmed = extractMapsUrl(String(url ?? ''));
+  if (!trimmed) return null;
+
+  const direct = resolveMapsEmbedSrc(trimmed);
+  if (direct) return direct;
+  if (!isShortMapsLink(trimmed)) return null;
+
+  try {
+    const response = await fetch(trimmed, {
+      redirect: 'follow',
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+      signal: AbortSignal.timeout(5000),
+      next: { revalidate: 60 * 60 * 12 },
+    });
+    return resolveMapsEmbedSrc(response.url);
+  } catch {
+    return null;
+  }
 }
 
 /** Share / directions link suitable for opening Google Maps in a new tab. */

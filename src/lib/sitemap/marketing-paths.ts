@@ -2,7 +2,7 @@
  * Indexable marketing routes for the public site (App Router `(main)` group).
  * Keep in sync when adding new top-level pages; resort detail URLs come from
  * `listStaticResortPathnames()` so slugs stay single-sourced.
- * Dynamic tour/blog URLs are merged at runtime in `buildFullSitemap()`.
+ * Dynamic tour, blog, and visa country URLs are merged at runtime in `buildFullSitemap()`.
  */
 export const MARKETING_STATIC_PATHNAMES: readonly string[] = [
   '/',

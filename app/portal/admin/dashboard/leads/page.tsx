@@ -71,11 +71,11 @@ function serviceTagColor(type: BookingServiceType): string {
         case "tour":
             return "green";
         case "ticket":
-            return "geekblue";
+            return "volcano";
         case "visa":
-            return "purple";
+            return "orange";
         case "resort":
-            return "magenta";
+            return "gold";
         default:
             return "default";
     }
@@ -127,8 +127,8 @@ function leadStatusColor(status: LeadStatus): string {
 }
 
 function sourceTagColor(source: string | null | undefined) {
-    if ((source || "").toLowerCase().includes("sunvia")) return "volcano";
-    return "blue";
+    if ((source || "").toLowerCase().includes("sunvia")) return "gold";
+    return "volcano";
 }
 
 function useBookings() {
@@ -273,11 +273,11 @@ function BookingsPanel() {
                 <div>
                     <Link
                         href={`/portal/admin/dashboard/leads/bookings/${record.id}`}
-                        className="font-medium text-gray-800 hover:text-primary hover:underline"
+                        className="font-medium text-[#2a2118] hover:text-primary hover:underline"
                     >
                         {record.name}
                     </Link>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-[#6b5c4d]">
                         {record.email ? (
                             <a href={`mailto:${record.email}`} className="hover:underline">
                                 {record.email}
@@ -308,27 +308,27 @@ function BookingsPanel() {
                             tid ? (
                                 <Link
                                     href={`/portal/admin/dashboard/tours/${tid}`}
-                                    className="block max-w-[240px] truncate text-xs font-medium text-gray-700 hover:text-primary"
+                                    className="block max-w-[240px] truncate text-xs font-medium text-[#3f342b] hover:text-primary"
                                 >
                                     {label}
                                 </Link>
                             ) : (
                                 <div
-                                    className="max-w-[240px] truncate text-xs text-gray-600"
+                                    className="max-w-[240px] truncate text-xs text-[#6b5c4d]"
                                     title={label}
                                 >
                                     {label}
                                 </div>
                             )
                         ) : (
-                            <div className="text-[11px] text-gray-400">General inquiry</div>
+                            <div className="text-[11px] text-[#8a7a6a]">General inquiry</div>
                         )}
                         {record.tourSlug ? (
                             <a
                                 href={`/tours/${record.tourSlug}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block text-[11px] text-gray-400 hover:text-primary"
+                                className="block text-[11px] text-[#8a7a6a] hover:text-primary"
                             >
                                 /tours/{record.tourSlug}
                             </a>
@@ -367,10 +367,10 @@ function BookingsPanel() {
             render: (m: string) =>
                 m ? (
                     <Tooltip title={<span className="whitespace-pre-line">{m}</span>}>
-                        <span className="line-clamp-1 max-w-[260px] text-gray-700">{m}</span>
+                        <span className="line-clamp-1 max-w-[260px] text-[#3f342b]">{m}</span>
                     </Tooltip>
                 ) : (
-                    <span className="text-gray-400">—</span>
+                    <span className="text-[#8a7a6a]">—</span>
                 ),
         },
         {
@@ -388,7 +388,7 @@ function BookingsPanel() {
             dataIndex: "ipAddress",
             key: "ipAddress",
             render: (ip: string | null) =>
-                ip ? <span className="font-mono text-xs">{ip}</span> : <span className="text-gray-400">—</span>,
+                ip ? <span className="font-mono text-xs">{ip}</span> : <span className="text-[#8a7a6a]">—</span>,
             responsive: ["lg"],
         },
         {
@@ -436,42 +436,42 @@ function BookingsPanel() {
     ];
 
     return (
-        <div className="space-y-6">
-            <Row gutter={[16, 16]}>
-                <Col xs={12} md={6}>
-                    <Card variant="borderless" className="shadow-sm">
+        <div className="space-y-4">
+            <Row gutter={[12, 12]}>
+                <Col xs={12} lg={6}>
+                    <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
                         <Statistic
-                            title="Total bookings"
+                            title="Total inquiries"
                             value={stats.total}
                             prefix={<BarChartOutlined />}
                             loading={loading}
                         />
                     </Card>
                 </Col>
-                <Col xs={12} md={6}>
-                    <Card variant="borderless" className="shadow-sm">
+                <Col xs={12} lg={6}>
+                    <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
                         <Statistic
                             title="Contacted"
                             value={stats.contacted}
                             prefix={<FileSearchOutlined />}
-                            styles={{ content: { color: "#2563eb" } }}
+                            styles={{ content: { color: "#9a3412" } }}
                             loading={loading}
                         />
                     </Card>
                 </Col>
-                <Col xs={12} md={6}>
-                    <Card variant="borderless" className="shadow-sm">
+                <Col xs={12} lg={6}>
+                    <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
                         <Statistic
                             title="Confirmed"
                             value={stats.confirmed}
-                            prefix={<CheckCircleTwoTone twoToneColor="#16a34a" />}
-                            styles={{ content: { color: "#16a34a" } }}
+                            prefix={<CheckCircleTwoTone twoToneColor="#15803d" />}
+                            styles={{ content: { color: "#15803d" } }}
                             loading={loading}
                         />
                     </Card>
                 </Col>
-                <Col xs={12} md={6}>
-                    <Card variant="borderless" className="shadow-sm">
+                <Col xs={12} lg={6}>
+                    <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
                         <Statistic
                             title="Cancelled"
                             value={stats.cancelled}
@@ -485,16 +485,16 @@ function BookingsPanel() {
 
             {error ? <Alert type="error" showIcon title={error} /> : null}
 
-            <Card variant="borderless" className="shadow-sm">
-                <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                    <Space wrap>
+            <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
+                <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+                    <div className="grid w-full flex-1 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                         <Input
                             allowClear
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Search name, email, phone, tour, IP…"
-                            prefix={<SearchOutlined className="text-gray-400" />}
-                            style={{ width: 300 }}
+                            prefix={<SearchOutlined className="text-[#8a7a6a]" />}
+                            style={{ width: "100%" }}
                         />
                         <Select
                             value={statusFilter}
@@ -503,7 +503,7 @@ function BookingsPanel() {
                                 { value: "all", label: "All statuses" },
                                 ...BOOKING_STATUS_OPTIONS.map((s) => ({ value: s, label: s })),
                             ]}
-                            style={{ width: 160 }}
+                            style={{ width: "100%" }}
                         />
                         <Select
                             value={serviceFilter}
@@ -515,7 +515,7 @@ function BookingsPanel() {
                                     label: `${s.emoji} ${s.label}`,
                                 })),
                             ]}
-                            style={{ width: 180 }}
+                            style={{ width: "100%" }}
                         />
                         <Select
                             value={tourFilter}
@@ -525,13 +525,13 @@ function BookingsPanel() {
                                 { value: "none", label: "No tour (general)" },
                                 ...tourOptions.map((t) => ({ value: t.id, label: t.label })),
                             ]}
-                            style={{ width: 220 }}
                             disabled={tourOptions.length === 0}
                             showSearch
                             optionFilterProp="label"
+                            style={{ width: "100%" }}
                         />
-                    </Space>
-                    <Space>
+                    </div>
+                    <div className="flex shrink-0 flex-wrap gap-2">
                         <Button icon={<ReloadOutlined />} onClick={() => void refresh()} loading={loading}>
                             Refresh
                         </Button>
@@ -543,9 +543,9 @@ function BookingsPanel() {
                                 setModalOpen(true);
                             }}
                         >
-                            New booking
+                            New inquiry
                         </Button>
-                    </Space>
+                    </div>
                 </div>
 
                 <Table<BookingRecord>
@@ -554,9 +554,10 @@ function BookingsPanel() {
                     loading={loading}
                     columns={columns}
                     dataSource={filtered}
+                    scroll={{ x: 980 }}
                     pagination={{ pageSize: 10, showSizeChanger: true }}
                     locale={{
-                        emptyText: <Empty description={loading ? "Loading…" : "No bookings yet"} />,
+                        emptyText: <Empty description={loading ? "Loading…" : "No inquiries yet"} />,
                     }}
                 />
             </Card>
@@ -651,15 +652,15 @@ function LeadsPanel() {
                 const meta = inquiryMeta(record.message);
                 return (
                     <div>
-                        <div className="font-medium text-gray-800">{record.name}</div>
+                        <div className="font-medium text-[#2a2118]">{record.name}</div>
                         {email ? (
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-[#6b5c4d]">
                                 <a href={`mailto:${email}`} className="hover:underline">
                                     {email}
                                 </a>
                             </div>
                         ) : (
-                            <div className="text-xs text-gray-500">Phone inquiry</div>
+                            <div className="text-xs text-[#6b5c4d]">Phone inquiry</div>
                         )}
                         {meta.preferred || meta.interest ? (
                             <div className="mt-1 flex flex-wrap gap-1">
@@ -690,7 +691,7 @@ function LeadsPanel() {
                 <div className="space-y-1">
                     <Tag color={sourceTagColor(source)}>{source}</Tag>
                     {record.pageUrl ? (
-                        <div className="max-w-[220px] truncate text-[11px] text-gray-400">
+                        <div className="max-w-[220px] truncate text-[11px] text-[#8a7a6a]">
                             {record.pageUrl}
                         </div>
                     ) : null}
@@ -704,10 +705,10 @@ function LeadsPanel() {
             render: (m: string) =>
                 m ? (
                     <Tooltip title={<span className="whitespace-pre-line">{m}</span>}>
-                        <span className="line-clamp-1 max-w-[240px] text-gray-700">{m}</span>
+                        <span className="line-clamp-1 max-w-[240px] text-[#3f342b]">{m}</span>
                     </Tooltip>
                 ) : (
-                    <span className="text-gray-400">—</span>
+                    <span className="text-[#8a7a6a]">—</span>
                 ),
         },
         {
@@ -723,7 +724,7 @@ function LeadsPanel() {
             dataIndex: "ipAddress",
             key: "ipAddress",
             render: (ip: string | null) =>
-                ip ? <span className="font-mono text-xs">{ip}</span> : <span className="text-gray-400">—</span>,
+                ip ? <span className="font-mono text-xs">{ip}</span> : <span className="text-[#8a7a6a]">—</span>,
             responsive: ["lg"],
         },
         {
@@ -775,42 +776,42 @@ function LeadsPanel() {
     ];
 
     return (
-        <div className="space-y-6">
-            <Row gutter={[16, 16]}>
-                <Col xs={12} md={6}>
-                    <Card variant="borderless" className="shadow-sm">
+        <div className="space-y-4">
+            <Row gutter={[12, 12]}>
+                <Col xs={12} lg={6}>
+                    <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
                         <Statistic
-                            title="Total leads"
+                            title="Total messages"
                             value={stats.total}
                             prefix={<BarChartOutlined />}
                             loading={loading}
                         />
                     </Card>
                 </Col>
-                <Col xs={12} md={6}>
-                    <Card variant="borderless" className="shadow-sm">
+                <Col xs={12} lg={6}>
+                    <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
                         <Statistic
                             title="Contacted"
                             value={stats.contacted}
                             prefix={<FileSearchOutlined />}
-                            styles={{ content: { color: "#2563eb" } }}
+                            styles={{ content: { color: "#9a3412" } }}
                             loading={loading}
                         />
                     </Card>
                 </Col>
-                <Col xs={12} md={6}>
-                    <Card variant="borderless" className="shadow-sm">
+                <Col xs={12} lg={6}>
+                    <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
                         <Statistic
                             title="Converted"
                             value={stats.converted}
-                            prefix={<CheckCircleTwoTone twoToneColor="#16a34a" />}
-                            styles={{ content: { color: "#16a34a" } }}
+                            prefix={<CheckCircleTwoTone twoToneColor="#15803d" />}
+                            styles={{ content: { color: "#15803d" } }}
                             loading={loading}
                         />
                     </Card>
                 </Col>
-                <Col xs={12} md={6}>
-                    <Card variant="borderless" className="shadow-sm">
+                <Col xs={12} lg={6}>
+                    <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
                         <Statistic
                             title="Spam"
                             value={stats.spam}
@@ -824,16 +825,16 @@ function LeadsPanel() {
 
             {error ? <Alert type="error" showIcon title={error} /> : null}
 
-            <Card variant="borderless" className="shadow-sm">
-                <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                    <Space wrap>
+            <Card variant="borderless" className="rounded-2xl border border-[#eadfce] shadow-sm">
+                <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+                    <div className="grid w-full flex-1 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                         <Input
                             allowClear
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Search name, email, source, IP…"
-                            prefix={<SearchOutlined className="text-gray-400" />}
-                            style={{ width: 300 }}
+                            prefix={<SearchOutlined className="text-[#8a7a6a]" />}
+                            style={{ width: "100%" }}
                         />
                         <Select
                             value={statusFilter}
@@ -842,7 +843,7 @@ function LeadsPanel() {
                                 { value: "all", label: "All statuses" },
                                 ...LEAD_STATUS_OPTIONS.map((s) => ({ value: s, label: s })),
                             ]}
-                            style={{ width: 150 }}
+                            style={{ width: "100%" }}
                         />
                         <Select
                             value={sourceFilter}
@@ -851,13 +852,13 @@ function LeadsPanel() {
                                 { value: "all", label: "All sources" },
                                 ...sources.map((s) => ({ value: s, label: s })),
                             ]}
-                            style={{ width: 280 }}
                             placeholder="Filter by source"
                             showSearch
                             optionFilterProp="label"
                             disabled={sources.length === 0}
+                            style={{ width: "100%" }}
                         />
-                    </Space>
+                    </div>
                     <Button icon={<ReloadOutlined />} onClick={() => void refresh()} loading={loading}>
                         Refresh
                     </Button>
@@ -869,9 +870,10 @@ function LeadsPanel() {
                     loading={loading}
                     columns={columns}
                     dataSource={filtered}
+                    scroll={{ x: 860 }}
                     pagination={{ pageSize: 10, showSizeChanger: true }}
                     locale={{
-                        emptyText: <Empty description={loading ? "Loading…" : "No leads yet"} />,
+                        emptyText: <Empty description={loading ? "Loading…" : "No contact messages yet"} />,
                     }}
                 />
             </Card>
@@ -888,42 +890,39 @@ function LeadsPanel() {
 
 export default function LeadsPage() {
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <div>
-                    <Title level={2} style={{ margin: 0 }}>
-                        Leads
-                    </Title>
-                    <Text type="secondary">
-                        <CalendarOutlined className="mr-1" />
-                        Manage tour bookings and website leads in one place. Every submission is
-                        stamped with the visitor IP to help spot suspicious activity.
-                    </Text>
-                </div>
+        <div className="space-y-4">
+            <div>
+                <Title level={2} style={{ margin: 0 }}>
+                    Lead Management
+                </Title>
+                <Text type="secondary">
+                    Inquiries holds visa, ticket, tour, and resort requests. Contact messages holds
+                    website forms that are not a service request.
+                </Text>
             </div>
 
             <Tabs
-                defaultActiveKey="leads"
+                defaultActiveKey="inquiries"
                 items={[
                     {
-                        key: "leads",
-                        label: (
-                            <span>
-                                <BarChartOutlined className="mr-2" />
-                                Website Lead Management
-                            </span>
-                        ),
-                        children: <LeadsPanel />,
-                    },
-                    {
-                        key: "bookings",
+                        key: "inquiries",
                         label: (
                             <span>
                                 <CalendarOutlined className="mr-2" />
-                                Booking Management
+                                Inquiries
                             </span>
                         ),
                         children: <BookingsPanel />,
+                    },
+                    {
+                        key: "messages",
+                        label: (
+                            <span>
+                                <BarChartOutlined className="mr-2" />
+                                Contact messages
+                            </span>
+                        ),
+                        children: <LeadsPanel />,
                     },
                 ]}
             />

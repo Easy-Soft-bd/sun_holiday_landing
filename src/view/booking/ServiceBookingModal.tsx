@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
     CalendarCheck,
     CheckCircle2,
@@ -164,13 +165,22 @@ export default function ServiceBookingModal(props: ServiceBookingModalProps) {
             return;
         }
 
+        if (!form.name.trim()) {
+            setError("Name is required.");
+            return;
+        }
         const phoneDigits = form.phone.replace(/\D/g, "");
         if (phoneDigits.length < 7 || phoneDigits.length > 16) {
             setError("Please enter a valid phone number.");
             return;
         }
-        if (emailRequired && !form.email.trim()) {
+        const email = form.email.trim();
+        if (emailRequired && !email) {
             setError("Email is required.");
+            return;
+        }
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setError("Please enter a valid email address.");
             return;
         }
 
@@ -225,28 +235,36 @@ export default function ServiceBookingModal(props: ServiceBookingModalProps) {
 
     const today = new Date().toISOString().slice(0, 10);
 
-    return (
+    const dialog = (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-3 py-6 backdrop-blur-sm sm:p-6"
+            className="fixed inset-0 z-[200] overflow-y-auto bg-black/70 p-3 backdrop-blur-sm sm:p-6"
             onMouseDown={(e) => {
                 if (e.target === e.currentTarget) onClose();
             }}
             role="presentation"
         >
             <div
+                className="flex min-h-full items-end justify-center sm:items-center"
+                onMouseDown={(e) => {
+                    if (e.target === e.currentTarget) onClose();
+                }}
+            >
+            <div
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="service-booking-title"
-                className="relative max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-base-100 shadow-2xl ring-1 ring-base-200 sm:rounded-3xl"
+                className="relative max-h-[calc(100dvh-1.5rem)] w-full max-w-2xl overflow-y-auto rounded-2xl bg-base-100 shadow-2xl ring-1 ring-base-200 sm:max-h-[min(92dvh,calc(100dvh-3rem))] sm:rounded-3xl"
             >
+                <div className="sticky top-0 z-10 flex justify-end bg-base-100/95 px-3 pt-3 backdrop-blur-sm sm:px-4 sm:pt-4">
                 <button
                     type="button"
                     onClick={onClose}
                     aria-label="Close booking form"
-                    className="absolute right-3 top-3 z-10 rounded-full bg-base-200/80 p-2 text-base-content/70 transition-colors hover:bg-base-200 hover:text-base-content sm:right-4 sm:top-4"
+                    className="rounded-full bg-base-200 p-2 text-base-content/70 transition-colors hover:bg-base-300 hover:text-base-content"
                 >
                     <X size={18} />
                 </button>
+                </div>
 
                 <div className="border-b border-base-200 bg-gradient-to-br from-primary/5 via-base-100 to-base-100 p-5 sm:p-7">
                     {eyebrow ? (
@@ -343,7 +361,7 @@ export default function ServiceBookingModal(props: ServiceBookingModalProps) {
                                     maxLength={120}
                                     value={form.name}
                                     onChange={updateField("name")}
-                                    className="input input-bordered w-full rounded-xl"
+                                    className="input input-bordered w-full rounded-xl text-base"
                                     placeholder="Your name"
                                 />
                             </Field>
@@ -364,7 +382,7 @@ export default function ServiceBookingModal(props: ServiceBookingModalProps) {
                                     pattern="[0-9+\-\s()]{7,20}"
                                     value={form.phone}
                                     onChange={updateField("phone")}
-                                    className="input input-bordered w-full rounded-xl"
+                                    className="input input-bordered w-full rounded-xl text-base"
                                     placeholder="+8801XXXXXXXXX"
                                 />
                             </Field>
@@ -384,7 +402,7 @@ export default function ServiceBookingModal(props: ServiceBookingModalProps) {
                                 required={emailRequired}
                                 value={form.email}
                                 onChange={updateField("email")}
-                                className="input input-bordered w-full rounded-xl"
+                                className="input input-bordered w-full rounded-xl text-base"
                                 placeholder="you@example.com"
                             />
                         </Field>
@@ -402,7 +420,7 @@ export default function ServiceBookingModal(props: ServiceBookingModalProps) {
                                     min={today}
                                     value={form.bookingDate}
                                     onChange={updateField("bookingDate")}
-                                    className="input input-bordered w-full rounded-xl"
+                                    className="input input-bordered w-full rounded-xl text-base"
                                 />
                             </Field>
                         ) : null}
@@ -419,7 +437,7 @@ export default function ServiceBookingModal(props: ServiceBookingModalProps) {
                                 rows={3}
                                 value={form.message}
                                 onChange={updateField("message")}
-                                className="textarea textarea-bordered w-full rounded-xl"
+                                className="textarea textarea-bordered w-full rounded-xl text-base"
                                 placeholder="Anything we should know?"
                             />
                         </Field>
@@ -468,8 +486,11 @@ export default function ServiceBookingModal(props: ServiceBookingModalProps) {
                     </form>
                 )}
             </div>
+            </div>
         </div>
     );
+
+    return createPortal(dialog, document.body);
 }
 
 function Field({

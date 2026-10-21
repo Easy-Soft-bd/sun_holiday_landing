@@ -1,3 +1,4 @@
+/** Initial seed for `visa_countries`. Live pages read from the database. */
 
 export interface VisaRequirement {
     title: string;
@@ -111,7 +112,7 @@ export const visaServices: VisaService[] = [
         id: '6',
         country: 'Singapore',
         flag: '🇸🇬',
-        image: 'https://images.unsplash.com/photo-1525625293386-3fb0ad7c1fd6?q=80&w=2070&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1565967511849-76a60a516170?q=80&w=2070&auto=format&fit=crop',
         category: 'Tourist',
         processingTime: '5-7 Working Days',
         validity: '35 Days / 2 Years',

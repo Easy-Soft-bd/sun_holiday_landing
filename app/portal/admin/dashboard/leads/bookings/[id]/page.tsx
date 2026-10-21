@@ -166,11 +166,11 @@ function statusBg(status: BookingStatus): string {
         case "Confirmed":
             return "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200";
         case "Contacted":
-            return "bg-blue-50 text-blue-700 ring-1 ring-blue-200";
+            return "bg-[#fff1e8] text-[#9a3412] ring-1 ring-[#f3eadc]";
         case "Cancelled":
             return "bg-rose-50 text-rose-700 ring-1 ring-rose-200";
         default:
-            return "bg-slate-100 text-slate-700 ring-1 ring-slate-200";
+            return "bg-[#f3eadc] text-[#3f342b] ring-1 ring-[#eadfce]";
     }
 }
 
@@ -179,11 +179,11 @@ function activityIcon(type: BookingActivityType) {
         case "status_change":
             return <CheckCircleTwoTone twoToneColor="#16a34a" />;
         case "call":
-            return <PhoneOutlined style={{ color: "#0ea5e9" }} />;
+            return <PhoneOutlined style={{ color: "#c2410c" }} />;
         case "whatsapp":
             return <WhatsAppOutlined style={{ color: "#22c55e" }} />;
         case "email":
-            return <MailOutlined style={{ color: "#6366f1" }} />;
+            return <MailOutlined style={{ color: "#9a3412" }} />;
         case "sms":
             return <MessageOutlined style={{ color: "#f59e0b" }} />;
         case "meeting":
@@ -265,7 +265,7 @@ function SectionTitle({
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <div className="flex items-center gap-2">
-                    <span className="text-base text-slate-500">{icon}</span>
+                    <span className="text-base text-[#6b5c4d]">{icon}</span>
                     <Title level={5} style={{ margin: 0 }}>
                         {title}
                     </Title>
@@ -293,23 +293,23 @@ function MetricTile({
     accent: "blue" | "emerald" | "amber" | "violet";
 }) {
     const accentMap = {
-        blue: "bg-blue-50 text-blue-600 ring-blue-100",
-        emerald: "bg-emerald-50 text-emerald-600 ring-emerald-100",
-        amber: "bg-amber-50 text-amber-600 ring-amber-100",
-        violet: "bg-violet-50 text-violet-600 ring-violet-100",
+        blue: "bg-[#fff1e8] text-[#c2410c] ring-[#f3eadc]",
+        emerald: "bg-emerald-50 text-emerald-700 ring-emerald-100",
+        amber: "bg-amber-50 text-amber-700 ring-amber-100",
+        violet: "bg-[#fff7f2] text-[#9a3412] ring-[#eadfce]",
     } as const;
     return (
-        <div className="flex items-start gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+        <div className="flex items-start gap-3 rounded-2xl border border-[#f3eadc] bg-[#fffdf8] p-4 shadow-[0_1px_2px_rgba(42,33,24,0.05)]">
             <span
                 className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg ring-1 ${accentMap[accent]}`}
             >
                 {icon}
             </span>
             <div className="min-w-0 flex-1">
-                <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                <div className="text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                     {label}
                 </div>
-                <div className="truncate text-sm font-semibold text-slate-800">{value}</div>
+                <div className="truncate text-sm font-semibold text-[#2a2118]">{value}</div>
             </div>
         </div>
     );
@@ -324,10 +324,10 @@ function MetaRow({
 }) {
     return (
         <div className="flex items-start justify-between gap-4 py-2 text-sm">
-            <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
+            <span className="text-xs font-medium uppercase tracking-wide text-[#8a7a6a]">
                 {label}
             </span>
-            <span className="text-right text-slate-700">{children}</span>
+            <span className="text-right text-[#3f342b]">{children}</span>
         </div>
     );
 }
@@ -516,7 +516,7 @@ export default function BookingDetailPage() {
                     icon={<ArrowLeftOutlined />}
                     onClick={() => router.push("/portal/admin/dashboard/leads")}
                 >
-                    Back to Leads
+                    Back to Lead Management
                 </Button>
                 <Alert
                     type="error"
@@ -547,9 +547,9 @@ export default function BookingDetailPage() {
                     type="text"
                     icon={<ArrowLeftOutlined />}
                     onClick={() => router.push("/portal/admin/dashboard/leads")}
-                    className="!px-2 !text-slate-500 hover:!text-slate-900"
+                    className="!px-2 !text-[#6b5c4d] hover:!text-[#2a2118]"
                 >
-                    Back to Leads
+                    Back to Lead Management
                 </Button>
                 <Text type="secondary" className="text-xs">
                     Booking #{booking.id}
@@ -557,10 +557,10 @@ export default function BookingDetailPage() {
             </div>
 
             {/* HERO */}
-            <div className="relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.12)]">
+            <div className="relative overflow-hidden rounded-3xl border border-[#eadfce] bg-[#fffdf8] shadow-[0_1px_2px_rgba(42,33,24,0.05),0_8px_24px_-12px_rgba(42,33,24,0.10)]">
                 <div
                     aria-hidden
-                    className="absolute inset-x-0 top-0 h-32 bg-gradient-to-br from-sky-500/10 via-indigo-500/10 to-purple-500/10"
+                    className="absolute inset-x-0 top-0 h-32 bg-gradient-to-br from-[#c2410c]/15 via-[#e07a3d]/10 to-[#f6f1e7]"
                 />
                 <div className="relative px-6 pb-6 pt-8 md:px-8 md:pt-10">
                     <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
@@ -569,11 +569,11 @@ export default function BookingDetailPage() {
                                 size={68}
                                 style={{
                                     background:
-                                        "linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)",
+                                        "linear-gradient(135deg, #9a3412 0%, #c2410c 100%)",
                                     fontSize: 26,
                                     fontWeight: 600,
                                     boxShadow:
-                                        "0 6px 16px -6px rgba(99,102,241,0.5), 0 1px 3px rgba(15,23,42,0.08)",
+                                        "0 6px 16px -6px rgba(194,65,12,0.35), 0 1px 3px rgba(42,33,24,0.08)",
                                 }}
                             >
                                 {(booking.name || "?").charAt(0).toUpperCase()}
@@ -590,7 +590,7 @@ export default function BookingDetailPage() {
                                     </span>
                                     <RiskBadge score={risk.score} />
                                 </div>
-                                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+                                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#6b5c4d]">
                                     <span className="inline-flex items-center gap-1">
                                         <ClockCircleOutlined />
                                         Created {fmtDate(booking.createdAt, true)} · {relativeTime(booking.createdAt)}
@@ -635,23 +635,23 @@ export default function BookingDetailPage() {
                     <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
                         <a
                             href={`tel:${booking.phone}`}
-                            className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 transition hover:border-sky-300 hover:shadow-sm"
+                            className="group flex items-center gap-3 rounded-2xl border border-[#eadfce] bg-[#fffdf8] px-4 py-3 transition hover:border-[#e07a3d] hover:shadow-sm"
                         >
-                            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600 ring-1 ring-sky-100">
+                            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff1e8] text-[#c2410c] ring-1 ring-[#f3eadc]">
                                 <PhoneOutlined />
                             </span>
                             <div className="min-w-0 flex-1">
-                                <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                <div className="text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                     Phone
                                 </div>
-                                <div className="truncate text-sm font-semibold text-slate-800 group-hover:text-sky-700">
+                                <div className="truncate text-sm font-semibold text-[#2a2118] group-hover:text-[#c2410c]">
                                     {booking.phone}
                                 </div>
                             </div>
                             <Tooltip title="Copy">
                                 <button
                                     type="button"
-                                    className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                                    className="rounded-md p-1.5 text-[#8a7a6a] transition hover:bg-[#f3eadc] hover:text-[#9a3412]"
                                     onClick={(e) => {
                                         e.preventDefault();
                                         copyValue(booking.phone, "Phone", message);
@@ -664,23 +664,23 @@ export default function BookingDetailPage() {
                         {booking.email ? (
                             <a
                                 href={`mailto:${booking.email}`}
-                                className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 transition hover:border-indigo-300 hover:shadow-sm"
+                                className="group flex items-center gap-3 rounded-2xl border border-[#eadfce] bg-[#fffdf8] px-4 py-3 transition hover:border-[#e07a3d] hover:shadow-sm"
                             >
-                                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+                                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff1e8] text-[#9a3412] ring-1 ring-[#f3eadc]">
                                     <MailOutlined />
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                    <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                    <div className="text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                         Email
                                     </div>
-                                    <div className="truncate text-sm font-semibold text-slate-800 group-hover:text-indigo-700">
+                                    <div className="truncate text-sm font-semibold text-[#2a2118] group-hover:text-[#9a3412]">
                                         {booking.email}
                                     </div>
                                 </div>
                                 <Tooltip title="Copy">
                                     <button
                                         type="button"
-                                        className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                                        className="rounded-md p-1.5 text-[#8a7a6a] transition hover:bg-[#f3eadc] hover:text-[#9a3412]"
                                         onClick={(e) => {
                                             e.preventDefault();
                                             copyValue(booking.email, "Email", message);
@@ -691,12 +691,12 @@ export default function BookingDetailPage() {
                                 </Tooltip>
                             </a>
                         ) : (
-                            <div className="flex items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 px-4 py-3 text-slate-400">
-                                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-400 ring-1 ring-slate-200">
+                            <div className="flex items-center gap-3 rounded-2xl border border-dashed border-[#eadfce] bg-[#faf6ef] px-4 py-3 text-[#8a7a6a]">
+                                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f3eadc] text-[#8a7a6a] ring-1 ring-[#eadfce]">
                                     <MailOutlined />
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                    <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                    <div className="text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                         Email
                                     </div>
                                     <div className="text-sm font-medium">
@@ -709,20 +709,20 @@ export default function BookingDetailPage() {
                             href={whatsappHref(booking.phone, booking.name, tourLabel)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 transition hover:border-emerald-300 hover:shadow-sm"
+                            className="group flex items-center gap-3 rounded-2xl border border-[#eadfce] bg-[#fffdf8] px-4 py-3 transition hover:border-[#86efac] hover:shadow-sm"
                         >
                             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100">
                                 <WhatsAppOutlined />
                             </span>
                             <div className="min-w-0 flex-1">
-                                <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                <div className="text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                     WhatsApp
                                 </div>
-                                <div className="truncate text-sm font-semibold text-slate-800 group-hover:text-emerald-700">
+                                <div className="truncate text-sm font-semibold text-[#2a2118] group-hover:text-[#15803d]">
                                     Open chat
                                 </div>
                             </div>
-                            <span className="text-slate-300 transition group-hover:text-emerald-500">
+                            <span className="text-[#c4b5a4] transition group-hover:text-[#15803d]">
                                 <LinkOutlined />
                             </span>
                         </a>
@@ -794,22 +794,22 @@ export default function BookingDetailPage() {
                                     ? "amber"
                                     : "indigo";
                         const toneRing: Record<string, string> = {
-                            slate: "border-slate-200 bg-slate-50",
+                            slate: "border-[#eadfce] bg-[#faf6ef]",
                             rose: "border-rose-200 bg-rose-50",
                             amber: "border-amber-200 bg-amber-50",
-                            indigo: "border-indigo-200 bg-indigo-50",
+                            indigo: "border-[#f3eadc] bg-[#fff7f2]",
                         };
                         const toneIcon: Record<string, string> = {
-                            slate: "bg-white text-slate-500 ring-slate-200",
-                            rose: "bg-white text-rose-600 ring-rose-200",
-                            amber: "bg-white text-amber-600 ring-amber-200",
-                            indigo: "bg-white text-indigo-600 ring-indigo-200",
+                            slate: "bg-[#fffdf8] text-[#6b5c4d] ring-[#eadfce]",
+                            rose: "bg-[#fffdf8] text-rose-600 ring-rose-200",
+                            amber: "bg-[#fffdf8] text-amber-600 ring-amber-200",
+                            indigo: "bg-[#fffdf8] text-[#c2410c] ring-[#eadfce]",
                         };
                         const toneText: Record<string, string> = {
-                            slate: "text-slate-700",
+                            slate: "text-[#3f342b]",
                             rose: "text-rose-700",
                             amber: "text-amber-800",
-                            indigo: "text-indigo-700",
+                            indigo: "text-[#9a3412]",
                         };
                         const helper = !valid
                             ? "Customer didn't pick a preferred date — confirm before contacting."
@@ -831,7 +831,7 @@ export default function BookingDetailPage() {
                                         <CalendarOutlined style={{ fontSize: 18 }} />
                                     </span>
                                     <div>
-                                        <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                        <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6b5c4d]">
                                             Preferred booking date
                                         </div>
                                         <div
@@ -839,7 +839,7 @@ export default function BookingDetailPage() {
                                         >
                                             {niceDate ?? "Not specified"}
                                         </div>
-                                        <div className="mt-0.5 text-xs text-slate-500">
+                                        <div className="mt-0.5 text-xs text-[#6b5c4d]">
                                             {helper}
                                         </div>
                                     </div>
@@ -874,7 +874,7 @@ export default function BookingDetailPage() {
 
                     <Card
                         variant="borderless"
-                        className="rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                        className="rounded-2xl shadow-[0_1px_2px_rgba(42,33,24,0.05)]"
                         styles={{ body: { padding: 24 } }}
                     >
                         <SectionTitle
@@ -883,7 +883,7 @@ export default function BookingDetailPage() {
                             description="What the customer wrote when submitting the booking."
                         />
                         {booking.message ? (
-                            <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-5">
+                            <div className="rounded-2xl border border-[#f3eadc] bg-[#faf6ef] p-5">
                                 <Paragraph
                                     style={{
                                         whiteSpace: "pre-line",
@@ -896,11 +896,11 @@ export default function BookingDetailPage() {
                                 </Paragraph>
                             </div>
                         ) : (
-                            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 px-6 py-10 text-center">
+                            <div className="rounded-2xl border border-dashed border-[#eadfce] bg-[#faf6ef] px-6 py-10 text-center">
                                 <Empty
                                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                                     description={
-                                        <span className="text-slate-500">No message provided</span>
+                                        <span className="text-[#6b5c4d]">No message provided</span>
                                     }
                                 />
                             </div>
@@ -909,7 +909,7 @@ export default function BookingDetailPage() {
 
                     <Card
                         variant="borderless"
-                        className="rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                        className="rounded-2xl shadow-[0_1px_2px_rgba(42,33,24,0.05)]"
                         styles={{ body: { padding: 24 } }}
                     >
                         <SectionTitle
@@ -917,7 +917,7 @@ export default function BookingDetailPage() {
                             title="Activity timeline"
                             description="Auto-logged audit events plus any manual follow-ups your team adds."
                             extra={
-                                <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+                                <span className="rounded-full bg-[#f3eadc] px-2.5 py-0.5 text-xs font-medium text-[#6b5c4d]">
                                     {activities.length}{" "}
                                     {activities.length === 1 ? "entry" : "entries"}
                                 </span>
@@ -925,7 +925,7 @@ export default function BookingDetailPage() {
                         />
 
                         {/* Composer */}
-                        <div className="mb-6 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
+                        <div className="mb-6 rounded-2xl border border-[#eadfce] bg-[#fffdf8] p-4 shadow-[0_1px_2px_rgba(42,33,24,0.04)]">
                             <Segmented
                                 size="small"
                                 value={activityType}
@@ -966,11 +966,11 @@ export default function BookingDetailPage() {
                         </div>
 
                         {activities.length === 0 ? (
-                            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 px-6 py-10 text-center">
+                            <div className="rounded-2xl border border-dashed border-[#eadfce] bg-[#faf6ef] px-6 py-10 text-center">
                                 <Empty
                                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                                     description={
-                                        <span className="text-slate-500">
+                                        <span className="text-[#6b5c4d]">
                                             No activity yet — add the first follow-up note above.
                                         </span>
                                     }
@@ -980,23 +980,23 @@ export default function BookingDetailPage() {
                             <Timeline
                                 items={activities.map((a) => ({
                                     icon: (
-                                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-base ring-1 ring-slate-200">
+                                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#fffdf8] text-base ring-1 ring-[#eadfce]">
                                             {activityIcon(a.type)}
                                         </span>
                                     ),
                                     content: (
-                                        <div className="-mt-1 ml-1 rounded-2xl border border-slate-100 bg-white px-4 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
+                                        <div className="-mt-1 ml-1 rounded-2xl border border-[#f3eadc] bg-[#fffdf8] px-4 py-3 shadow-[0_1px_2px_rgba(42,33,24,0.04)]">
                                             <div className="flex flex-wrap items-center justify-between gap-2">
                                                 <div className="flex flex-wrap items-center gap-2">
-                                                    <Text strong className="text-slate-800">
+                                                    <Text strong className="text-[#2a2118]">
                                                         {activityLabel(a.type)}
                                                     </Text>
-                                                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-500">
+                                                    <span className="inline-flex items-center gap-1 rounded-full bg-[#f3eadc] px-2 py-0.5 text-[11px] text-[#6b5c4d]">
                                                         <UserOutlined />
                                                         {a.authorLabel || a.authorEmail || "System"}
                                                     </span>
                                                     <Tooltip title={fmtDate(a.createdAt, true)}>
-                                                        <span className="text-[11px] text-slate-400">
+                                                        <span className="text-[11px] text-[#8a7a6a]">
                                                             {relativeTime(a.createdAt)}
                                                         </span>
                                                     </Tooltip>
@@ -1041,7 +1041,7 @@ export default function BookingDetailPage() {
                     {tour ? (
                         <Card
                             variant="borderless"
-                            className="rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                            className="rounded-2xl shadow-[0_1px_2px_rgba(42,33,24,0.05)]"
                             styles={{ body: { padding: 24 } }}
                         >
                             <SectionTitle
@@ -1071,7 +1071,7 @@ export default function BookingDetailPage() {
                             />
                             <div className="flex flex-col gap-5 sm:flex-row">
                                 {tour.image ? (
-                                    <div className="overflow-hidden rounded-2xl ring-1 ring-slate-200">
+                                    <div className="overflow-hidden rounded-2xl ring-1 ring-[#eadfce]">
                                         <AntImage
                                             src={tour.image}
                                             alt={tour.title}
@@ -1115,7 +1115,7 @@ export default function BookingDetailPage() {
                     ) : tourLabel ? (
                         <Card
                             variant="borderless"
-                            className="rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                            className="rounded-2xl shadow-[0_1px_2px_rgba(42,33,24,0.05)]"
                             styles={{ body: { padding: 24 } }}
                         >
                             <SectionTitle icon={<EnvironmentOutlined />} title="Tour package" />
@@ -1129,7 +1129,7 @@ export default function BookingDetailPage() {
                                         The original tour was deleted or is no longer linked. Snapshot kept:{" "}
                                         <Text strong>{tourLabel}</Text>
                                         {booking.tourSlug ? (
-                                            <span className="block text-xs text-gray-500">
+                                            <span className="block text-xs text-[#6b5c4d]">
                                                 /tours/{booking.tourSlug}
                                             </span>
                                         ) : null}
@@ -1154,7 +1154,7 @@ export default function BookingDetailPage() {
                         return (
                             <Card
                                 variant="borderless"
-                                className="rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                                className="rounded-2xl shadow-[0_1px_2px_rgba(42,33,24,0.05)]"
                                 styles={{ body: { padding: 24 } }}
                             >
                                 <SectionTitle
@@ -1176,7 +1176,7 @@ export default function BookingDetailPage() {
                                 <div className="space-y-4">
                                     {booking.serviceTitle ? (
                                         <div>
-                                            <div className="mb-1 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                            <div className="mb-1 text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                                 Subject
                                             </div>
                                             <Title level={4} style={{ margin: 0 }}>
@@ -1187,19 +1187,19 @@ export default function BookingDetailPage() {
 
                                     {detailEntries.length > 0 ? (
                                         <div>
-                                            <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                            <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                                 Details captured
                                             </div>
                                             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                                 {detailEntries.map(([k, v]) => (
                                                     <div
                                                         key={k}
-                                                        className="rounded-xl border border-slate-100 bg-slate-50/50 px-3 py-2"
+                                                        className="rounded-xl border border-[#f3eadc] bg-[#faf6ef] px-3 py-2"
                                                     >
-                                                        <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                                        <div className="text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                                             {humanizeDetailKey(k)}
                                                         </div>
-                                                        <div className="mt-0.5 break-words text-sm font-medium text-slate-800">
+                                                        <div className="mt-0.5 break-words text-sm font-medium text-[#2a2118]">
                                                             {detailValuePreview(v)}
                                                         </div>
                                                     </div>
@@ -1223,7 +1223,7 @@ export default function BookingDetailPage() {
                 <div className="space-y-6">
                     <Card
                         variant="borderless"
-                        className="rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                        className="rounded-2xl shadow-[0_1px_2px_rgba(42,33,24,0.05)]"
                         styles={{ body: { padding: 24 } }}
                     >
                         <SectionTitle
@@ -1233,7 +1233,7 @@ export default function BookingDetailPage() {
                         />
                         <div className="space-y-5">
                             <div>
-                                <div className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                <div className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                     Status
                                 </div>
                                 <Select
@@ -1252,7 +1252,7 @@ export default function BookingDetailPage() {
                                                     <PauseCircleTwoTone twoToneColor="#dc2626" />
                                                 ) : s === "Contacted" ? (
                                                     <FileSearchOutlined
-                                                        style={{ color: "#2563eb" }}
+                                                        style={{ color: "#c2410c" }}
                                                     />
                                                 ) : (
                                                     <ClockCircleOutlined />
@@ -1283,7 +1283,7 @@ export default function BookingDetailPage() {
 
                             <div>
                                 <div className="mb-1.5 flex items-center justify-between">
-                                    <span className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                    <span className="text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                         Internal notes
                                     </span>
                                     <Text type="secondary" className="text-[11px]">
@@ -1316,7 +1316,7 @@ export default function BookingDetailPage() {
 
                     <Card
                         variant="borderless"
-                        className="rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                        className="rounded-2xl shadow-[0_1px_2px_rgba(42,33,24,0.05)]"
                         styles={{ body: { padding: 24 } }}
                     >
                         <SectionTitle
@@ -1339,13 +1339,13 @@ export default function BookingDetailPage() {
                                 className={`rounded-2xl border p-3 text-center ${
                                     risk.ipCount >= 4
                                         ? "border-amber-200 bg-amber-50/60"
-                                        : "border-slate-100 bg-slate-50/70"
+                                        : "border-[#f3eadc] bg-[#faf6ef]"
                                 }`}
                             >
-                                <div className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                                <div className="text-[10px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                     Same IP
                                 </div>
-                                <div className="mt-1 text-lg font-semibold text-slate-800">
+                                <div className="mt-1 text-lg font-semibold text-[#2a2118]">
                                     {risk.ipCount}
                                 </div>
                             </div>
@@ -1353,13 +1353,13 @@ export default function BookingDetailPage() {
                                 className={`rounded-2xl border p-3 text-center ${
                                     risk.emailCount >= 4
                                         ? "border-amber-200 bg-amber-50/60"
-                                        : "border-slate-100 bg-slate-50/70"
+                                        : "border-[#f3eadc] bg-[#faf6ef]"
                                 }`}
                             >
-                                <div className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                                <div className="text-[10px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                     Same email
                                 </div>
-                                <div className="mt-1 text-lg font-semibold text-slate-800">
+                                <div className="mt-1 text-lg font-semibold text-[#2a2118]">
                                     {risk.emailCount}
                                 </div>
                             </div>
@@ -1367,25 +1367,25 @@ export default function BookingDetailPage() {
                                 className={`rounded-2xl border p-3 text-center ${
                                     risk.phoneCount >= 4
                                         ? "border-amber-200 bg-amber-50/60"
-                                        : "border-slate-100 bg-slate-50/70"
+                                        : "border-[#f3eadc] bg-[#faf6ef]"
                                 }`}
                             >
-                                <div className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                                <div className="text-[10px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                     Same phone
                                 </div>
-                                <div className="mt-1 text-lg font-semibold text-slate-800">
+                                <div className="mt-1 text-lg font-semibold text-[#2a2118]">
                                     {risk.phoneCount}
                                 </div>
                             </div>
                         </div>
 
-                        <div className="mt-4 divide-y divide-slate-100">
+                        <div className="mt-4 divide-y divide-[#f3eadc]">
                             <MetaRow label="IP address">
                                 {booking.ipAddress ? (
                                     <Tooltip title="Click to copy">
                                         <button
                                             type="button"
-                                            className="font-mono text-xs text-slate-700 hover:text-slate-900 hover:underline"
+                                            className="font-mono text-xs text-[#3f342b] hover:text-[#9a3412] hover:underline"
                                             onClick={() =>
                                                 copyValue(booking.ipAddress, "IP address", message)
                                             }
@@ -1401,7 +1401,7 @@ export default function BookingDetailPage() {
                                 {booking.userAgent ? (
                                     <Tooltip title={booking.userAgent}>
                                         <span
-                                            className="block max-w-[220px] truncate text-xs text-slate-500"
+                                            className="block max-w-[220px] truncate text-xs text-[#6b5c4d]"
                                             style={{ maxWidth: 220 }}
                                         >
                                             {booking.userAgent}
@@ -1430,7 +1430,7 @@ export default function BookingDetailPage() {
 
                     <Card
                         variant="borderless"
-                        className="rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                        className="rounded-2xl shadow-[0_1px_2px_rgba(42,33,24,0.05)]"
                         styles={{ body: { padding: 24 } }}
                     >
                         <SectionTitle
@@ -1439,11 +1439,11 @@ export default function BookingDetailPage() {
                             description="Other bookings or leads matching this customer."
                         />
                         {totalRelated === 0 && related.leads.length === 0 ? (
-                            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 px-6 py-8 text-center">
+                            <div className="rounded-2xl border border-dashed border-[#eadfce] bg-[#faf6ef] px-6 py-8 text-center">
                                 <Empty
                                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                                     description={
-                                        <span className="text-slate-500">
+                                        <span className="text-[#6b5c4d]">
                                             No other submissions from this customer
                                         </span>
                                     }
@@ -1453,22 +1453,22 @@ export default function BookingDetailPage() {
                             <div className="space-y-5">
                                 {related.sameEmail.length ? (
                                     <div>
-                                        <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                        <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                             Same email · {related.sameEmail.length}
                                         </div>
                                         <ul className="space-y-1">
                                             {related.sameEmail.map((b) => (
                                                 <li
                                                     key={`e-${b.id}`}
-                                                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 bg-white px-3 py-2 text-sm transition hover:border-slate-200"
+                                                    className="flex items-center justify-between gap-2 rounded-xl border border-[#f3eadc] bg-[#fffdf8] px-3 py-2 text-sm transition hover:border-[#eadfce]"
                                                 >
                                                     <Link
                                                         href={`/portal/admin/dashboard/leads/bookings/${b.id}`}
-                                                        className="min-w-0 flex-1 truncate text-slate-700 hover:text-primary hover:underline"
+                                                        className="min-w-0 flex-1 truncate text-[#3f342b] hover:text-primary hover:underline"
                                                     >
                                                         #{b.id} · {b.serviceTitle || b.tourTitle || "General"}
                                                     </Link>
-                                                    <span className="text-xs text-slate-400">
+                                                    <span className="text-xs text-[#8a7a6a]">
                                                         {relativeTime(b.createdAt)}
                                                     </span>
                                                 </li>
@@ -1478,22 +1478,22 @@ export default function BookingDetailPage() {
                                 ) : null}
                                 {related.samePhone.length ? (
                                     <div>
-                                        <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                        <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                             Same phone · {related.samePhone.length}
                                         </div>
                                         <ul className="space-y-1">
                                             {related.samePhone.map((b) => (
                                                 <li
                                                     key={`p-${b.id}`}
-                                                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 bg-white px-3 py-2 text-sm transition hover:border-slate-200"
+                                                    className="flex items-center justify-between gap-2 rounded-xl border border-[#f3eadc] bg-[#fffdf8] px-3 py-2 text-sm transition hover:border-[#eadfce]"
                                                 >
                                                     <Link
                                                         href={`/portal/admin/dashboard/leads/bookings/${b.id}`}
-                                                        className="min-w-0 flex-1 truncate text-slate-700 hover:text-primary hover:underline"
+                                                        className="min-w-0 flex-1 truncate text-[#3f342b] hover:text-primary hover:underline"
                                                     >
                                                         #{b.id} · {b.serviceTitle || b.tourTitle || "General"}
                                                     </Link>
-                                                    <span className="text-xs text-slate-400">
+                                                    <span className="text-xs text-[#8a7a6a]">
                                                         {relativeTime(b.createdAt)}
                                                     </span>
                                                 </li>
@@ -1503,22 +1503,22 @@ export default function BookingDetailPage() {
                                 ) : null}
                                 {related.sameIp.length ? (
                                     <div>
-                                        <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                        <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                             Same IP · {related.sameIp.length}
                                         </div>
                                         <ul className="space-y-1">
                                             {related.sameIp.map((b) => (
                                                 <li
                                                     key={`ip-${b.id}`}
-                                                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 bg-white px-3 py-2 text-sm transition hover:border-slate-200"
+                                                    className="flex items-center justify-between gap-2 rounded-xl border border-[#f3eadc] bg-[#fffdf8] px-3 py-2 text-sm transition hover:border-[#eadfce]"
                                                 >
                                                     <Link
                                                         href={`/portal/admin/dashboard/leads/bookings/${b.id}`}
-                                                        className="min-w-0 flex-1 truncate text-slate-700 hover:text-primary hover:underline"
+                                                        className="min-w-0 flex-1 truncate text-[#3f342b] hover:text-primary hover:underline"
                                                     >
                                                         #{b.id} · {b.name}
                                                     </Link>
-                                                    <span className="text-xs text-slate-400">
+                                                    <span className="text-xs text-[#8a7a6a]">
                                                         {relativeTime(b.createdAt)}
                                                     </span>
                                                 </li>
@@ -1528,26 +1528,26 @@ export default function BookingDetailPage() {
                                 ) : null}
                                 {related.leads.length ? (
                                     <div>
-                                        <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                                        <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-[#8a7a6a]">
                                             Website leads · {related.leads.length}
                                         </div>
                                         <ul className="space-y-1">
                                             {related.leads.map((l) => (
                                                 <li
                                                     key={`l-${l.id}`}
-                                                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 bg-white px-3 py-2 text-sm transition hover:border-slate-200"
+                                                    className="flex items-center justify-between gap-2 rounded-xl border border-[#f3eadc] bg-[#fffdf8] px-3 py-2 text-sm transition hover:border-[#eadfce]"
                                                 >
                                                     <span className="min-w-0 flex-1 truncate">
                                                         <Tag color="blue" className="!rounded-full">
                                                             {l.source}
                                                         </Tag>
                                                         {l.pageUrl ? (
-                                                            <span className="text-xs text-slate-400">
+                                                            <span className="text-xs text-[#8a7a6a]">
                                                                 {l.pageUrl}
                                                             </span>
                                                         ) : null}
                                                     </span>
-                                                    <span className="text-xs text-slate-400">
+                                                    <span className="text-xs text-[#8a7a6a]">
                                                         {relativeTime(l.createdAt)}
                                                     </span>
                                                 </li>
@@ -1561,17 +1561,17 @@ export default function BookingDetailPage() {
 
                     <Card
                         variant="borderless"
-                        className="rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                        className="rounded-2xl shadow-[0_1px_2px_rgba(42,33,24,0.05)]"
                         styles={{ body: { padding: 24 } }}
                     >
                         <SectionTitle
                             icon={<GlobalOutlined />}
                             title="Submission metadata"
                         />
-                        <div className="divide-y divide-slate-100">
+                        <div className="divide-y divide-[#f3eadc]">
                             <MetaRow label="Booking date">
                                 {booking.bookingDate ? (
-                                    <span className="font-medium text-slate-700">
+                                    <span className="font-medium text-[#3f342b]">
                                         {fmtDate(booking.bookingDate)}
                                     </span>
                                 ) : (

@@ -5,7 +5,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import PublicIconRenderer from "../common/PublicIconRenderer";
 import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
 import { normalizeSocialLinks, resolveSocialLinks, type SocialLink } from "@/src/lib/social-links";
-import { parseMultiValue, resolveMapsEmbedSrc } from "@/src/lib/settings-normalize";
+import { parseMultiValue, resolveMapsEmbedForIframe } from "@/src/lib/settings-normalize";
 import { DEFAULT_SITE_NAME } from "@/src/lib/brand";
 import { getSiteUrl } from "@/src/lib/site";
 
@@ -270,7 +270,7 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
 
     const address = settings?.address || footerData.contactAddress || "123 Travel Plaza, Suite 456\nDhaka, Bangladesh";
     const mapsHref = settings?.googleMapsUrl?.trim() || null;
-    const mapEmbedSrc = resolveMapsEmbedSrc(mapsHref) || OFFICE_MAP_EMBED;
+    const mapEmbedSrc = (await resolveMapsEmbedForIframe(mapsHref)) || OFFICE_MAP_EMBED;
     const bio = footerData.bio || defaultData.bio;
 
     const socialLinks = resolveFooterSocialLinks(footerData.socialLinks, settings);

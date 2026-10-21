@@ -7,6 +7,8 @@ export const TAG_HOME_PAGE = 'home-page';
 export const TAG_GENERAL_SETTINGS = 'general-settings';
 export const TAG_TOURS_LIST = 'tours-list';
 export const TAG_BLOG_LIST = 'blog-list';
+export const TAG_VISA_LIST = 'visa-list';
+export const TAG_TICKET_ROUTES = 'ticket-routes';
 export const TAG_SUNVIA_ECO_RESORT = 'sunvia-eco-resort';
 export const TAG_CUSTOM_ICONS = 'custom-icons';
 
@@ -28,6 +30,15 @@ export function blogRouteTag(param: string) {
   return `blog-url-${param}`;
 }
 
+export function visaDetailTag(id: string | number) {
+  return `visa-${id}`;
+}
+
+/** Invalidate cached HTML/data for a public visa URL segment (slug or legacy numeric id). */
+export function visaRouteTag(param: string) {
+  return `visa-url-${param}`;
+}
+
 /*
 Tag to route mapping:
 - TAG_TOURS_LIST -> `/tours`, sitemap, list consumers
@@ -36,4 +47,8 @@ Tag to route mapping:
 - TAG_BLOG_LIST -> `/blog`, sitemap, list consumers
 - blogDetailTag(id) -> admin/API cache keys by primary key
 - blogRouteTag(param) -> `/blog/[slug]` where param is the URL segment used in fetch
+- TAG_VISA_LIST -> `/visa`, homepage visa strip, sitemap
+- TAG_TICKET_ROUTES -> `/tickets` popular route cards
+- visaDetailTag(id) -> admin/API cache keys by primary key
+- visaRouteTag(param) -> `/visa/[slug]` where param is the URL segment used in fetch
 */

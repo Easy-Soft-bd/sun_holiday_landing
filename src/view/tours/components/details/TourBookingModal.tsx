@@ -120,6 +120,11 @@ export default function TourBookingModal({ tour, open, onClose }: Props) {
             setError("Please enter a valid phone number.");
             return;
         }
+        const email = form.email.trim();
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setError("Please enter a valid email address.");
+            return;
+        }
 
         setSubmitting(true);
         setError(null);
@@ -142,7 +147,7 @@ export default function TourBookingModal({ tour, open, onClose }: Props) {
                 body: JSON.stringify({
                     name: form.name.trim(),
                     phone: form.phone.trim(),
-                    email: form.email.trim(),
+                    email: form.email.trim() || undefined,
                     bookingDate: form.bookingDate || null,
                     message: messageWithGuests,
                     source: `tour-${sourceSlug}`,
@@ -316,18 +321,12 @@ export default function TourBookingModal({ tour, open, onClose }: Props) {
                             </Field>
                         </div>
 
-                        <Field
-                            id="bk-email"
-                            label="Email"
-                            icon={<Mail size={16} />}
-                            required
-                        >
+                        <Field id="bk-email" label="Email (optional)" icon={<Mail size={16} />}>
                             <input
                                 id="bk-email"
                                 type="email"
                                 name="email"
                                 autoComplete="email"
-                                required
                                 value={form.email}
                                 onChange={updateField("email")}
                                 className="input input-bordered w-full rounded-xl"

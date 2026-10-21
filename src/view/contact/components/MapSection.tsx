@@ -1,4 +1,4 @@
-import { resolveMapsEmbedSrc, resolveMapsDirectionsHref } from "@/src/lib/settings-normalize";
+import { resolveMapsDirectionsHref, resolveMapsEmbedForIframe } from "@/src/lib/settings-normalize";
 
 const DEFAULT_MAP_EMBED =
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.902442430139!2d90.37258331536263!3d23.75085809467645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b33cffc3fb%3A0x4a826f475fd312af!2sDhanmondi%2027!5e0!3m2!1sen!2sbd!4v1675238475234!5m2!1sen!2sbd";
@@ -8,8 +8,8 @@ type MapSectionProps = {
     address?: string | null;
 };
 
-export default function MapSection({ googleMapsUrl, address }: MapSectionProps) {
-    const embedSrc = resolveMapsEmbedSrc(googleMapsUrl) || DEFAULT_MAP_EMBED;
+export default async function MapSection({ googleMapsUrl, address }: MapSectionProps) {
+    const embedSrc = (await resolveMapsEmbedForIframe(googleMapsUrl)) || DEFAULT_MAP_EMBED;
     const directionsHref = resolveMapsDirectionsHref(googleMapsUrl);
     const blurb =
         address?.trim() ||

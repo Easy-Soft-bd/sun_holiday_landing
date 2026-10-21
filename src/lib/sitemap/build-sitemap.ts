@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { getCachedActiveBlogPosts } from '@/src/lib/data/blog';
 import { getCachedActiveTours } from '@/src/lib/data/tours';
+import { getCachedActiveVisaCountries } from '@/src/lib/data/visa';
 import { listStaticResortPathnames } from '@/src/lib/resorts/static-resort-pages';
 import {
   MARKETING_PATH_PRIORITY,
@@ -30,13 +31,13 @@ function entry(
 }
 
 /**
- * Full public sitemap: static marketing pages + resort slugs + active tours + active blog posts.
+ * Full public sitemap: static marketing pages + resort slugs + active tours + active blog posts + active visa countries.
  * Served by `app/sitemap.ts` as `/sitemap.xml` and refreshed via `revalidate`.
  */
 export async function buildFullSitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  const [tours, blogPosts, resortPaths] = await Promise.all([
+  const [tours, blogPosts, visaCountries, resortPaths] = await Promise.all([
     getCachedActiveTours().catch((err) => {
       console.error('sitemap: failed to load tours', err);
       return [] as Awaited<ReturnType<typeof getCachedActiveTours>>;
@@ -44,6 +45,10 @@ export async function buildFullSitemap(): Promise<MetadataRoute.Sitemap> {
     getCachedActiveBlogPosts().catch((err) => {
       console.error('sitemap: failed to load blog posts', err);
       return [] as Awaited<ReturnType<typeof getCachedActiveBlogPosts>>;
+    }),
+    getCachedActiveVisaCountries().catch((err) => {
+      console.error('sitemap: failed to load visa countries', err);
+      return [] as Awaited<ReturnType<typeof getCachedActiveVisaCountries>>;
     }),
     Promise.resolve(listStaticResortPathnames()),
   ]);
@@ -75,7 +80,7 @@ export async function buildFullSitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency:
           path === '/'
             ? 'weekly'
-            : path === '/blog' || path === '/news' || path === '/events' || path === '/csr' || path === '/tours'
+            : path === '/blog' || path === '/news' || path === '/events' || path === '/csr' || path === '/tours' || path === '/visa'
               ? 'daily'
               : 'monthly',
         priority: MARKETING_PATH_PRIORITY[path] ?? 0.7,
@@ -101,6 +106,18 @@ export async function buildFullSitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: tour.updatedAt ? new Date(tour.updatedAt) : now,
         changeFrequency: 'weekly',
         priority: 0.9,
+      })
+    );
+  }
+
+  for (const country of visaCountries) {
+    const slug = country.slug?.trim();
+    if (!slug) continue;
+    push(
+      entry(`/visa/${slug}`, {
+        lastModified: country.updatedAt ? new Date(country.updatedAt) : now,
+        changeFrequency: 'weekly',
+        priority: 0.8,
       })
     );
   }

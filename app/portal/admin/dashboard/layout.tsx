@@ -24,6 +24,7 @@ import {
     EditOutlined,
     EnvironmentOutlined,
     ExportOutlined,
+    GlobalOutlined,
     HomeOutlined,
     InboxOutlined,
     LogoutOutlined,
@@ -31,6 +32,7 @@ import {
     MenuUnfoldOutlined,
     PlusOutlined,
     ReadOutlined,
+    SendOutlined,
     SettingOutlined,
     StarOutlined,
     UserOutlined,
@@ -58,9 +60,9 @@ const cmsPages: { key: string; label: string; href: string }[] = [
 function buildMenuItems(): SidebarItem[] {
     return [
         {
-            key: ROOT,
-            icon: <DashboardOutlined />,
-            label: <Link href={ROOT}>Overview</Link>,
+            key: `${ROOT}/leads`,
+            icon: <InboxOutlined />,
+            label: <Link href={`${ROOT}/leads`}>Lead Management</Link>,
         },
         {
             key: `${ROOT}/tours`,
@@ -68,14 +70,24 @@ function buildMenuItems(): SidebarItem[] {
             label: <Link href={`${ROOT}/tours`}>Tours</Link>,
         },
         {
+            key: `${ROOT}/visa`,
+            icon: <GlobalOutlined />,
+            label: <Link href={`${ROOT}/visa`}>Visa</Link>,
+        },
+        {
+            key: `${ROOT}/tickets`,
+            icon: <SendOutlined />,
+            label: <Link href={`${ROOT}/tickets`}>Tickets</Link>,
+        },
+        {
             key: `${ROOT}/blog`,
             icon: <ReadOutlined />,
             label: <Link href={`${ROOT}/blog`}>Blog</Link>,
         },
         {
-            key: `${ROOT}/leads`,
-            icon: <InboxOutlined />,
-            label: <Link href={`${ROOT}/leads`}>Leads</Link>,
+            key: ROOT,
+            icon: <DashboardOutlined />,
+            label: <Link href={ROOT}>Overview</Link>,
         },
         {
             type: "divider",
@@ -135,7 +147,9 @@ const breadcrumbLabels: Record<string, string> = {
     dashboard: "Dashboard",
     tours: "Tours",
     blog: "Blog",
-    leads: "Leads",
+    visa: "Visa",
+    tickets: "Tickets",
+    leads: "Lead Management",
     bookings: "Booking",
     add: "Add",
     edit: "Edit",
@@ -169,6 +183,12 @@ function selectedKeyForPath(pathname: string): string {
     }
     if (pathname.startsWith(`${ROOT}/blog`)) {
         return `${ROOT}/blog`;
+    }
+    if (pathname.startsWith(`${ROOT}/visa`)) {
+        return `${ROOT}/visa`;
+    }
+    if (pathname.startsWith(`${ROOT}/tickets`)) {
+        return `${ROOT}/tickets`;
     }
     if (pathname.startsWith(`${ROOT}/leads`)) {
         return `${ROOT}/leads`;
@@ -379,10 +399,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Content
                     style={{
                         margin: 0,
-                        padding: "28px 20px 48px",
                         minHeight: 280,
                         background: "transparent",
                     }}
+                    className="px-3 py-4 sm:px-4 sm:py-5 lg:px-5 lg:py-6"
                 >
                     {children}
                 </Content>

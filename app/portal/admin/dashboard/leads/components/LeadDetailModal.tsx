@@ -66,7 +66,7 @@ export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props)
 
     return (
         <Modal
-            title={`Lead from ${lead.name || "—"}`}
+            title={`Message from ${lead.name || "—"}`}
             open={open}
             onOk={handleOk}
             onCancel={onClose}
@@ -89,7 +89,7 @@ export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props)
                     <Descriptions.Item label="Investment interest">{meta.interest}</Descriptions.Item>
                 ) : null}
                 <Descriptions.Item label="Source">
-                    <Tag color={lead.source?.toLowerCase().includes("sunvia") ? "volcano" : "blue"}>
+                    <Tag color={lead.source?.toLowerCase().includes("sunvia") ? "gold" : "volcano"}>
                         {lead.source}
                     </Tag>
                     {lead.pageUrl ? (
@@ -97,7 +97,7 @@ export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props)
                             href={lead.pageUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="ml-2 text-xs text-blue-500 hover:underline"
+                            className="ml-2 text-xs text-[#9a3412] hover:underline"
                         >
                             {lead.pageUrl}
                         </a>
@@ -107,7 +107,7 @@ export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props)
                     <span className="whitespace-pre-line">{lead.message || "—"}</span>
                 </Descriptions.Item>
                 <Descriptions.Item label="IP / UA">
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-[#6b5c4d]">
                         <div>IP: {lead.ipAddress || "—"}</div>
                         <div className="truncate">UA: {lead.userAgent || "—"}</div>
                         {lead.referrer ? <div className="truncate">Referrer: {lead.referrer}</div> : null}

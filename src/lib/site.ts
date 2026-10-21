@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { TourRecord } from '@/src/lib/data/tours';
 import type { BlogPostRecord } from '@/src/lib/data/blog';
+import type { VisaCountryRecord } from '@/src/lib/data/visa';
 import { DEFAULT_SITE_NAME } from '@/src/lib/brand';
 import { stripHtml } from '@/src/lib/html';
 
@@ -239,5 +240,76 @@ export function buildBlogPostMetadata(post: BlogPostRecord, pathname: string): M
       images: [socialImage],
     },
     category: post.category,
+  };
+}
+
+/** Metadata for a public visa country page (canonical, Open Graph, robots). */
+export function buildVisaCountryMetadata(country: VisaCountryRecord, pathname: string): Metadata {
+  const path = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  const plainExcerpt = stripHtml(country.excerpt || '');
+  const plainContent = stripHtml(country.content || '');
+  const fallbackDesc =
+    plainExcerpt ||
+    (plainContent.length > 160 ? `${plainContent.slice(0, 157).trim()}…` : plainContent) ||
+    DEFAULT_DESCRIPTION;
+  const metaDesc =
+    typeof country.metaDescription === 'string' && country.metaDescription.trim()
+      ? country.metaDescription.trim()
+      : fallbackDesc.length > 160
+        ? `${fallbackDesc.slice(0, 157).trim()}…`
+        : fallbackDesc;
+
+  const pageTitle =
+    typeof country.metaTitle === 'string' && country.metaTitle.trim()
+      ? country.metaTitle.trim()
+      : `${country.name} Visa Assistance`;
+  const title = pageTitle.includes(DEFAULT_SITE_NAME)
+    ? pageTitle
+    : `${pageTitle} | ${DEFAULT_SITE_NAME}`;
+
+  const canonical = absoluteUrl(path);
+  const socialImage = absoluteUrl(country.coverImage);
+
+  return {
+    title,
+    description: metaDesc,
+    keywords: [
+      country.name,
+      `${country.name} visa`,
+      'visa assistance',
+      'visa requirements',
+      'Bangladesh',
+      DEFAULT_SITE_NAME,
+    ],
+    alternates: {
+      canonical,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true },
+    },
+    openGraph: {
+      title,
+      description: metaDesc,
+      url: canonical,
+      siteName: DEFAULT_SITE_NAME,
+      locale: 'en_BD',
+      type: 'website',
+      images: [
+        {
+          url: socialImage,
+          width: 1200,
+          height: 630,
+          alt: `${country.name} visa`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: metaDesc,
+      images: [socialImage],
+    },
   };
 }

@@ -169,14 +169,15 @@ export default function BookingFormModal({ open, initial, onClose, onSaved }: Pr
 
     return (
         <Modal
-            title={isEdit ? "Edit booking" : "New booking"}
+            title={isEdit ? "Edit inquiry" : "New inquiry"}
             open={open}
             onOk={handleOk}
             onCancel={onClose}
             okText={isEdit ? "Save" : "Create"}
             destroyOnHidden
             maskClosable={false}
-            width={620}
+            width={720}
+            styles={{ body: { paddingTop: 12 } }}
         >
             <Form
                 form={form}

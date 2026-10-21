@@ -16,15 +16,23 @@ import {
   getCachedHomePageData,
   getCachedSunviaEcoResortPageData,
 } from "@/src/lib/get-page-data";
+import { getCachedActiveVisaCountries, toVisaCountryCard } from "@/src/lib/data/visa";
+import VisaCountries from "@/src/view/Home/visa/VisaCountries";
 
 /**
  * Below-fold home sections with CMS data. Gated so they stay out of the
  * initial HTML DOM and do not compete with hero LCP.
  */
 export default async function HomeDeferred() {
-  const [pageData, resortPageData] = await Promise.all([
+  const [pageData, resortPageData, visaCountries] = await Promise.all([
     getCachedHomePageData(),
     getCachedSunviaEcoResortPageData(),
+    getCachedActiveVisaCountries()
+      .then((countries) => countries.map(toVisaCountryCard))
+      .catch((error) => {
+        console.error("home visa countries", error);
+        return [];
+      }),
   ]);
 
   return (
@@ -94,6 +102,7 @@ export default async function HomeDeferred() {
       >
         <HajjCta data={pageData?.hajj_cta} />
       </Suspense>
+      <VisaCountries countries={visaCountries} />
       <Suspense fallback={<FeatureTourSkeleton />}>
         <FeatureTour />
       </Suspense>

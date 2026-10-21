@@ -51,7 +51,7 @@ export default function TicketHero() {
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!search.from.trim() || !search.to.trim()) {
-            setValidation("Please enter both departure and destination cities.");
+            setValidation("Please enter both departure and destination.");
             return;
         }
         setValidation(null);
@@ -75,37 +75,36 @@ export default function TicketHero() {
     }
 
     return (
-        <section className="relative bg-base-100 border-b border-base-200 lg:min-h-[600px] flex flex-col justify-end pb-20 pt-40 overflow-visible">
+        <section className="relative overflow-hidden border-b border-base-200 bg-base-100 pb-10 pt-28 sm:pb-14 sm:pt-32">
             <div className="absolute inset-0 z-0">
                 <div
-                    className="w-full h-full bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop')] bg-cover bg-center"
+                    className="h-full w-full bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop')] bg-cover bg-center"
                 />
                 <div className="absolute inset-0 bg-[#001030]/60 backdrop-blur-[2px]" />
             </div>
 
-            <div className="container mx-auto px-4 relative z-10">
-                <div className="text-center text-white mb-12">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-bold uppercase tracking-wider mb-6">
+            <div className="container relative z-10 mx-auto px-4">
+                <div className="mb-8 text-center text-white sm:mb-10">
+                    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-bold uppercase tracking-wider text-white backdrop-blur-md">
                         <PlaneMarker />
                         Fly Anywhere
                     </div>
-                    <h1 className="font-magmawave text-5xl md:text-7xl mb-4 tracking-tighter leading-tight text-white drop-shadow-sm">
+                    <h1 className="mb-4 font-magmawave text-4xl leading-tight tracking-tighter text-white drop-shadow-sm sm:text-5xl md:text-7xl">
                         Find Best <span className="text-primary">Flight Deals</span>
                     </h1>
-                    <p className="text-xl text-white/80 max-w-2xl mx-auto font-light">
-                        Search and book flights to your favorite destinations with exclusive offers.
+                    <p className="mx-auto max-w-2xl text-base font-light text-white/80 sm:text-xl">
+                        Tell us the route. Our ticket desk will call you with the fare options.
                     </p>
                 </div>
 
-                {/* Search Form */}
                 <form
                     onSubmit={handleSearch}
-                    className="bg-base-100 p-6 rounded-[2rem] shadow-2xl border border-base-200 max-w-4xl mx-auto -mb-32 relative"
+                    className="mx-auto max-w-4xl rounded-[2rem] border border-base-200 bg-base-100 p-4 shadow-2xl sm:p-6"
                 >
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text font-bold text-base-content/60 uppercase text-xs tracking-wider flex items-center gap-2">
+                                <span className="label-text flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-base-content/60">
                                     <MapPin size={12} /> From
                                 </span>
                             </label>
@@ -114,12 +113,12 @@ export default function TicketHero() {
                                 value={search.from}
                                 onChange={updateField("from")}
                                 placeholder="Dhaka (DAC)"
-                                className="input input-bordered rounded-xl font-bold focus:input-primary"
+                                className="input input-bordered rounded-xl text-base font-bold focus:input-primary"
                             />
                         </div>
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text font-bold text-base-content/60 uppercase text-xs tracking-wider flex items-center gap-2">
+                                <span className="label-text flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-base-content/60">
                                     <MapPin size={12} /> To
                                 </span>
                             </label>
@@ -128,12 +127,12 @@ export default function TicketHero() {
                                 value={search.to}
                                 onChange={updateField("to")}
                                 placeholder="Destination"
-                                className="input input-bordered rounded-xl font-bold focus:input-primary"
+                                className="input input-bordered rounded-xl text-base font-bold focus:input-primary"
                             />
                         </div>
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text font-bold text-base-content/60 uppercase text-xs tracking-wider flex items-center gap-2">
+                                <span className="label-text flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-base-content/60">
                                     <Calendar size={12} /> Date
                                 </span>
                             </label>
@@ -141,19 +140,19 @@ export default function TicketHero() {
                                 type="date"
                                 value={search.date}
                                 onChange={updateField("date")}
-                                className="input input-bordered rounded-xl font-bold focus:input-primary text-base-content/70"
+                                className="input input-bordered rounded-xl text-base font-bold text-base-content/70 focus:input-primary"
                             />
                         </div>
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text font-bold text-base-content/60 uppercase text-xs tracking-wider flex items-center gap-2">
+                                <span className="label-text flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-base-content/60">
                                     <Users size={12} /> Travelers
                                 </span>
                             </label>
                             <select
                                 value={search.travelers}
                                 onChange={updateField("travelers")}
-                                className="select select-bordered rounded-xl font-bold focus:select-primary"
+                                className="select select-bordered rounded-xl text-base font-bold focus:select-primary"
                             >
                                 <option>1 Passenger</option>
                                 <option>2 Passengers</option>
@@ -168,10 +167,10 @@ export default function TicketHero() {
 
                     <button
                         type="submit"
-                        className="btn btn-primary w-full mt-6 rounded-xl text-lg gap-2 shadow-lg shadow-primary/30"
+                        className="btn btn-primary mt-6 w-full gap-2 rounded-xl text-lg shadow-lg shadow-primary/30"
                     >
                         <Search size={20} />
-                        Search Flights
+                        Search
                     </button>
                 </form>
             </div>
@@ -180,8 +179,8 @@ export default function TicketHero() {
                 open={open}
                 onClose={() => setOpen(false)}
                 {...payload}
-                eyebrow="Request a flight quote"
-                title="Book this flight"
+                eyebrow="Send a ticket query"
+                title="Tell us how to reach you"
                 subtitle={
                     search.from && search.to
                         ? `${search.from} → ${search.to}${search.date ? ` · ${search.date}` : ""}`
@@ -189,9 +188,9 @@ export default function TicketHero() {
                 }
                 summary={summary}
                 requireEmail={false}
-                submitLabel="Request booking"
-                successTitle="Flight request received!"
-                successDescription="Our team will call or text you on the number you shared with the best fare options."
+                submitLabel="Send Query"
+                successTitle="Query received!"
+                successDescription="Our ticket desk will call or text you on the number you shared with the available options."
             />
         </section>
     );
