@@ -13,6 +13,7 @@ class HomePage extends Model {
   declare why_choose_us: any;
   declare sailor_moon_cta: any;
   declare sailor_moon_resorts_page: any;
+  declare swapno_bilash_resort_page: any;
   declare resorts_listing_page: any;
   declare about_page: any;
   declare about_teams_page: any;
@@ -135,6 +136,17 @@ HomePage.init(
       },
       set(value: any) {
         this.setDataValue('sailor_moon_resorts_page', value);
+      },
+    },
+    swapno_bilash_resort_page: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      get() {
+        const rawValue = this.getDataValue('swapno_bilash_resort_page');
+        return typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
+      },
+      set(value: any) {
+        this.setDataValue('swapno_bilash_resort_page', value);
       },
     },
     resorts_listing_page: {

@@ -8,23 +8,27 @@ import ImageUrlUploadField from "@/src/components/common/ImageUrlUploadField";
 import IconPicker from "@/src/components/common/IconPicker";
 import SailorMoonGalleryImageCell from "@/src/view/sailor-moon-resorts/SailorMoonGalleryImageCell";
 import type { SailorMoonResortsPageData } from "@/src/lib/data/sailor-moon-resorts-page";
-import { mergeSailorMoonResortsPageData } from "@/src/lib/data/sailor-moon-resorts-page";
+import { mergeSailorMoonResortsPageData, readSailorMoonPriceHighlights } from "@/src/lib/data/sailor-moon-resorts-page";
+import type { ResortPageEditorConfig } from "@/src/view/sailor-moon-resorts/editor-config";
 
 const { TextArea } = Input;
 
-type FormValues = Omit<SailorMoonResortsPageData, "metaKeywords" | "contact"> & {
+type FormValues = Omit<SailorMoonResortsPageData, "metaKeywords" | "contact" | "bookingCtaHref"> & {
   metaKeywordsText: string;
-  phonesText: string;
-  emailsText: string;
 };
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   initialData?: Partial<SailorMoonResortsPageData> | null;
+  editor?: ResortPageEditorConfig;
 };
 
-export default function SailorMoonResortsEditModal({ isOpen, onClose, initialData }: Props) {
+export default function SailorMoonResortsEditModal({ isOpen, onClose, initialData, editor }: Props) {
+  const section = editor?.section ?? "sailor_moon_resorts_page";
+  const title = editor?.title ?? "Edit Sailor Moon Resorts page";
+  const uploadType = editor?.uploadType ?? "sailor";
+  const defaults = editor?.defaults;
   const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm<FormValues>();
@@ -34,47 +38,48 @@ export default function SailorMoonResortsEditModal({ isOpen, onClose, initialDat
     if (!isOpen) {
       return;
     }
-    const m = mergeSailorMoonResortsPageData(initialData);
-    const { metaKeywords, contact, ...rest } = m;
+    const m = mergeSailorMoonResortsPageData(initialData, defaults);
+    const { metaKeywords, contact: _contact, bookingCtaHref: _bookingCtaHref, ...rest } = m;
     form.setFieldsValue({
       ...rest,
       metaKeywordsText: metaKeywords.join(", "),
-      phonesText: contact.phone.join("\n"),
-      emailsText: contact.email.join("\n"),
     });
-  }, [isOpen, initialData, form]);
+  }, [isOpen, initialData, form, defaults]);
 
   const handleSave = async (values: FormValues) => {
     setIsSaving(true);
     try {
-      const { metaKeywordsText, phonesText, emailsText, ...rest } = values;
+      const existing = mergeSailorMoonResortsPageData(initialData, defaults);
+      const { metaKeywordsText, ...rest } = values;
       const payload: SailorMoonResortsPageData = {
         ...rest,
         galleryMaxItems: Number(rest.galleryMaxItems) > 0 ? Number(rest.galleryMaxItems) : 12,
+        bookingCtaHref: existing.bookingCtaHref,
         metaKeywords: metaKeywordsText
           .split(",")
           .map((s) => s.trim())
           .filter(Boolean),
-        contact: {
-          phone: phonesText
-            .split("\n")
-            .map((s) => s.trim())
-            .filter(Boolean),
-          email: emailsText
-            .split("\n")
-            .map((s) => s.trim())
-            .filter(Boolean),
-        },
+        pricingItems: (rest.pricingItems ?? [])
+          .map((item) => ({
+            name: String(item?.name ?? "").trim(),
+            price: String(item?.price ?? "").trim(),
+            unit: String(item?.unit ?? "").trim() || "per night",
+            description: String(item?.description ?? "").trim(),
+            highlights: readSailorMoonPriceHighlights(item?.highlights),
+          }))
+          .filter((item) => item.name),
+        // Phones and emails on the public page come from Dashboard → Settings.
+        contact: existing.contact,
       };
 
       const response = await fetch("/api/home-page", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ section: "sailor_moon_resorts_page", data: payload }),
+        body: JSON.stringify({ section, data: payload }),
       });
 
       if (response.ok) {
-        message.success("Sailor Moon Resorts page updated");
+        message.success(`${title.replace(/^Edit\s+/i, "")} updated`);
         router.refresh();
         onClose();
       } else {
@@ -95,7 +100,7 @@ export default function SailorMoonResortsEditModal({ isOpen, onClose, initialDat
 
   return (
     <Modal
-      title="Edit Sailor Moon Resorts page"
+      title={title}
       open={isOpen}
       onCancel={handleCancel}
       footer={null}
@@ -124,7 +129,7 @@ export default function SailorMoonResortsEditModal({ isOpen, onClose, initialDat
           extra="Upload a file or paste a URL. Hero also uses the first gallery image below."
           rules={[{ required: true, message: "Add an image URL or upload a file" }]}
         >
-          <ImageUrlUploadField uploadType="sailor" placeholder="/uploads/sailor/… or https://…" previewHeightClassName="h-28" />
+          <ImageUrlUploadField uploadType={uploadType} placeholder={`/uploads/${uploadType}/… or https://…`} previewHeightClassName="h-28" />
         </Form.Item>
 
         <Divider titlePlacement="left">Main details</Divider>
@@ -277,7 +282,7 @@ export default function SailorMoonResortsEditModal({ isOpen, onClose, initialDat
           <p className="font-medium text-slate-800">Grid manager</p>
           <p className="mt-1 text-xs leading-relaxed text-slate-500">
             Reorder with the arrows on each card. The <strong>Hero</strong> slot uses the first image for the page hero and Open Graph unless you override OG above.
-            Uploads go to <code className="rounded bg-white px-1 text-[11px]">/uploads/sailor</code>.
+            Uploads go to <code className="rounded bg-white px-1 text-[11px]">{`/uploads/${uploadType}`}</code>.
           </p>
         </div>
         <Form.List name="images">
@@ -293,6 +298,7 @@ export default function SailorMoonResortsEditModal({ isOpen, onClose, initialDat
                     label={null}
                   >
                     <SailorMoonGalleryImageCell
+                      uploadType={uploadType}
                       isHero={index === 0}
                       indexDisplay={index + 1}
                       onRemove={() => remove(name)}
@@ -317,7 +323,77 @@ export default function SailorMoonResortsEditModal({ isOpen, onClose, initialDat
           )}
         </Form.List>
 
+        <Divider titlePlacement="left">Pricing</Divider>
+        <Form.Item name="pricingEyebrow" label="Eyebrow" rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
+        <Space.Compact className="w-full">
+          <Form.Item className="w-1/2 pr-2" name="pricingHeadingBefore" label="Heading (before accent)" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item className="w-1/2 pl-2" name="pricingHeadingAccent" label="Heading accent" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+        </Space.Compact>
+        <Form.Item name="pricingIntro" label="Intro" rules={[{ required: true }]}>
+          <TextArea rows={2} />
+        </Form.Item>
+        <Form.List name="pricingItems">
+          {(fields, { add, remove }) => (
+            <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+              {fields.map(({ key, name, ...restField }) => (
+                <div key={key} className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50/80 to-white p-4 shadow-sm ring-1 ring-slate-900/5">
+                  <div className="mb-3 flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Room {name + 1}</span>
+                    <Button type="text" danger size="small" icon={<MinusCircleOutlined />} onClick={() => remove(name)} aria-label="Remove room" />
+                  </div>
+                  <Form.Item {...restField} name={[name, "name"]} label="Room name" rules={[{ required: true }]} className="mb-3">
+                    <Input placeholder="Deluxe Room" />
+                  </Form.Item>
+                  <Space.Compact className="w-full">
+                    <Form.Item {...restField} className="mb-3 w-1/2 pr-2" name={[name, "price"]} label="Price" rules={[{ required: true }]}>
+                      <Input placeholder="4,500 or On request" />
+                    </Form.Item>
+                    <Form.Item {...restField} className="mb-3 w-1/2 pl-2" name={[name, "unit"]} label="Unit" rules={[{ required: true }]}>
+                      <Input placeholder="per night" />
+                    </Form.Item>
+                  </Space.Compact>
+                  <Form.Item {...restField} name={[name, "description"]} label="Short line" rules={[{ required: true }]} className="mb-3">
+                    <TextArea rows={2} />
+                  </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, "highlights"]}
+                    label="Bullet list"
+                    extra="One point per line"
+                    className="mb-0"
+                    getValueProps={(value: unknown) => ({
+                      value: Array.isArray(value) ? value.join("\n") : String(value ?? ""),
+                    })}
+                  >
+                    <TextArea rows={4} placeholder={"Queen bed\nBeach access\nAir conditioning"} />
+                  </Form.Item>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => add({ name: "", price: "", unit: "per night", description: "", highlights: [] })}
+                className="group flex min-h-[160px] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/50 text-sm font-medium text-slate-500 transition hover:border-primary hover:bg-primary/5 hover:text-primary"
+              >
+                <PlusOutlined className="text-lg transition group-hover:scale-110" />
+                Add room rate
+              </button>
+            </div>
+          )}
+        </Form.List>
+        <Form.Item name="pricingDisclaimer" label="Disclaimer under the rates">
+          <Input placeholder="*Rates can change by season" />
+        </Form.Item>
+
         <Divider titlePlacement="left">Booking</Divider>
+        <p className="mb-4 text-sm leading-relaxed text-slate-500">
+          Phone numbers and email addresses on this page come from Dashboard → Settings. The form below is the on-page booking request.
+        </p>
         <Form.Item name="bookingEyebrow" label="Eyebrow" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
@@ -340,21 +416,10 @@ export default function SailorMoonResortsEditModal({ isOpen, onClose, initialDat
             <Input />
           </Form.Item>
         </Space.Compact>
-        <Form.Item name="phonesText" label="Phone numbers" extra="One per line" rules={[{ required: true }]}>
-          <TextArea rows={4} placeholder={"+880…\n+880…"} />
+        <Form.Item name="bookingCtaText" label="Submit button text" rules={[{ required: true }]}>
+          <Input />
         </Form.Item>
-        <Form.Item name="emailsText" label="Email addresses" extra="One per line" rules={[{ required: true }]}>
-          <TextArea rows={3} placeholder={"info@…\nsales@…"} />
-        </Form.Item>
-        <Space.Compact className="w-full">
-          <Form.Item className="w-1/2 pr-2" name="bookingCtaText" label="Booking button text" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item className="w-1/2 pl-2" name="bookingCtaHref" label="Booking button link" rules={[{ required: true }]}>
-            <Input placeholder="/contact" />
-          </Form.Item>
-        </Space.Compact>
-        <Form.Item name="bookingDisclaimer" label="Small disclaimer under button">
+        <Form.Item name="bookingDisclaimer" label="Small disclaimer under the form">
           <Input placeholder="*Conditions apply" />
         </Form.Item>
 
@@ -370,6 +435,13 @@ export default function SailorMoonResortsEditModal({ isOpen, onClose, initialDat
             <Input />
           </Form.Item>
         </Space.Compact>
+        <Form.Item
+          name="googleMapsUrl"
+          label="Google Maps link"
+          extra="Share link or embed URL. Leave this blank and the map stays hidden."
+        >
+          <Input placeholder="https://maps.app.goo.gl/... or https://www.google.com/maps/embed?..." />
+        </Form.Item>
 
         <Form.Item className="mb-0 mt-6">
           <Space className="w-full justify-end">

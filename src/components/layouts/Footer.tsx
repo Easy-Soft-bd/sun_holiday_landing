@@ -8,6 +8,7 @@ import { normalizeSocialLinks, resolveSocialLinks, type SocialLink } from "@/src
 import { parseMultiValue, resolveMapsEmbedForIframe } from "@/src/lib/settings-normalize";
 import { DEFAULT_SITE_NAME } from "@/src/lib/brand";
 import { getSiteUrl } from "@/src/lib/site";
+import { ensureSwapnoBilashResortLink } from "@/src/lib/resort-links";
 
 /** Footer CMS entries predate the settings editor and may not carry a label. */
 interface CmsSocialLink {
@@ -69,6 +70,7 @@ const defaultData: FooterData = {
     resortsTitle: "Resorts",
     resortsLinks: [
         { label: "Sailor Moon Beach Resort", url: "/sailor-moon-resorts" },
+        { label: "Swapno Bilash Resort", url: "/swapno-bilash-resort" },
         { label: "Sunvia Hotel Resort", url: "/sunvia-hotel-resort" },
         { label: "Grandeur Bliss", url: "/resort/grandeur-bliss" },
     ],
@@ -187,8 +189,10 @@ function mergeFooterData(data?: FooterData): FooterData {
         merged.mediaLinks = defaultData.mediaLinks;
     }
     merged.mediaTitle = merged.mediaTitle || defaultData.mediaTitle;
-    merged.resortsLinks = merged.resortsLinks?.map((link) =>
-        link.url === "/sunvia-eco-resort" ? { ...link, url: "/sunvia-hotel-resort" } : link
+    merged.resortsLinks = ensureSwapnoBilashResortLink(
+        (merged.resortsLinks ?? []).map((link) =>
+            link.url === "/sunvia-eco-resort" ? { ...link, url: "/sunvia-hotel-resort" } : link
+        )
     );
     merged.resortsTitle = merged.resortsTitle || defaultData.resortsTitle;
     return merged;

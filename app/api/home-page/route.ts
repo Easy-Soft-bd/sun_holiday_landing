@@ -36,6 +36,9 @@ export async function POST(request: Request) {
     if (section === 'sailor_moon_resorts_page') {
       revalidatePath('/sailor-moon-resorts');
     }
+    if (section === 'swapno_bilash_resort_page') {
+      revalidatePath('/swapno-bilash-resort');
+    }
     if (section === 'resorts_listing_page') {
       revalidatePath('/resorts');
     }

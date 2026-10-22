@@ -5,6 +5,24 @@ export type SailorMoonResortFeature = {
   icon: string;
 };
 
+export type SailorMoonPriceItem = {
+  name: string;
+  /** Display price, e.g. "4,500" or "On request". */
+  price: string;
+  /** Rate period shown under the price, e.g. "per night". */
+  unit: string;
+  description: string;
+  /** Short included points shown as a bullet list on the rate card. */
+  highlights: string[];
+};
+
+export function readSailorMoonPriceHighlights(value: unknown): string[] {
+  const lines = Array.isArray(value) ? value : String(value ?? "").split(/\n+/);
+  return lines
+    .map((line) => String(line).replace(/^[-•*]\s*/, "").trim())
+    .filter(Boolean);
+}
+
 /** Maps old CMS keys to React Icons names for backward compatibility */
 export const SAILOR_MOON_LEGACY_FEATURE_ICONS: Record<string, string> = {
   dining: "LuUtensils",
@@ -26,6 +44,29 @@ function normalizeFeatures(features: SailorMoonResortFeature[]): SailorMoonResor
     ...f,
     icon: normalizeSailorMoonFeatureIcon(f.icon),
   }));
+}
+
+function normalizePriceItems(
+  items: SailorMoonPriceItem[],
+  defaults: SailorMoonResortsPageData = defaultSailorMoonResortsPageData,
+): SailorMoonPriceItem[] {
+  const fallbackByName = new Map(
+    defaults.pricingItems.map((item) => [item.name.toLowerCase(), item.highlights])
+  );
+
+  return items
+    .map((item) => {
+      const name = String(item?.name ?? "").trim();
+      const highlights = readSailorMoonPriceHighlights(item?.highlights);
+      return {
+        name,
+        price: String(item?.price ?? "").trim(),
+        unit: String(item?.unit ?? "").trim() || "per night",
+        description: String(item?.description ?? "").trim(),
+        highlights: highlights.length > 0 ? highlights : (fallbackByName.get(name.toLowerCase()) ?? []),
+      };
+    })
+    .filter((item) => item.name);
 }
 
 export type SailorMoonResortsPageData = {
@@ -75,6 +116,13 @@ export type SailorMoonResortsPageData = {
   galleryHeadingBefore: string;
   galleryHeadingAccent: string;
 
+  pricingEyebrow: string;
+  pricingHeadingBefore: string;
+  pricingHeadingAccent: string;
+  pricingIntro: string;
+  pricingDisclaimer: string;
+  pricingItems: SailorMoonPriceItem[];
+
   bookingEyebrow: string;
   bookingHeadingBefore: string;
   bookingHeadingAccent: string;
@@ -86,6 +134,8 @@ export type SailorMoonResortsPageData = {
   locationEyebrow: string;
   locationHeadingBefore: string;
   locationHeadingAccent: string;
+  /** Google Maps share or embed link. Empty hides the map. */
+  googleMapsUrl: string;
 };
 
 export const defaultSailorMoonResortsPageData: SailorMoonResortsPageData = {
@@ -184,6 +234,37 @@ export const defaultSailorMoonResortsPageData: SailorMoonResortsPageData = {
   galleryHeadingBefore: "Photo",
   galleryHeadingAccent: "Gallery",
 
+  pricingEyebrow: "Stay Rates",
+  pricingHeadingBefore: "Room",
+  pricingHeadingAccent: "Pricing",
+  pricingIntro:
+    "Choose a room and send a booking request. Our team confirms availability and the final rate.",
+  pricingDisclaimer:
+    "*Rates can change by season and availability. A request is not a confirmed reservation.",
+  pricingItems: [
+    {
+      name: "Standard Room",
+      price: "On request",
+      unit: "per night",
+      description: "A comfortable room for couples or solo travelers.",
+      highlights: ["Queen or twin bedding", "Air conditioning", "Resort dining access", "Beach access"],
+    },
+    {
+      name: "Deluxe Room",
+      price: "On request",
+      unit: "per night",
+      description: "A larger room with a brighter outlook by the sea.",
+      highlights: ["Extra space and seating", "Air conditioning", "Brighter sea outlook", "Beach access"],
+    },
+    {
+      name: "Family Room",
+      price: "On request",
+      unit: "per night",
+      description: "Extra room for families between the beach, dining, and BBQ.",
+      highlights: ["Space for families", "Air conditioning", "Dining and BBQ access", "Beach access"],
+    },
+  ],
+
   bookingEyebrow: "Plan Your Stay",
   bookingHeadingBefore: "Booking",
   bookingHeadingAccent: "Information",
@@ -195,12 +276,14 @@ export const defaultSailorMoonResortsPageData: SailorMoonResortsPageData = {
   locationEyebrow: "Find Us",
   locationHeadingBefore: "Our",
   locationHeadingAccent: "Location",
+  googleMapsUrl: "",
 };
 
 export function mergeSailorMoonResortsPageData(
-  partial?: Partial<SailorMoonResortsPageData> | null
+  partial?: Partial<SailorMoonResortsPageData> | null,
+  defaults: SailorMoonResortsPageData = defaultSailorMoonResortsPageData,
 ): SailorMoonResortsPageData {
-  const d = defaultSailorMoonResortsPageData;
+  const d = defaults;
   if (!partial) {
     return { ...d };
   }
@@ -213,6 +296,11 @@ export function mergeSailorMoonResortsPageData(
     features:
       partial.features && partial.features.length > 0 ? normalizeFeatures(partial.features) : d.features,
     images: partial.images && partial.images.length > 0 ? partial.images : d.images,
+    pricingItems: Array.isArray(partial.pricingItems)
+      ? normalizePriceItems(partial.pricingItems, d)
+      : d.pricingItems,
+    googleMapsUrl:
+      typeof partial.googleMapsUrl === "string" ? partial.googleMapsUrl.trim() : d.googleMapsUrl,
     contact: {
       phone:
         partial.contact?.phone && partial.contact.phone.length > 0

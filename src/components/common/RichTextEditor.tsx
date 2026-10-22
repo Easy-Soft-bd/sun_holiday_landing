@@ -33,6 +33,8 @@ type RichTextEditorProps = {
   enableHeadings?: boolean;
   /** Blog editor: headings, quote, alignment, underline, image, undo, and redo. */
   variant?: "simple" | "full";
+  /** Shorter writing area for dense forms. */
+  compact?: boolean;
   uploadImage?: (file: File) => Promise<string>;
 };
 
@@ -61,6 +63,7 @@ export default function RichTextEditor({
   enableHeadings = false,
   variant = "simple",
   uploadImage,
+  compact = false,
 }: RichTextEditorProps) {
   const { message } = App.useApp();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
@@ -105,7 +108,9 @@ export default function RichTextEditor({
     editorProps: {
       attributes: {
         class: [
-          "tiptap-editor-content ProseMirror min-h-[11rem] px-4 py-3 text-[15px] leading-relaxed text-slate-800 focus:outline-none",
+          compact
+            ? "tiptap-editor-content ProseMirror min-h-16 px-3 py-2 text-[15px] leading-relaxed text-slate-800 focus:outline-none"
+            : "tiptap-editor-content ProseMirror min-h-[11rem] px-4 py-3 text-[15px] leading-relaxed text-slate-800 focus:outline-none",
           "[&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2",
           showHeadings
             ? "[&_h2]:mb-2 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mb-2 [&_h3]:text-lg [&_h3]:font-semibold"

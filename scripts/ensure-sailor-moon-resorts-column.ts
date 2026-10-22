@@ -14,6 +14,7 @@ async function main() {
 
   await sequelize.authenticate();
   await ensureJsonColumn(sequelize, "page_home", "sailor_moon_resorts_page");
+  await ensureJsonColumn(sequelize, "page_home", "swapno_bilash_resort_page");
   console.log("Done.");
   await sequelize.close();
   process.exit(0);

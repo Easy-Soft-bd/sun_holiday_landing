@@ -50,6 +50,7 @@ const ROOT = "/portal/admin/dashboard";
 const cmsPages: { key: string; label: string; href: string }[] = [
     { key: "cms-home", label: "Home", href: "/" },
     { key: "cms-sailor", label: "Sailor Moon Resorts", href: "/sailor-moon-resorts" },
+    { key: "cms-swapno", label: "Swapno Bilash Resort", href: "/swapno-bilash-resort" },
     { key: "cms-resorts", label: "Resorts Listing", href: "/resorts" },
     { key: "cms-sunvia-eco", label: "Sunvia Hotel & Resort", href: "/sunvia-hotel-resort" },
     { key: "cms-about", label: "About", href: "/about" },

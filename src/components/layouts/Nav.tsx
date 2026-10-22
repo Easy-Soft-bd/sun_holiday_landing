@@ -42,7 +42,8 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             name: "Resort",
             icon: Hotel,
             submenu: [
-                { name: "Sailor Moon Resorts", href: "/sailor-moon-resorts" },
+                { name: "Sailor Moon Beach Resorts", href: "/sailor-moon-resorts" },
+                { name: "Swapno Bilash Resort", href: "/swapno-bilash-resort" },
                 { name: "Sunvia Hotel & Resort", href: "/sunvia-hotel-resort" },
             ]
         },

@@ -4,34 +4,68 @@ import ClientOnly from "@/src/components/common/ClientOnly";
 import { MapPin, Star, Clock, Phone, Mail, ChevronRight, Calendar } from "lucide-react";
 import type { SailorMoonResortsPageData } from "@/src/lib/data/sailor-moon-resorts-page";
 import { mergeSailorMoonResortsPageData } from "@/src/lib/data/sailor-moon-resorts-page";
+import { resolveMapsDirectionsHref, resolveMapsEmbedForIframe } from "@/src/lib/settings-normalize";
+import type { ResortPageEditorConfig } from "@/src/view/sailor-moon-resorts/editor-config";
 import SailorMoonFeatureIcon from "@/src/view/sailor-moon-resorts/SailorMoonFeatureIcon";
-import SailorMoonBookingCTA from "@/src/view/sailor-moon-resorts/SailorMoonBookingCTA";
+import SailorMoonBookingForm, { SailorMoonPriceGrid } from "@/src/view/sailor-moon-resorts/SailorMoonStay";
+
+const sailorEditor: ResortPageEditorConfig = {
+  section: "sailor_moon_resorts_page",
+  title: "Edit Sailor Moon Resorts page",
+  uploadType: "sailor",
+  bookingSource: "Sailor Moon Beach Resorts",
+};
 
 type Props = {
   data?: Partial<SailorMoonResortsPageData> | null;
   admin?: boolean;
+  contactPhones?: string[];
+  contactEmails?: string[];
+  editor?: ResortPageEditorConfig;
 };
 
-async function SailorMoonResortsAdminSlot({ data }: { data: SailorMoonResortsPageData }) {
+function contactList(values: string[] | undefined) {
+  return (values ?? []).map((value) => value.trim()).filter(Boolean);
+}
+
+async function SailorMoonResortsAdminSlot({
+  data,
+  editor,
+}: {
+  data: SailorMoonResortsPageData;
+  editor: ResortPageEditorConfig;
+}) {
   const SailorMoonResortsAdminControl = (await import("./SailorMoonResortsAdminControl")).default;
   return (
     <ClientOnly>
       <div className="absolute right-4 top-4 z-50 md:right-8 md:top-8">
-        <SailorMoonResortsAdminControl data={data} />
+        <SailorMoonResortsAdminControl data={data} editor={editor} />
       </div>
     </ClientOnly>
   );
 }
 
-export default async function SailorMoonResortsView({ data, admin = false }: Props) {
-  const resortData = mergeSailorMoonResortsPageData(data);
+export default async function SailorMoonResortsView({
+  data,
+  admin = false,
+  contactPhones,
+  contactEmails,
+  editor = sailorEditor,
+}: Props) {
+  const resortData = mergeSailorMoonResortsPageData(data, editor.defaults);
   const heroImage = resortData.images[0] ?? "/sailor/SHA_6244 copy.jpg";
   const galleryCount = Math.max(1, Math.min(resortData.images.length, resortData.galleryMaxItems || 12));
+  const phones = contactList(contactPhones);
+  const emails = contactList(contactEmails);
+  const mapEmbedSrc = resortData.googleMapsUrl
+    ? await resolveMapsEmbedForIframe(resortData.googleMapsUrl)
+    : null;
+  const mapDirectionsHref = mapEmbedSrc ? resolveMapsDirectionsHref(resortData.googleMapsUrl) : null;
 
   return (
-    <div className="group/sailor-moon-resorts min-h-screen bg-base-100">
+    <div className="group/resort-page min-h-screen bg-base-100">
       <section className="relative h-[70vh] overflow-hidden md:h-[80vh]">
-        {admin ? <SailorMoonResortsAdminSlot data={resortData} /> : null}
+        {admin ? <SailorMoonResortsAdminSlot data={resortData} editor={editor} /> : null}
         <div className="absolute inset-0">
           <AppImage src={heroImage} alt={resortData.name} fill className="object-cover" priority sizes="100vw" quality={60} />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
@@ -172,9 +206,27 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
         </div>
       </section>
 
-      <section id="booking" className="bg-base-200 py-20 lg:py-28">
+      <section id="pricing" className="bg-base-200 py-20 lg:py-28">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="mx-auto max-w-4xl">
+          <div className="mb-16 text-center">
+            <p className="mb-4 text-sm font-bold uppercase tracking-[0.3em] text-primary">{resortData.pricingEyebrow}</p>
+            <h2 className="mb-4 font-gilliequest text-4xl leading-tight tracking-tighter md:text-5xl lg:text-6xl">
+              {resortData.pricingHeadingBefore}{" "}
+              <span className="text-primary italic">{resortData.pricingHeadingAccent}</span>
+            </h2>
+            <p className="mx-auto max-w-2xl text-lg text-base-content/70">{resortData.pricingIntro}</p>
+          </div>
+
+          <SailorMoonPriceGrid items={resortData.pricingItems} />
+          {resortData.pricingDisclaimer ? (
+            <p className="mt-8 text-center text-xs text-base-content/50">{resortData.pricingDisclaimer}</p>
+          ) : null}
+        </div>
+      </section>
+
+      <section id="booking" className="bg-base-100 py-20 lg:py-28">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="mx-auto max-w-6xl">
             <div className="rounded-3xl border border-base-300 bg-base-100 p-8 shadow-xl md:p-12">
               <div className="mb-12 text-center">
                 <p className="mb-4 text-sm font-bold uppercase tracking-[0.3em] text-primary">{resortData.bookingEyebrow}</p>
@@ -185,7 +237,8 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
                 <p className="text-lg text-base-content/70">{resortData.bookingIntro}</p>
               </div>
 
-              <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+              <div className="mb-8 grid grid-cols-1 gap-8 lg:grid-cols-5">
+                <div className="space-y-6 lg:col-span-2">
                 <div className="rounded-2xl border border-base-300 bg-base-200 p-6">
                   <div className="mb-4 flex items-center gap-4">
                     <div className="rounded-full bg-primary/10 p-3">
@@ -199,7 +252,7 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
                 </div>
 
                 <div className="rounded-2xl border border-base-300 bg-base-200 p-6">
-                  <div className="mb-4 flex items-center gap-4">
+                  <div className="flex items-center gap-4">
                     <div className="rounded-full bg-primary/10 p-3">
                       <Clock className="size-6 text-primary" />
                     </div>
@@ -209,9 +262,7 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="mb-12 space-y-6">
+                {phones.length > 0 ? (
                 <div className="rounded-2xl border border-base-300 bg-base-200 p-6">
                   <div className="flex items-start gap-4">
                     <div className="rounded-full bg-primary/10 p-3">
@@ -220,7 +271,7 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
                     <div>
                       <h3 className="mb-2 text-lg font-bold">Contact Numbers</h3>
                       <div className="space-y-1">
-                        {resortData.contact.phone.map((phone, index) => (
+                        {phones.map((phone, index) => (
                           <a
                             key={`${phone}-${index}`}
                             href={`tel:${phone.replace(/\s/g, "")}`}
@@ -233,7 +284,9 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
                     </div>
                   </div>
                 </div>
+                ) : null}
 
+                {emails.length > 0 ? (
                 <div className="rounded-2xl border border-base-300 bg-base-200 p-6">
                   <div className="flex items-start gap-4">
                     <div className="rounded-full bg-primary/10 p-3">
@@ -242,11 +295,11 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
                     <div>
                       <h3 className="mb-2 text-lg font-bold">Email Addresses</h3>
                       <div className="space-y-1">
-                        {resortData.contact.email.map((email, index) => (
+                        {emails.map((email, index) => (
                           <a
                             key={`${email}-${index}`}
                             href={`mailto:${email}`}
-                            className="block text-base-content/70 transition-colors hover:text-primary"
+                            className="block break-all text-base-content/70 transition-colors hover:text-primary"
                           >
                             {email}
                           </a>
@@ -255,22 +308,28 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
                     </div>
                   </div>
                 </div>
+                ) : null}
               </div>
 
-              <SailorMoonBookingCTA
-                label={resortData.bookingCtaText}
-                resortName={resortData.name}
-                location={resortData.location}
-                checkIn={resortData.checkIn}
-                checkOut={resortData.checkOut}
-                disclaimer={resortData.bookingDisclaimer}
-              />
+                <div className="lg:col-span-3">
+                  <SailorMoonBookingForm
+                    resortName={resortData.name}
+                    location={resortData.location}
+                    checkInTime={resortData.checkIn}
+                    checkOutTime={resortData.checkOut}
+                    submitLabel={resortData.bookingCtaText}
+                    disclaimer={resortData.bookingDisclaimer}
+                    rooms={resortData.pricingItems}
+                    source={editor.bookingSource}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-base-100 py-20 lg:py-28">
+      <section className="bg-base-200 py-20 lg:py-28">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">
             <p className="mb-4 text-sm font-bold uppercase tracking-[0.3em] text-primary">{resortData.locationEyebrow}</p>
@@ -279,10 +338,36 @@ export default async function SailorMoonResortsView({ data, admin = false }: Pro
               <span className="text-primary italic">{resortData.locationHeadingAccent}</span>
             </h2>
             <div className="flex items-center justify-center gap-2 text-lg text-base-content/70">
-              <MapPin className="size-5 text-primary" />
+              <MapPin className="size-5 shrink-0 text-primary" />
               <p>{resortData.location}</p>
             </div>
           </div>
+
+          {mapEmbedSrc ? (
+            <div className="mx-auto mt-10 max-w-5xl overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-xl">
+              <iframe
+                src={mapEmbedSrc}
+                title={`${resortData.name} map`}
+                className="h-[320px] w-full md:h-[420px]"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+              {mapDirectionsHref ? (
+                <div className="flex justify-end border-t border-base-300 px-5 py-3">
+                  <a
+                    href={mapDirectionsHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-primary hover:underline"
+                  >
+                    Open in Google Maps
+                  </a>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </section>
     </div>

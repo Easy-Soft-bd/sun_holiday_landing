@@ -6,6 +6,7 @@ import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Upload, Aler
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 import IconPicker from "@/src/components/common/IconPicker";
 import { DEFAULT_SOCIAL_ICON, SUGGESTED_SOCIAL_LINKS, sanitizeSocialUrl } from "@/src/lib/social-links";
+import { ensureSwapnoBilashResortLink } from "@/src/lib/resort-links";
 
 const { TextArea } = Input;
 
@@ -61,6 +62,7 @@ const defaultData: FooterData = {
     resortsTitle: "Resorts",
     resortsLinks: [
         { label: "Sailor Moon Beach Resort", url: "/sailor-moon-resorts" },
+        { label: "Swapno Bilash Resort", url: "/swapno-bilash-resort" },
         { label: "Sunvia Hotel Resort", url: "/sunvia-hotel-resort" },
         { label: "Grandeur Bliss", url: "/resort/grandeur-bliss" },
     ],
@@ -118,10 +120,11 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
                     Array.isArray(initialData?.servicesLinks) && initialData.servicesLinks.length > 0
                         ? initialData.servicesLinks
                         : defaultData.servicesLinks,
-                resortsLinks:
+                resortsLinks: ensureSwapnoBilashResortLink(
                     Array.isArray(initialData?.resortsLinks) && initialData.resortsLinks.length > 0
                         ? initialData.resortsLinks
                         : defaultData.resortsLinks,
+                ),
                 resortsTitle: initialData?.resortsTitle || defaultData.resortsTitle,
                 mediaLinks:
                     Array.isArray(initialData?.mediaLinks) && initialData.mediaLinks.length > 0

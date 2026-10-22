@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { App, Button, Col, Form, Input, Modal, Row, Space } from "antd";
-import { SaveOutlined } from "@ant-design/icons";
-import type { AboutPageData } from "./about-page-data";
-import { defaultAboutPageData } from "./about-page-data";
+import { App, Button, Col, Form, Input, Modal, Row, Space, Tabs } from "antd";
+import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, PlusOutlined, SaveOutlined } from "@ant-design/icons";
+import type { AboutPageData, AboutPoint, AboutSocialLink } from "./about-page-data";
+import { mergeAboutPageData } from "./about-page-data";
 import RichTextEditor from "@/src/components/common/RichTextEditor";
 import ImageUrlUploadField from "@/src/components/common/ImageUrlUploadField";
+import IconPicker from "@/src/components/common/IconPicker";
+import { DEFAULT_SOCIAL_ICON, SUGGESTED_SOCIAL_LINKS, sanitizeSocialUrl } from "@/src/lib/social-links";
 
 type Props = {
   isOpen: boolean;
@@ -15,31 +17,88 @@ type Props = {
   initialData?: Partial<AboutPageData>;
 };
 
+type TabKey = "hero" | "story" | "vision" | "values" | "strategy" | "office" | "social";
+
+const TAB_BY_FIELD: Record<string, TabKey> = {
+  heroBadgeText: "hero",
+  heroTitleLead: "hero",
+  heroTitleAccent: "hero",
+  heroTitleSub: "hero",
+  heroDescription: "hero",
+  heroBackgroundImage: "hero",
+  storyImage: "story",
+  storyImageAlt: "story",
+  storyCaption: "story",
+  storyBadgeText: "story",
+  storyTitle: "story",
+  storyParagraph1: "story",
+  storyParagraph2: "story",
+  visionTitle: "vision",
+  visionIcon: "vision",
+  visionParagraph1: "vision",
+  visionParagraph2: "vision",
+  missionTitle: "vision",
+  missionIcon: "vision",
+  missionParagraph1: "vision",
+  missionParagraph2: "vision",
+  valuesBadgeText: "values",
+  valuesTitle: "values",
+  valuesIntro: "values",
+  values: "values",
+  strategyBadgeText: "strategy",
+  strategyTitle: "strategy",
+  strategyIntro: "strategy",
+  strategy: "strategy",
+  officeTitle: "office",
+  officeAddressHtml: "office",
+  contactButtonText: "office",
+  contactButtonLink: "office",
+  callButtonText: "office",
+  callButtonLink: "office",
+  socialBadgeText: "social",
+  socialTitle: "social",
+  socialIntro: "social",
+  socialLinks: "social",
+};
+
 export default function AboutEditModal({ isOpen, onClose, initialData }: Props) {
   const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm<AboutPageData>();
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabKey>("hero");
 
   useEffect(() => {
     if (isOpen) {
-      form.setFieldsValue({ ...defaultAboutPageData, ...initialData });
+      form.setFieldsValue(mergeAboutPageData(initialData));
+      setActiveTab("hero");
     }
   }, [isOpen, initialData, form]);
 
   const handleSave = async (values: AboutPageData) => {
     setSaving(true);
     try {
+      const lead = values.heroTitleLead.trim();
+      const accent = values.heroTitleAccent.trim();
+      const payload: AboutPageData = {
+        ...values,
+        heroTitleLead: lead,
+        heroTitleAccent: accent,
+        heroTitleMain: [lead, accent].filter(Boolean).join(" "),
+        values: cleanPoints(values.values),
+        strategy: cleanPoints(values.strategy),
+        socialLinks: cleanSocialLinks(values.socialLinks),
+      };
       const res = await fetch("/api/home-page", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ section: "about_page", data: values }),
+        body: JSON.stringify({ section: "about_page", data: payload }),
       });
       if (!res.ok) {
         message.error("Failed to save About page");
         return;
       }
-      message.success("About page updated successfully");
+      message.success("About page updated");
       router.refresh();
       onClose();
     } catch {
@@ -50,94 +109,405 @@ export default function AboutEditModal({ isOpen, onClose, initialData }: Props) 
   };
 
   return (
-    <Modal title="Edit About Page" open={isOpen} onCancel={onClose} width={980} footer={null}>
-      <Form form={form} layout="vertical" onFinish={handleSave} initialValues={defaultAboutPageData}>
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item name="heroBadgeText" label="Hero badge" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="heroTitleMain" label="Hero main title" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="heroTitleSub" label="Hero subtitle" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="heroDescription" label="Hero description" rules={[{ required: true }]}>
-              <RichTextEditor placeholder="Write hero description..." />
-            </Form.Item>
-            <Form.Item name="heroBackgroundImage" label="Hero background image URL" rules={[{ required: true }]}>
-              <ImageUrlUploadField uploadType="about" previewHeightClassName="h-24" />
-            </Form.Item>
-            <Form.Item name="storyImage" label="Story image URL" rules={[{ required: true }]}>
-              <ImageUrlUploadField uploadType="about" previewHeightClassName="h-24" />
-            </Form.Item>
-            <Form.Item name="storyBadgeText" label="Story badge text" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="storyTitle" label="Story title" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="storyParagraph1" label="Story paragraph 1" rules={[{ required: true }]}>
-              <RichTextEditor placeholder="Write story paragraph 1..." />
-            </Form.Item>
-            <Form.Item name="storyParagraph2" label="Story paragraph 2" rules={[{ required: true }]}>
-              <RichTextEditor placeholder="Write story paragraph 2..." />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item name="visionTitle" label="Vision title" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="visionParagraph1" label="Vision paragraph 1" rules={[{ required: true }]}>
-              <RichTextEditor placeholder="Write vision paragraph 1..." />
-            </Form.Item>
-            <Form.Item name="visionParagraph2" label="Vision paragraph 2" rules={[{ required: true }]}>
-              <RichTextEditor placeholder="Write vision paragraph 2..." />
-            </Form.Item>
-            <Form.Item name="missionTitle" label="Mission title" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="missionParagraph1" label="Mission paragraph 1" rules={[{ required: true }]}>
-              <RichTextEditor placeholder="Write mission paragraph 1..." />
-            </Form.Item>
-            <Form.Item name="missionParagraph2" label="Mission paragraph 2" rules={[{ required: true }]}>
-              <RichTextEditor placeholder="Write mission paragraph 2..." />
-            </Form.Item>
-            <Form.Item name="officeTitle" label="Office section title" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="officeAddressHtml" label="Office address" rules={[{ required: true }]}>
-              <RichTextEditor placeholder="Write office address..." />
-            </Form.Item>
-            <Space.Compact className="w-full">
-              <Form.Item className="mb-0 w-1/2 pr-2" name="contactButtonText" label="Contact button text" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-              <Form.Item className="mb-0 w-1/2 pl-2" name="contactButtonLink" label="Contact button link" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Space.Compact>
-            <Space.Compact className="mt-3 w-full">
-              <Form.Item className="mb-0 w-1/2 pr-2" name="callButtonText" label="Call button text" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-              <Form.Item className="mb-0 w-1/2 pl-2" name="callButtonLink" label="Call button link" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Space.Compact>
-          </Col>
-        </Row>
-
-        <Form.Item className="mb-0 mt-8">
-          <div className="flex justify-end gap-2">
+    <Modal
+      title="Edit About page"
+      open={isOpen}
+      onCancel={onClose}
+      width={880}
+      centered
+      destroyOnHidden
+      styles={{ body: { paddingTop: 4, overflow: "visible" } }}
+      footer={
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="m-0 text-left text-sm text-slate-500">Save updates the whole page, including the other tabs.</p>
+          <Space>
             <Button onClick={onClose}>Cancel</Button>
-            <Button type="primary" htmlType="submit" loading={saving} icon={<SaveOutlined />}>
-              Save Changes
+            <Button type="primary" loading={saving} icon={<SaveOutlined />} onClick={() => form.submit()}>
+              Save page
             </Button>
-          </div>
-        </Form.Item>
+          </Space>
+        </div>
+      }
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        requiredMark="optional"
+        className="[&_.ant-form-item]:mb-3"
+        onFinish={(values) => void handleSave(values)}
+        onFinishFailed={({ errorFields }) => {
+          const field = String(errorFields[0]?.name?.[0] ?? "");
+          setActiveTab(TAB_BY_FIELD[field] ?? "hero");
+          message.warning("Check the highlighted fields before saving.");
+        }}
+      >
+        <Tabs
+          activeKey={activeTab}
+          onChange={(key) => setActiveTab(key as TabKey)}
+          tabBarStyle={{ marginBottom: 8 }}
+          items={[
+            {
+              key: "hero",
+              label: "Hero",
+              children: (
+                <>
+                  <TabIntro>The top of the page: the label, title, short line, and background photo.</TabIntro>
+                  <Form.Item name="heroBadgeText" label="Small label" extra="The pill above the title." rules={[{ required: true, message: "Enter the small label" }]}>
+                    <Input placeholder="Est. Nov 8, 2021" />
+                  </Form.Item>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item name="heroTitleLead" label="Title, first words" extra="Shown in black, before the colored words.">
+                        <Input placeholder="About" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item name="heroTitleAccent" label="Title, colored words" rules={[{ required: true, message: "Enter the colored title words" }]}>
+                        <Input placeholder="Sun Tourism" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Form.Item name="heroTitleSub" label="Line under the title" rules={[{ required: true, message: "Enter the line under the title" }]}>
+                    <Input placeholder="Crafting Unforgettable Journeys" />
+                  </Form.Item>
+                  <Form.Item name="heroDescription" label="Short description" rules={[{ required: true, message: "Enter the description" }]}>
+                    <RichTextEditor compact placeholder="One or two sentences under the title" />
+                  </Form.Item>
+                  <Form.Item name="heroBackgroundImage" label="Background photo" rules={[{ required: true, message: "Add a background photo" }]}>
+                    <ImageUrlUploadField uploadType="about" previewHeightClassName="h-28" />
+                  </Form.Item>
+                </>
+              ),
+            },
+            {
+              key: "story",
+              label: "Story",
+              children: (
+                <>
+                  <TabIntro>The photo and the origin story beside it.</TabIntro>
+                  <Form.Item name="storyImage" label="Photo" rules={[{ required: true, message: "Add the story photo" }]}>
+                    <ImageUrlUploadField uploadType="about" previewHeightClassName="h-28" />
+                  </Form.Item>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item name="storyImageAlt" label="Photo description" extra="Used by screen readers. Describe what is in the photo." rules={[{ required: true, message: "Describe the photo" }]}>
+                        <Input placeholder="Group of friends traveling" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item name="storyCaption" label="Caption on the photo" extra="The small label sitting on the corner of the photo." rules={[{ required: true, message: "Enter the photo caption" }]}>
+                        <Input placeholder="Est. Nov 8, 2021" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item name="storyBadgeText" label="Section label" rules={[{ required: true, message: "Enter the section label" }]}>
+                        <Input placeholder="Our Origin" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item name="storyTitle" label="Heading" rules={[{ required: true, message: "Enter the heading" }]}>
+                        <Input placeholder="Born from Passion" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Form.Item name="storyParagraph1" label="First paragraph" rules={[{ required: true, message: "Enter the first paragraph" }]}>
+                    <RichTextEditor compact placeholder="How the company started" />
+                  </Form.Item>
+                  <Form.Item name="storyParagraph2" label="Second paragraph" rules={[{ required: true, message: "Enter the second paragraph" }]}>
+                    <RichTextEditor compact placeholder="What the founders brought with them" />
+                  </Form.Item>
+                </>
+              ),
+            },
+            {
+              key: "vision",
+              label: "Vision & Mission",
+              children: (
+                <>
+                  <TabIntro>The two cards under the story.</TabIntro>
+                  <Row gutter={16}>
+                    <Col span={16}>
+                      <Form.Item name="visionTitle" label="Vision heading" rules={[{ required: true, message: "Enter the vision heading" }]}>
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item name="visionIcon" label="Vision icon" rules={[{ required: true, message: "Pick an icon" }]}>
+                        <IconPicker placeholder="Search icons" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Form.Item name="visionParagraph1" label="Vision, first paragraph" rules={[{ required: true, message: "Enter the first vision paragraph" }]}>
+                    <RichTextEditor compact placeholder="First vision paragraph" />
+                  </Form.Item>
+                  <Form.Item name="visionParagraph2" label="Vision, second paragraph" rules={[{ required: true, message: "Enter the second vision paragraph" }]}>
+                    <RichTextEditor compact placeholder="Second vision paragraph" />
+                  </Form.Item>
+                  <Row gutter={16}>
+                    <Col span={16}>
+                      <Form.Item name="missionTitle" label="Mission heading" rules={[{ required: true, message: "Enter the mission heading" }]}>
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item name="missionIcon" label="Mission icon" rules={[{ required: true, message: "Pick an icon" }]}>
+                        <IconPicker placeholder="Search icons" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Form.Item name="missionParagraph1" label="Mission, first paragraph" rules={[{ required: true, message: "Enter the first mission paragraph" }]}>
+                    <RichTextEditor compact placeholder="First mission paragraph" />
+                  </Form.Item>
+                  <Form.Item name="missionParagraph2" label="Mission, second paragraph" rules={[{ required: true, message: "Enter the second mission paragraph" }]}>
+                    <RichTextEditor compact placeholder="Second mission paragraph" />
+                  </Form.Item>
+                </>
+              ),
+            },
+            {
+              key: "values",
+              label: "Values",
+              children: (
+                <>
+                  <TabIntro>The Our Values heading and the cards under it. Cards stay in the order you set.</TabIntro>
+                  <SectionHeadingFields badgeName="valuesBadgeText" titleName="valuesTitle" introName="valuesIntro" />
+                  <PointList name="values" addLabel="Add a value" />
+                </>
+              ),
+            },
+            {
+              key: "strategy",
+              label: "Strategy",
+              children: (
+                <>
+                  <TabIntro>The Our Strategy heading and the numbered steps under it.</TabIntro>
+                  <SectionHeadingFields badgeName="strategyBadgeText" titleName="strategyTitle" introName="strategyIntro" />
+                  <PointList name="strategy" addLabel="Add a step" />
+                </>
+              ),
+            },
+            {
+              key: "office",
+              label: "Office",
+              children: (
+                <>
+                  <TabIntro>The closing block with the address and the two buttons.</TabIntro>
+                  <Form.Item name="officeTitle" label="Heading" rules={[{ required: true, message: "Enter the heading" }]}>
+                    <Input placeholder="Visit Our Office" />
+                  </Form.Item>
+                  <Form.Item name="officeAddressHtml" label="Address" rules={[{ required: true, message: "Enter the address" }]}>
+                    <RichTextEditor compact placeholder="Street, area, city" />
+                  </Form.Item>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item name="contactButtonText" label="First button label" rules={[{ required: true, message: "Enter the button label" }]}>
+                        <Input placeholder="Contact Us" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        name="contactButtonLink"
+                        label="First button link"
+                        extra="A page such as /contact, or mailto:you@example.com"
+                        rules={[{ required: true, message: "Enter the link" }]}
+                      >
+                        <Input placeholder="/contact" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item name="callButtonText" label="Second button label" rules={[{ required: true, message: "Enter the button label" }]}>
+                        <Input placeholder="Call Support" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        name="callButtonLink"
+                        label="Second button link"
+                        extra="Use tel:+8801... for a phone number."
+                        rules={[{ required: true, message: "Enter the link" }]}
+                      >
+                        <Input placeholder="tel:+8801..." />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </>
+              ),
+            },
+            {
+              key: "social",
+              label: "Social",
+              children: (
+                <>
+                  <TabIntro>The last section on the page. A row only shows an icon after it has a profile link.</TabIntro>
+                  <SectionHeadingFields badgeName="socialBadgeText" titleName="socialTitle" introName="socialIntro" />
+                  <SocialLinkList />
+                </>
+              ),
+            },
+          ]}
+        />
       </Form>
     </Modal>
   );
+}
+
+function TabIntro({ children }: { children: string }) {
+  return <p className="mb-2 text-sm leading-relaxed text-slate-500">{children}</p>;
+}
+
+function SectionHeadingFields({
+  badgeName,
+  titleName,
+  introName,
+}: {
+  badgeName: "valuesBadgeText" | "strategyBadgeText" | "socialBadgeText";
+  titleName: "valuesTitle" | "strategyTitle" | "socialTitle";
+  introName: "valuesIntro" | "strategyIntro" | "socialIntro";
+}) {
+  return (
+    <>
+      <Row gutter={16}>
+        <Col span={10}>
+          <Form.Item name={badgeName} label="Small label" rules={[{ required: true, message: "Enter the label" }]}>
+            <Input />
+          </Form.Item>
+        </Col>
+        <Col span={14}>
+          <Form.Item name={titleName} label="Heading" rules={[{ required: true, message: "Enter the heading" }]}>
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Form.Item name={introName} label="Intro line" rules={[{ required: true, message: "Enter the intro" }]}>
+        <Input.TextArea rows={2} />
+      </Form.Item>
+    </>
+  );
+}
+
+function PointList({ name, addLabel }: { name: "values" | "strategy"; addLabel: string }) {
+  return (
+    <Form.List name={name}>
+      {(fields, { add, remove, move }) => (
+        <div className="space-y-3">
+          {fields.map((field, index) => (
+            <div key={field.key} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">Card {index + 1}</span>
+                <Space size={4}>
+                  <Button
+                    size="small"
+                    aria-label="Move card up"
+                    disabled={index === 0}
+                    icon={<ArrowUpOutlined />}
+                    onClick={() => move(index, index - 1)}
+                  />
+                  <Button
+                    size="small"
+                    aria-label="Move card down"
+                    disabled={index === fields.length - 1}
+                    icon={<ArrowDownOutlined />}
+                    onClick={() => move(index, index + 1)}
+                  />
+                  <Button size="small" danger aria-label="Remove card" icon={<DeleteOutlined />} onClick={() => remove(field.name)} />
+                </Space>
+              </div>
+              <Row gutter={12}>
+                <Col xs={24} md={15}>
+                  <Form.Item name={[field.name, "title"]} label="Title" rules={[{ required: true, message: "Enter a title" }]}>
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={9}>
+                  <Form.Item name={[field.name, "icon"]} label="Icon" rules={[{ required: true, message: "Pick an icon" }]}>
+                    <IconPicker placeholder="Search icons" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item
+                name={[field.name, "description"]}
+                label="Description"
+                rules={[{ required: true, message: "Enter a description" }]}
+                className="mb-0"
+              >
+                <Input.TextArea rows={2} />
+              </Form.Item>
+            </div>
+          ))}
+          <Button
+            type="dashed"
+            block
+            icon={<PlusOutlined />}
+            onClick={() => add({ title: "", description: "", icon: "LuStar" } satisfies AboutPoint)}
+          >
+            {addLabel}
+          </Button>
+        </div>
+      )}
+    </Form.List>
+  );
+}
+
+function SocialLinkList() {
+  return (
+    <Form.List name="socialLinks">
+      {(fields, { add, remove }) => (
+        <div className="space-y-2">
+          {fields.map((field) => (
+            <div key={field.key} className="grid grid-cols-1 items-start gap-2 sm:grid-cols-[150px_140px_minmax(0,1fr)_auto]">
+              <Form.Item name={[field.name, "icon"]} className="mb-0">
+                <IconPicker placeholder="Icon" />
+              </Form.Item>
+              <Form.Item name={[field.name, "label"]} className="mb-0">
+                <Input placeholder="Facebook" />
+              </Form.Item>
+              <Form.Item name={[field.name, "url"]} className="mb-0">
+                <Input placeholder="https://facebook.com/yourpage" />
+              </Form.Item>
+              <Button type="text" danger aria-label="Remove social link" icon={<DeleteOutlined />} onClick={() => remove(field.name)} />
+            </div>
+          ))}
+          <Button
+            type="dashed"
+            block
+            icon={<PlusOutlined />}
+            onClick={() => add({ label: "", icon: DEFAULT_SOCIAL_ICON, url: "" } satisfies AboutSocialLink)}
+          >
+            Add a profile
+          </Button>
+          <div className="pt-1">
+            {SUGGESTED_SOCIAL_LINKS.map((preset) => (
+              <Button key={preset.label} size="small" className="mb-2 mr-2" onClick={() => add({ ...preset })}>
+                {preset.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+    </Form.List>
+  );
+}
+
+function cleanSocialLinks(items: AboutSocialLink[] | undefined): AboutSocialLink[] {
+  return (items ?? [])
+    .map((item) => ({
+      label: String(item?.label ?? "").trim(),
+      icon: String(item?.icon ?? "").trim() || DEFAULT_SOCIAL_ICON,
+      url: sanitizeSocialUrl(item?.url),
+    }))
+    .filter((item) => item.label || item.url);
+}
+
+function cleanPoints(items: AboutPoint[] | undefined): AboutPoint[] {
+  return (items ?? [])
+    .map((item) => ({
+      title: String(item?.title ?? "").trim(),
+      description: String(item?.description ?? "").trim(),
+      icon: String(item?.icon ?? "").trim() || "LuStar",
+    }))
+    .filter((item) => item.title);
 }

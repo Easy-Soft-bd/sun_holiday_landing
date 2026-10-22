@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import SailorMoonResortsView from "@/src/view/sailor-moon-resorts/SailorMoonResortsView";
-import { getCachedAdminStatus, getCachedHomePageData } from "@/src/lib/get-page-data";
+import { getCachedAdminStatus, getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
 import { mergeSailorMoonResortsPageData } from "@/src/lib/data/sailor-moon-resorts-page";
 import { buildPageMetadata } from "@/src/lib/site";
 
@@ -18,7 +18,18 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SailorMoonResortsPage() {
-  const [admin, home] = await Promise.all([getCachedAdminStatus(), getCachedHomePageData()]);
+  const [admin, home, settings] = await Promise.all([
+    getCachedAdminStatus(),
+    getCachedHomePageData(),
+    getCachedSettings().catch(() => null),
+  ]);
 
-  return <SailorMoonResortsView data={home?.sailor_moon_resorts_page} admin={admin} />;
+  return (
+    <SailorMoonResortsView
+      data={home?.sailor_moon_resorts_page}
+      admin={admin}
+      contactPhones={settings?.contactPhones ?? []}
+      contactEmails={settings?.contactEmails ?? []}
+    />
+  );
 }

@@ -60,7 +60,8 @@ type Stats = {
 
 const cmsLinks: { title: string; href: string; description: string }[] = [
     { title: "Home", href: "/", description: "Hero, featured tours, CTAs, footer." },
-    { title: "Sailor Moon Resorts", href: "/sailor-moon-resorts", description: "Hero, gallery, facilities, CTA." },
+    { title: "Sailor Moon Resorts", href: "/sailor-moon-resorts", description: "Hero, gallery, facilities, pricing, booking." },
+    { title: "Swapno Bilash Resort", href: "/swapno-bilash-resort", description: "Hero, gallery, facilities, pricing, booking." },
     { title: "Resorts Listing", href: "/resorts", description: "Hero, beach & city sections, listings." },
     { title: "Sunvia Hotel & Resort", href: "/sunvia-hotel-resort", description: "Investor page sections and lead form." },
     { title: "About", href: "/about", description: "Story, teams, milestones." },

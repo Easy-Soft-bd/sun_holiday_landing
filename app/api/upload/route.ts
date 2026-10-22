@@ -56,6 +56,9 @@ export async function POST(request: NextRequest) {
     } else if (type === 'sailor') {
       uploadSubDir = 'uploads/sailor';
       urlPrefix = '/uploads/sailor';
+    } else if (type === 'swapno') {
+      uploadSubDir = 'uploads/swapno';
+      urlPrefix = '/uploads/swapno';
     } else if (type === 'blog') {
       uploadSubDir = 'uploads/blog';
       urlPrefix = '/uploads/blog';
