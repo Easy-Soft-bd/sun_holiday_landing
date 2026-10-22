@@ -1,9 +1,14 @@
 export const SWAPNO_BILASH_RESORT_LINK = {
   label: "Swapno Bilash Resort",
   url: "/swapno-bilash-resort",
-} as const;
+};
 
-export function ensureSwapnoBilashResortLink<T extends { label: string; url: string }>(links: T[]): T[] {
+type ResortNavLink = {
+  label: string;
+  url: string;
+};
+
+export function ensureSwapnoBilashResortLink(links: ResortNavLink[]): ResortNavLink[] {
   if (links.some((link) => link.url === SWAPNO_BILASH_RESORT_LINK.url)) {
     return links;
   }
