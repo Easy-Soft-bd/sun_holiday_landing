@@ -16,10 +16,12 @@ type Branding = {
 function MainChromeInner({
   branding,
   showDevelopmentBanner,
+  callPhone,
   children,
 }: {
   branding: Branding;
   showDevelopmentBanner: boolean;
+  callPhone?: string | null;
   children: ReactNode;
 }) {
   const { admin, user, ready } = usePublicAdmin();
@@ -31,6 +33,7 @@ function MainChromeInner({
         <TopBanner
           adminUser={admin ? user : null}
           showDevelopmentBanner={showDevelopmentBanner}
+          callPhone={callPhone}
         />
       ) : null}
       <div className="relative">
@@ -44,10 +47,12 @@ function MainChromeInner({
 export default function MainChrome({
   branding,
   showDevelopmentBanner,
+  callPhone,
   children,
 }: {
   branding: Branding;
   showDevelopmentBanner: boolean;
+  callPhone?: string | null;
   children: ReactNode;
 }) {
   return (
@@ -55,6 +60,7 @@ export default function MainChrome({
       <MainChromeInner
         branding={branding}
         showDevelopmentBanner={showDevelopmentBanner}
+        callPhone={callPhone}
       >
         {children}
       </MainChromeInner>

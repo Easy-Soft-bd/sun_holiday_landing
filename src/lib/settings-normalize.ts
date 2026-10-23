@@ -1,6 +1,32 @@
 import { resolveBrandAsset, resolveSiteName, DEFAULT_FAVICON } from '@/src/lib/brand';
 import { resolveSocialLinks, type SocialLink } from '@/src/lib/social-links';
 
+export function uniquePhones(values: string[]): string[] {
+  const seen = new Set<string>();
+  const next: string[] = [];
+  for (const value of values) {
+    const trimmed = value.trim();
+    const key = trimmed.replace(/\D/g, "");
+    if (!trimmed || !key || seen.has(key)) continue;
+    seen.add(key);
+    next.push(trimmed);
+  }
+  return next;
+}
+
+export function uniqueEmails(values: string[]): string[] {
+  const seen = new Set<string>();
+  const next: string[] = [];
+  for (const value of values) {
+    const trimmed = value.trim();
+    const key = trimmed.toLowerCase();
+    if (!trimmed || seen.has(key)) continue;
+    seen.add(key);
+    next.push(trimmed);
+  }
+  return next;
+}
+
 export function parseMultiValue(value: unknown): string[] {
   return String(value ?? '')
     .split(/[\n,;]+/)
@@ -38,15 +64,17 @@ export type NormalizedSettings = {
 export function normalizeSettingsPlain(
   settings: Record<string, unknown>,
 ): NormalizedSettings {
-  const contactEmails =
+  const contactEmails = uniqueEmails(
     Array.isArray(settings.contactEmails) && (settings.contactEmails as unknown[]).length > 0
       ? (settings.contactEmails as unknown[]).map((v) => String(v).trim()).filter(Boolean)
-      : parseMultiValue(settings.contactEmail);
+      : parseMultiValue(settings.contactEmail),
+  );
 
-  const contactPhones =
+  const contactPhones = uniquePhones(
     Array.isArray(settings.contactPhones) && (settings.contactPhones as unknown[]).length > 0
       ? (settings.contactPhones as unknown[]).map((v) => String(v).trim()).filter(Boolean)
-      : parseMultiValue(settings.contactPhone);
+      : parseMultiValue(settings.contactPhone),
+  );
 
   const googleMapsUrl = String(settings.googleMapsUrl ?? '').trim();
 

@@ -6,7 +6,7 @@ import { buildPageMetadata } from "@/src/lib/site";
 
 export const metadata: Metadata = buildPageMetadata({
     title: "Contact Us - Sun Tourism Ltd | 24/7 Travel Support",
-    description: "Get in touch with Sun Tourism Ltd. Visit our Dhanmondi office, call our 24/7 support, or email us for your travel needs.",
+    description: "Get in touch with Sun Tourism Ltd. Call, email, or visit the office for travel support.",
     path: "/contact",
     keywords: ["Contact Sun Tourism", "Travel Agency Dhaka", "Sun Tourism Address", "Travel Support Bangladesh"],
 });

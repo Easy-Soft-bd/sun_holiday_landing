@@ -34,6 +34,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             icon: Briefcase,
             submenu: [
                 { name: "Visa", href: "/visa" },
+                { name: "Medical Visa", href: "/medical-visa" },
                 { name: "Ticket", href: "/tickets" },
                 { name: "Tour", href: "/tours" },
             ]

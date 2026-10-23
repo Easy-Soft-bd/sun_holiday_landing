@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import AboutView from "@/src/view/about/AboutView";
 import { buildPageMetadata } from "@/src/lib/site";
-import { getCachedAdminStatus, getCachedHomePageData } from "@/src/lib/get-page-data";
+import { getCachedAdminStatus, getCachedHomePageData, getCachedSettings } from "@/src/lib/get-page-data";
 
 export const metadata: Metadata = buildPageMetadata({
     title: "About Us - Sun Tourism Ltd | Your Trusted Travel Partner",
@@ -11,9 +11,19 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default async function About() {
-  const [admin, pageData] = await Promise.all([
+  const [admin, pageData, settings] = await Promise.all([
     getCachedAdminStatus(),
     getCachedHomePageData(),
+    getCachedSettings(),
   ]);
-  return <AboutView data={pageData?.about_page} admin={admin} />;
+  return (
+    <AboutView
+      data={pageData?.about_page}
+      admin={admin}
+      phones={settings?.contactPhones ?? []}
+      emails={settings?.contactEmails ?? []}
+      address={settings?.address ?? ""}
+      socialLinks={settings?.socialLinks ?? []}
+    />
+  );
 }

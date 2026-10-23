@@ -7,6 +7,7 @@ type Props = {
     message: string;
     image: string;
     reverse?: boolean;
+    groupLabel?: string;
 };
 
 export default function DirectorCard({
@@ -15,6 +16,7 @@ export default function DirectorCard({
     message,
     image,
     reverse = false,
+    groupLabel = "Board",
 }: Props) {
     const safeName = (name || "").trim() || "Team Member";
     const safeTitle = (title || "").trim() || "Director";
@@ -23,7 +25,7 @@ export default function DirectorCard({
         "Thank you for trusting Sun Tourism Ltd.";
     const safeImage =
         (image || "").trim() ||
-        "https://placehold.co/900x1200?text=Leadership";
+        "https://placehold.co/900x1200?text=Director";
     const initial = safeName.charAt(0).toUpperCase();
 
     return (
@@ -81,7 +83,7 @@ export default function DirectorCard({
                             {/* Name on image */}
                             <div className="absolute inset-x-3 bottom-3">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/80">
-                                    Leadership
+                                    {groupLabel}
                                 </p>
                                 <h3 className="mt-0.5 text-lg font-bold leading-tight text-white drop-shadow sm:text-xl lg:text-2xl">
                                     {safeName}

@@ -4,11 +4,12 @@ import Logo from "../common/Logo";
 import { Mail, Phone, MapPin } from "lucide-react";
 import PublicIconRenderer from "../common/PublicIconRenderer";
 import DeferredAdmin from "@/src/components/admin/DeferredAdmin";
-import { normalizeSocialLinks, resolveSocialLinks, type SocialLink } from "@/src/lib/social-links";
-import { parseMultiValue, resolveMapsEmbedForIframe } from "@/src/lib/settings-normalize";
+import { resolveSocialLinks, type SocialLink } from "@/src/lib/social-links";
+import { parseMultiValue, resolveMapsEmbedForIframe, uniqueEmails, uniquePhones } from "@/src/lib/settings-normalize";
 import { DEFAULT_SITE_NAME } from "@/src/lib/brand";
 import { getSiteUrl } from "@/src/lib/site";
 import { ensureSwapnoBilashResortLink } from "@/src/lib/resort-links";
+import { ensureMedicalVisaLink } from "@/src/lib/service-links";
 
 /** Footer CMS entries predate the settings editor and may not carry a label. */
 interface CmsSocialLink {
@@ -63,6 +64,7 @@ const defaultData: FooterData = {
     servicesTitle: "Services",
     servicesLinks: [
         { label: "Visa Processing", url: "/visa" },
+        { label: "Medical Visa", url: "/medical-visa" },
         { label: "Ticket", url: "/tickets" },
         { label: "Tour", url: "/tours" },
         { label: "News & Blog", url: "/blog" },
@@ -82,9 +84,6 @@ const defaultData: FooterData = {
         { label: "CSR", url: "/csr" },
     ],
     contactTitle: "Get In Touch",
-    contactAddress: "123 Travel Plaza, Suite 456\nDhaka, Bangladesh",
-    contactPhones: ["+880 1234 567 890"],
-    contactEmails: ["support@sunholidays.com"],
     certificationsTitle: "Authorized By & Certified Member",
     certifications: [
         { name: "IATA", image: "/certs/iata.png" },
@@ -98,8 +97,6 @@ const defaultData: FooterData = {
 
 const PARADISE_SOLUTION_LABEL = "Paradise Solution";
 const PARADISE_SOLUTION_URL = "https://www.paradisesolution.us/";
-const OFFICE_MAP_EMBED =
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.902442430139!2d90.37258331536263!3d23.75085809467645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b33cffc3fb%3A0x4a826f475fd312af!2sDhanmondi%2027!5e0!3m2!1sen!2sbd!4v1675238475234!5m2!1sen!2sbd";
 
 function renderCopyright(text: string) {
     const credit = text.includes(PARADISE_SOLUTION_LABEL)
@@ -123,24 +120,6 @@ function renderCopyright(text: string) {
     );
 }
 
-function normalizeContactList(
-    fromArray: string[] | undefined,
-    legacySingle: string | undefined,
-    fallback: string[]
-): string[] {
-    const trimmed = (fromArray ?? [])
-        .map((s) => String(s).trim())
-        .filter(Boolean);
-    if (trimmed.length > 0) {
-        return trimmed;
-    }
-    const fromLegacy = parseMultiValue(legacySingle);
-    if (fromLegacy.length > 0) {
-        return fromLegacy;
-    }
-    return [...fallback];
-}
-
 function resolveSettingsContactList(
     fromArray: string[] | null | undefined,
     legacySingle: string | null | undefined,
@@ -155,33 +134,12 @@ function httpSocialLinks(links: SocialLink[]): SocialLink[] {
     return links.filter((link) => /^https?:\/\//i.test(link.url));
 }
 
-/** Footer profiles win when they have real URLs. Otherwise the site settings list is used. */
-function resolveFooterSocialLinks(
-    footerLinks: unknown,
-    settings: FooterProps["settings"],
-): SocialLink[] {
-    const fromFooter = httpSocialLinks(normalizeSocialLinks(footerLinks));
-    if (fromFooter.length > 0) {
-        return fromFooter;
-    }
-    return httpSocialLinks(resolveSocialLinks(settings));
-}
-
 function mergeFooterData(data?: FooterData): FooterData {
     const merged: FooterData = { ...defaultData, ...data };
-    merged.contactPhones = normalizeContactList(
-        merged.contactPhones,
-        merged.contactPhone,
-        defaultData.contactPhones ?? []
-    );
-    merged.contactEmails = normalizeContactList(
-        merged.contactEmails,
-        merged.contactEmail,
-        defaultData.contactEmails ?? []
-    );
     if (!Array.isArray(merged.servicesLinks) || merged.servicesLinks.length === 0) {
         merged.servicesLinks = defaultData.servicesLinks;
     }
+    merged.servicesLinks = ensureMedicalVisaLink(merged.servicesLinks ?? []);
     if (!Array.isArray(merged.resortsLinks) || merged.resortsLinks.length === 0) {
         merged.resortsLinks = defaultData.resortsLinks;
     }
@@ -217,6 +175,19 @@ interface FooterProps {
         siteName?: string | null;
         siteLogo?: string | null;
     };
+}
+
+function footerEditorData(data: FooterData): FooterData {
+    const {
+        contactAddress: _address,
+        contactPhones: _phones,
+        contactEmails: _emails,
+        contactPhone: _phone,
+        contactEmail: _email,
+        socialLinks: _social,
+        ...editorData
+    } = data;
+    return editorData;
 }
 
 function FooterHeading({ children }: { children: string }) {
@@ -256,28 +227,15 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
     const footerData = mergeFooterData(data);
     const currentYear = new Date().getFullYear();
 
-    let contactPhones = resolveSettingsContactList(settings?.contactPhones, settings?.contactPhone);
-    if (!contactPhones.length) {
-        contactPhones = footerData.contactPhones ?? [];
-    }
-    if (!contactPhones.length) {
-        contactPhones = defaultData.contactPhones ?? [];
-    }
-
-    let contactEmails = resolveSettingsContactList(settings?.contactEmails, settings?.contactEmail);
-    if (!contactEmails.length) {
-        contactEmails = footerData.contactEmails ?? [];
-    }
-    if (!contactEmails.length) {
-        contactEmails = defaultData.contactEmails ?? [];
-    }
-
-    const address = settings?.address || footerData.contactAddress || "123 Travel Plaza, Suite 456\nDhaka, Bangladesh";
+    const contactPhones = uniquePhones(resolveSettingsContactList(settings?.contactPhones, settings?.contactPhone));
+    const contactEmails = uniqueEmails(resolveSettingsContactList(settings?.contactEmails, settings?.contactEmail));
+    const address = settings?.address?.trim() || "";
     const mapsHref = settings?.googleMapsUrl?.trim() || null;
-    const mapEmbedSrc = (await resolveMapsEmbedForIframe(mapsHref)) || OFFICE_MAP_EMBED;
+    const mapEmbedSrc = mapsHref ? await resolveMapsEmbedForIframe(mapsHref) : null;
     const bio = footerData.bio || defaultData.bio;
-
-    const socialLinks = resolveFooterSocialLinks(footerData.socialLinks, settings);
+    const socialLinks = httpSocialLinks(resolveSocialLinks(settings));
+    const showContact = Boolean(address || contactPhones.length || contactEmails.length);
+    const showMap = Boolean(mapEmbedSrc);
     const siteName = branding?.siteName || DEFAULT_SITE_NAME;
     const organizationJsonLd = {
         "@context": "https://schema.org",
@@ -287,26 +245,32 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
         description: bio,
         ...(contactPhones[0] ? { telephone: contactPhones } : {}),
         ...(contactEmails[0] ? { email: contactEmails[0] } : {}),
-        address: {
-            "@type": "PostalAddress",
-            streetAddress: address.replace(/\s*\n\s*/g, ", "),
-            addressCountry: "BD",
-        },
+        ...(address
+            ? {
+                  address: {
+                      "@type": "PostalAddress",
+                      streetAddress: address.replace(/\s*\n\s*/g, ", "),
+                      addressCountry: "BD",
+                  },
+              }
+            : {}),
         ...(socialLinks.length > 0 ? { sameAs: socialLinks.map((link) => link.url) } : {}),
     };
 
-    const addressNode = mapsHref ? (
-        <a
-            href={mapsHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="whitespace-pre-line text-sm leading-relaxed text-base-content/75 transition-colors hover:text-primary"
-        >
-            {address}
-        </a>
-    ) : (
-        <span className="whitespace-pre-line text-sm leading-relaxed text-base-content/75">{address}</span>
-    );
+    const addressNode = address ? (
+        mapsHref ? (
+            <a
+                href={mapsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whitespace-pre-line text-sm leading-relaxed text-base-content/75 transition-colors hover:text-primary"
+            >
+                {address}
+            </a>
+        ) : (
+            <span className="whitespace-pre-line text-sm leading-relaxed text-base-content/75">{address}</span>
+        )
+    ) : null;
 
     return (
         <footer className="group/footer relative border-t border-base-300 bg-base-200 text-base-content">
@@ -321,7 +285,7 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
 
             <DeferredAdmin
                 name="footer"
-                data={{ ...footerData, socialLinks }}
+                data={footerEditorData(footerData)}
                 className="absolute top-5 right-4 z-20"
             />
 
@@ -374,26 +338,31 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                     </div>
                 </div>
 
+                {showContact || showMap ? (
                 <section className="mt-12 overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-sm">
-                    <div className="grid lg:grid-cols-2">
+                    <div className={showContact && showMap ? "grid lg:grid-cols-2" : ""}>
+                        {showContact ? (
                         <div className="flex flex-col justify-center gap-6 p-6 sm:p-8">
                             <FooterHeading>{footerData.contactTitle || "Get In Touch"}</FooterHeading>
                             <ul className="space-y-4">
+                                {addressNode ? (
                                 <li className="flex items-start gap-3">
                                     <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
                                         <MapPin size={18} aria-hidden />
                                     </span>
                                     {addressNode}
                                 </li>
+                                ) : null}
+                                {contactPhones.length > 0 ? (
                                 <li className="flex items-start gap-3">
                                     <span className="mt-0.5 grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
                                         <Phone size={18} aria-hidden />
                                     </span>
                                     <div className="flex flex-col justify-center py-1">
-                                        {contactPhones.map((phone, i) => (
+                                        {contactPhones.map((phone) => (
                                             <a
-                                                key={`phone-${i}`}
-                                                href={`tel:${phone.replace(/\s/g, "")}`}
+                                                key={phone}
+                                                href={`tel:${phone.replace(/[^\d+]/g, "")}`}
                                                 className="inline-flex items-center py-0.5 text-sm font-medium leading-5 text-base-content/80 transition-colors hover:text-primary"
                                             >
                                                 {phone}
@@ -401,8 +370,9 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                                         ))}
                                     </div>
                                 </li>
-                                {contactEmails.map((email, i) => (
-                                    <li key={`email-${i}`} className="flex items-center gap-3">
+                                ) : null}
+                                {contactEmails.map((email) => (
+                                    <li key={email} className="flex items-center gap-3">
                                         <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
                                             <Mail size={18} aria-hidden />
                                         </span>
@@ -416,9 +386,11 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                                 ))}
                             </ul>
                         </div>
+                        ) : null}
+                        {showMap ? (
                         <div className="min-h-72 border-t border-base-300 lg:border-t-0 lg:border-l">
                             <iframe
-                                src={mapEmbedSrc}
+                                src={mapEmbedSrc || undefined}
                                 title="Google Map Office Location"
                                 className="h-72 w-full lg:h-full lg:min-h-80"
                                 style={{ border: 0 }}
@@ -427,8 +399,10 @@ const Footer = async ({ data, settings, branding }: FooterProps) => {
                                 referrerPolicy="no-referrer-when-downgrade"
                             />
                         </div>
+                        ) : null}
                     </div>
                 </section>
+                ) : null}
 
                 <div className="mt-10 grid gap-8 border-t border-base-300 pt-8 md:grid-cols-2 md:items-center">
                     <div>

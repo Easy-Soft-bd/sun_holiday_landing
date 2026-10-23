@@ -23,54 +23,59 @@ function normalizeList(arr?: string[] | null, one?: string | null): string[] {
 export default function ContactInfo({ settings }: ContactInfoProps) {
     const phoneNumbers = normalizeList(settings?.contactPhones, settings?.contactPhone);
     const emails = normalizeList(settings?.contactEmails, settings?.contactEmail);
-    const officeAddress = settings?.address?.trim() || [
-        "362/1, Holding 13/1 (2nd Floor)",
-        "Old-27 New-16 Dhanmondi",
-        "Dhaka-1209, Bangladesh",
-    ].join("\n");
-    const primaryPhone = phoneNumbers[0] || "+8801873838301";
-    const primaryEmail = emails[0] || "info@sunholidaysltd.com";
-    const directionsHref = resolveMapsDirectionsHref(settings?.googleMapsUrl) || "#map";
+    const officeAddress = settings?.address?.trim() || "";
+    const primaryPhone = phoneNumbers[0] || "";
+    const primaryEmail = emails[0] || "";
+    const directionsHref = resolveMapsDirectionsHref(settings?.googleMapsUrl);
+    const phoneHref = primaryPhone ? `tel:${primaryPhone.replace(/[^\d+]/g, "")}` : "";
 
     const contactDetails = [
-        {
-            icon: MapPin,
-            title: "Visit Our Office",
-            content: (
-                <span className="whitespace-pre-line">{officeAddress}</span>
-            ),
-            action: { label: "Get Directions", href: directionsHref, external: directionsHref.startsWith("http") },
-        },
-        {
-            icon: Phone,
-            title: "Call Us Anytime",
-            content: (
-                <div className="space-y-1">
-                    {(phoneNumbers.length > 0 ? phoneNumbers : ["+88 018 73 83 83 01"]).map((phone, idx) => (
-                        <a
-                            key={`${phone}-${idx}`}
-                            href={`tel:${phone.replace(/\s/g, "")}`}
-                            className="block hover:text-primary transition-colors"
-                        >
-                            {phone}
-                        </a>
-                    ))}
-                </div>
-            ),
-            action: { label: "Call Now", href: `tel:${primaryPhone.replace(/\s/g, "")}`, external: false },
-        },
-        {
-            icon: Mail,
-            title: "Email Support",
-            content: (
-                <div className="space-y-1">
-                    {(emails.length > 0 ? emails : ["info@sunholidaysltd.com"]).map((email, idx) => (
-                        <a key={`${email}-${idx}`} href={`mailto:${email}`} className="block hover:text-primary transition-colors">{email}</a>
-                    ))}
-                </div>
-            ),
-            action: { label: "Send Email", href: `mailto:${primaryEmail}`, external: false },
-        },
+        officeAddress
+            ? {
+                  icon: MapPin,
+                  title: "Visit Our Office",
+                  content: <span className="whitespace-pre-line">{officeAddress}</span>,
+                  action: directionsHref
+                      ? { label: "Get Directions", href: directionsHref, external: true }
+                      : null,
+              }
+            : null,
+        phoneNumbers.length > 0
+            ? {
+                  icon: Phone,
+                  title: "Call Us Anytime",
+                  content: (
+                      <div className="space-y-1">
+                          {phoneNumbers.map((phone) => (
+                              <a
+                                  key={phone}
+                                  href={`tel:${phone.replace(/[^\d+]/g, "")}`}
+                                  className="block hover:text-primary transition-colors"
+                              >
+                                  {phone}
+                              </a>
+                          ))}
+                      </div>
+                  ),
+                  action: { label: "Call Now", href: phoneHref, external: false },
+              }
+            : null,
+        emails.length > 0
+            ? {
+                  icon: Mail,
+                  title: "Email Support",
+                  content: (
+                      <div className="space-y-1">
+                          {emails.map((email) => (
+                              <a key={email} href={`mailto:${email}`} className="block hover:text-primary transition-colors">
+                                  {email}
+                              </a>
+                          ))}
+                      </div>
+                  ),
+                  action: { label: "Send Email", href: `mailto:${primaryEmail}`, external: false },
+              }
+            : null,
         {
             icon: Clock,
             title: "Working Hours",
@@ -81,9 +86,11 @@ export default function ContactInfo({ settings }: ContactInfoProps) {
                     Always ready to help.
                 </>
             ),
-            action: { label: "Contact Support", href: `tel:${primaryPhone.replace(/\s/g, "")}`, external: false },
+            action: phoneHref
+                ? { label: "Contact Support", href: phoneHref, external: false }
+                : { label: "Contact Support", href: "/contact", external: false },
         },
-    ];
+    ].filter((item): item is NonNullable<typeof item> => item !== null);
 
     return (
         <section className="py-20 bg-base-100">
@@ -98,6 +105,7 @@ export default function ContactInfo({ settings }: ContactInfoProps) {
                             <div className="text-base-content/70 leading-relaxed mb-6 min-h-[4.5rem]">
                                 {item.content}
                             </div>
+                            {item.action ? (
                             <a
                                 href={item.action.href}
                                 {...(item.action.external
@@ -108,6 +116,7 @@ export default function ContactInfo({ settings }: ContactInfoProps) {
                                 {item.action.label}
                                 <span className="ml-2 transform group-hover/link:translate-x-1 transition-transform">→</span>
                             </a>
+                            ) : null}
                         </div>
                     ))}
                 </div>

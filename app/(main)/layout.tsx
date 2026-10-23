@@ -43,6 +43,7 @@ export default async function MainLayout({
     <MainChrome
       branding={branding}
       showDevelopmentBanner={isDevelopmentModeBannerEnabled()}
+      callPhone={settings?.contactPhones?.[0] ?? ""}
     >
       {children}
       <Suspense fallback={null}>

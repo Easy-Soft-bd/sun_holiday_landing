@@ -17,8 +17,13 @@ export type TeamsPageData = {
   heroTitleAccent: string;
   heroTitleSub: string;
   heroDescription: string;
+  boardStatLabel: string;
   leadersStatLabel: string;
   membersStatLabel: string;
+  boardEyebrow: string;
+  boardTitle: string;
+  boardDescription: string;
+  board: DirectorItem[];
   leadershipEyebrow: string;
   leadershipTitle: string;
   leadershipDescription: string;
@@ -45,8 +50,38 @@ export const defaultTeamsPageData: TeamsPageData = {
   heroTitleSub: "Behind Your Journey",
   heroDescription:
     "The dedicated professionals working tirelessly to craft unforgettable travel experiences just for you.",
+  boardStatLabel: "Directors",
   leadersStatLabel: "Leaders",
-  membersStatLabel: "Members",
+  membersStatLabel: "Employees",
+  boardEyebrow: "Board of Directors",
+  boardTitle: "Our Board",
+  boardDescription: "The directors who guide Sun Tourism Ltd.",
+  board: [
+    {
+      name: "Nusrat Jahan",
+      title: "Director",
+      image:
+        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop",
+      message:
+        "As a Director of Sun Tourism Ltd, I am proud of the care our team puts into every journey. Thank you for trusting us with your travels.",
+    },
+    {
+      name: "Kamrul Hasan",
+      title: "Director",
+      image:
+        "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=1000&auto=format&fit=crop",
+      message:
+        "Travel should feel clear and well looked after from the first conversation. That is the standard we hold for Sun Tourism Ltd.",
+    },
+    {
+      name: "Farhana Akter",
+      title: "Independent Director",
+      image:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1000&auto=format&fit=crop",
+      message:
+        "Good governance and honest service go together. I am glad to help guide Sun Tourism Ltd as it grows with its travelers.",
+    },
+  ],
   leadershipEyebrow: "Leadership",
   leadershipTitle: "Our Top Leaders",
   leadershipDescription: "Meet the visionaries steering Sun Tourism Ltd.",
@@ -77,10 +112,10 @@ export const defaultTeamsPageData: TeamsPageData = {
         "As the Managing Director of our Sun Tourism Ltd, I wanted to take a moment to express my gratitude for your trust and loyalty as one of our valued travelers.",
     },
   ],
-  teamSectionEyebrow: "Our Team",
-  teamSectionTitle: "Our Valuable Team",
+  teamSectionEyebrow: "Team",
+  teamSectionTitle: "Our Employees",
   teamSectionDescription:
-    "Professionals in various designations, each playing a crucial role in ensuring exceptional service.",
+    "The people who plan, book, and look after every journey.",
   teams: [
     {
       name: "Md. Shariful Hira",
@@ -129,3 +164,86 @@ export const defaultTeamsPageData: TeamsPageData = {
   ctaSecondaryLabel: "Explore Tours",
   ctaSecondaryHref: "/tours",
 };
+
+const PREVIOUS_COPY: Record<string, string> = {
+  membersStatLabel: "Members",
+  teamSectionEyebrow: "Our Team",
+  teamSectionTitle: "Our Valuable Team",
+  teamSectionDescription:
+    "Professionals in various designations, each playing a crucial role in ensuring exceptional service.",
+};
+
+function textField<K extends keyof TeamsPageData>(
+  key: K,
+  partial: Partial<TeamsPageData> | undefined,
+): TeamsPageData[K] {
+  const incoming = partial?.[key];
+  const fallback = defaultTeamsPageData[key];
+  if (typeof incoming !== "string" || !incoming.trim()) return fallback;
+  if (incoming === PREVIOUS_COPY[key as string]) return fallback;
+  return incoming as TeamsPageData[K];
+}
+
+function cleanDirectors(value: unknown, fallback: DirectorItem[]): DirectorItem[] {
+  if (!Array.isArray(value)) return fallback;
+  return value
+    .filter((item): item is DirectorItem => Boolean(item) && typeof item === "object")
+    .map((item) => ({
+      name: String(item.name ?? "").trim(),
+      title: String(item.title ?? "").trim(),
+      image: String(item.image ?? "").trim(),
+      message: String(item.message ?? "").trim(),
+    }))
+    .filter((item) => item.name || item.title);
+}
+
+function cleanEmployees(value: unknown, fallback: TeamItem[]): TeamItem[] {
+  if (!Array.isArray(value)) return fallback;
+  return value
+    .filter((item): item is TeamItem => Boolean(item) && typeof item === "object")
+    .map((item) => ({
+      name: String(item.name ?? "").trim(),
+      position: String(item.position ?? "").trim(),
+      image: String(item.image ?? "").trim(),
+    }))
+    .filter((item) => item.name || item.position);
+}
+
+export function mergeTeamsPageData(partial?: Partial<TeamsPageData> | null): TeamsPageData {
+  const source = partial ?? {};
+  return {
+    ...defaultTeamsPageData,
+    heroBadgeText: textField("heroBadgeText", source),
+    heroTitleMain: textField("heroTitleMain", source),
+    heroTitleAccent: textField("heroTitleAccent", source),
+    heroTitleSub: textField("heroTitleSub", source),
+    heroDescription: textField("heroDescription", source),
+    boardStatLabel: textField("boardStatLabel", source),
+    leadersStatLabel: textField("leadersStatLabel", source),
+    membersStatLabel: textField("membersStatLabel", source),
+    boardEyebrow: textField("boardEyebrow", source),
+    boardTitle: textField("boardTitle", source),
+    boardDescription: textField("boardDescription", source),
+    board: cleanDirectors(
+      Object.prototype.hasOwnProperty.call(source, "board") ? source.board : undefined,
+      defaultTeamsPageData.board,
+    ),
+    leadershipEyebrow: textField("leadershipEyebrow", source),
+    leadershipTitle: textField("leadershipTitle", source),
+    leadershipDescription: textField("leadershipDescription", source),
+    leaderMessageLabel: textField("leaderMessageLabel", source),
+    directors: cleanDirectors(source.directors, defaultTeamsPageData.directors),
+    teamSectionEyebrow: textField("teamSectionEyebrow", source),
+    teamSectionTitle: textField("teamSectionTitle", source),
+    teamSectionDescription: textField("teamSectionDescription", source),
+    teams: cleanEmployees(source.teams, defaultTeamsPageData.teams),
+    ctaTitleMain: textField("ctaTitleMain", source),
+    ctaTitleAccent: textField("ctaTitleAccent", source),
+    ctaTitleEnd: textField("ctaTitleEnd", source),
+    ctaDescription: textField("ctaDescription", source),
+    ctaPrimaryLabel: textField("ctaPrimaryLabel", source),
+    ctaPrimaryHref: textField("ctaPrimaryHref", source),
+    ctaSecondaryLabel: textField("ctaSecondaryLabel", source),
+    ctaSecondaryHref: textField("ctaSecondaryHref", source),
+  };
+}

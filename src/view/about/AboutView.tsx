@@ -5,10 +5,15 @@ import PublicIconRenderer from "@/src/components/common/PublicIconRenderer";
 import type { AboutPageData } from "./about-page-data";
 import { mergeAboutPageData } from "./about-page-data";
 import RichTextHtml from "@/src/components/common/RichTextHtml";
+import type { SocialLink } from "@/src/lib/social-links";
 
 type Props = {
     data?: Partial<AboutPageData>;
     admin?: boolean;
+    phones?: string[];
+    emails?: string[];
+    address?: string;
+    socialLinks?: SocialLink[];
 };
 
 async function AboutAdminSlot({ data }: { data: AboutPageData }) {
@@ -22,11 +27,23 @@ async function AboutAdminSlot({ data }: { data: AboutPageData }) {
     );
 }
 
-export default async function AboutView({ data, admin = false }: Props) {
+export default async function AboutView({
+    data,
+    admin = false,
+    phones = [],
+    emails = [],
+    address = "",
+    socialLinks: settingsSocialLinks = [],
+}: Props) {
     const aboutData = mergeAboutPageData(data);
     const valueItems = aboutData.values;
     const strategyItems = aboutData.strategy;
-    const socialLinks = aboutData.socialLinks.filter((link) => link.url);
+    const officeAddress = address.trim();
+    const phone = phones.map((value) => value.trim()).find(Boolean) || "";
+    const email = emails.map((value) => value.trim()).find(Boolean) || "";
+    const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, "")}` : "";
+    const emailHref = email ? `mailto:${email}` : "";
+    const socialLinks = settingsSocialLinks.filter((link) => /^https?:\/\//i.test(link.url));
     return (
         <main className="group/about min-h-screen bg-base-100">
             {/* Hero Section */}
@@ -198,10 +215,16 @@ export default async function AboutView({ data, admin = false }: Props) {
                 <div className="max-w-2xl mx-auto bg-primary/5 p-12 rounded-[2rem] border border-primary/10">
                     <MapPin className="mx-auto size-12 text-primary mb-6" />
                     <h2 className="text-3xl font-bold mb-4">{aboutData.officeTitle}</h2>
-                    <RichTextHtml html={aboutData.officeAddressHtml} className="mb-8 text-xl text-base-content/70" />
+                    {officeAddress ? (
+                        <p className="mb-8 whitespace-pre-line text-xl text-base-content/70">{officeAddress}</p>
+                    ) : null}
                      <div className="flex flex-wrap justify-center gap-4">
-                        <a href={aboutData.contactButtonLink} className="btn btn-primary rounded-full px-8 text-white">{aboutData.contactButtonText}</a>
-                        <a href={aboutData.callButtonLink} className="btn btn-ghost hover:bg-base-100 border border-base-300 rounded-full px-8">{aboutData.callButtonText}</a>
+                        {emailHref ? (
+                            <a href={emailHref} className="btn btn-primary rounded-full px-8 text-white">{aboutData.contactButtonText}</a>
+                        ) : null}
+                        {phoneHref ? (
+                            <a href={phoneHref} className="btn btn-ghost hover:bg-base-100 border border-base-300 rounded-full px-8">{aboutData.callButtonText}</a>
+                        ) : null}
                     </div>
                 </div>
              </section>

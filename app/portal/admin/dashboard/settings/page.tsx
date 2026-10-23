@@ -278,7 +278,7 @@ export default function SettingsPage() {
               <ContactsOutlined className="mr-2 text-primary" />
               Contact
             </Title>
-            <Text type="secondary">Shown in the footer and on the contact page.</Text>
+            <Text type="secondary">Used across the site, including the footer, contact page, About, tickets, resorts, and service pages.</Text>
           </div>
           <div className="mb-2 text-xs font-bold tracking-[0.16em] text-base-content/50 uppercase">Email addresses</div>
           <Form.List name="contactEmails">
@@ -365,7 +365,7 @@ export default function SettingsPage() {
               <ShareAltOutlined className="mr-2 text-primary" />
               Social links
             </Title>
-            <Text type="secondary">These appear in the footer in the order listed here.</Text>
+            <Text type="secondary">Used across the site, including the footer and the About page, in the order listed here.</Text>
           </div>
           <Form.List name="socialLinks">
             {(fields, { add, remove, move }) => (

@@ -18,6 +18,7 @@ class HomePage extends Model {
   declare about_page: any;
   declare about_teams_page: any;
   declare award_certificate_page: any;
+  declare medical_visa_page: any;
   declare footer: any;
 }
 
@@ -191,6 +192,17 @@ HomePage.init(
       },
       set(value: any) {
         this.setDataValue('award_certificate_page', value);
+      },
+    },
+    medical_visa_page: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      get() {
+        const rawValue = this.getDataValue('medical_visa_page');
+        return typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
+      },
+      set(value: any) {
+        this.setDataValue('medical_visa_page', value);
       },
     },
     footer: {

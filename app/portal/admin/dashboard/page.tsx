@@ -65,6 +65,7 @@ const cmsLinks: { title: string; href: string; description: string }[] = [
     { title: "Resorts Listing", href: "/resorts", description: "Hero, beach & city sections, listings." },
     { title: "Sunvia Hotel & Resort", href: "/sunvia-hotel-resort", description: "Investor page sections and lead form." },
     { title: "About", href: "/about", description: "Story, teams, milestones." },
+    { title: "Medical Visa", href: "/medical-visa", description: "Medical visa story, papers, and enquiry form." },
     { title: "Tours", href: "/tours", description: "Active tour catalog." },
     { title: "Blog", href: "/blog", description: "Published travel stories and guides." },
 ];

@@ -11,17 +11,21 @@ interface TopBannerProps {
     } | null;
     /** Public "Development Mode" strip. Admin strip still shows when logged in. */
     showDevelopmentBanner?: boolean;
+    /** First office phone from Dashboard Settings. Hidden when empty. */
+    callPhone?: string | null;
 }
 
 export default function TopBanner({
     adminUser = null,
     showDevelopmentBanner = false,
+    callPhone = "",
 }: TopBannerProps) {
     const [isVisible, setIsVisible] = useState(true);
     const bannerRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const showAdminBanner = Boolean(adminUser);
     const shouldRender = showAdminBanner || showDevelopmentBanner;
+    const callHref = callPhone?.trim() ? `tel:${callPhone.replace(/[^\d+]/g, "")}` : "";
 
     useEffect(() => {
         const updateHeight = () => {
@@ -111,16 +115,16 @@ export default function TopBanner({
                     </div>
                 )}
                 
-                {!showAdminBanner && (
+                {!showAdminBanner && callHref ? (
                     <a
-                        href="tel:+880123456789"
+                        href={callHref}
                         className="flex-none rounded-full bg-primary px-3 sm:px-3.5 py-1 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-primary/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 transition-all flex items-center gap-1.5 sm:gap-2"
                     >
                         <PhoneCall size={12} className="sm:w-[14px] sm:h-[14px]" />
                         <span>Call Us <span className="hidden xs:inline">Directly</span></span>
                         <span aria-hidden="true" className="hidden sm:inline">&rarr;</span>
                     </a>
-                )}
+                ) : null}
             </div>
             
             <div className="flex flex-1 justify-end items-center gap-2 sm:gap-4 shrink-0">

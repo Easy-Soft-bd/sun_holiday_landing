@@ -39,6 +39,7 @@ async function syncModels() {
     await ensureJsonColumn(sequelize, 'page_home', 'swapno_bilash_resort_page');
     await ensureJsonColumn(sequelize, 'page_home', 'resorts_listing_page');
     await ensureJsonColumn(sequelize, 'page_home', 'award_certificate_page');
+    await ensureJsonColumn(sequelize, 'page_home', 'medical_visa_page');
     await ensureJsonColumn(sequelize, 'general_settings', 'socialLinks');
     await ensureJsonColumn(sequelize, 'custom_icons', 'content');
 

@@ -45,6 +45,9 @@ export async function POST(request: Request) {
     if (section === 'award_certificate_page') {
       revalidatePath('/about/award_certificate');
     }
+    if (section === 'medical_visa_page') {
+      revalidatePath('/medical-visa');
+    }
 
     return NextResponse.json({ success: true, data: homePage });
   } catch (error) {

@@ -4,20 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Upload, Alert } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
-import IconPicker from "@/src/components/common/IconPicker";
-import { DEFAULT_SOCIAL_ICON, SUGGESTED_SOCIAL_LINKS, sanitizeSocialUrl } from "@/src/lib/social-links";
 import { ensureSwapnoBilashResortLink } from "@/src/lib/resort-links";
+import { ensureMedicalVisaLink } from "@/src/lib/service-links";
 
 const { TextArea } = Input;
 
 interface QuickLink {
     label: string;
-    url: string;
-}
-
-interface SocialLinkField {
-    label: string;
-    icon: string;
     url: string;
 }
 
@@ -28,7 +21,6 @@ interface Certification {
 
 interface FooterData {
     bio: string;
-    socialLinks: SocialLinkField[];
     servicesTitle: string;
     servicesLinks: QuickLink[];
     resortsTitle: string;
@@ -42,19 +34,12 @@ interface FooterData {
     copyrightText: string;
 }
 
-const EMPTY_SOCIAL_LINKS: SocialLinkField[] = [
-    { label: "Facebook", icon: "SiFacebook", url: "" },
-    { label: "Instagram", icon: "SiInstagram", url: "" },
-    { label: "YouTube", icon: "SiYoutube", url: "" },
-    { label: "WhatsApp", icon: "SiWhatsapp", url: "" },
-];
-
 const defaultData: FooterData = {
     bio: "Sun Tourism Ltd is your premier gateway to world-class travel experiences. We specialize in curated holidays, seamless visa processing, and luxury resort bookings.",
-    socialLinks: EMPTY_SOCIAL_LINKS,
     servicesTitle: "Services",
     servicesLinks: [
         { label: "Visa Processing", url: "/visa" },
+        { label: "Medical Visa", url: "/medical-visa" },
         { label: "Ticket", url: "/tickets" },
         { label: "Tour", url: "/tours" },
         { label: "News & Blog", url: "/blog" },
@@ -108,18 +93,14 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
                 };
             });
 
-            const storedSocial = Array.isArray(initialData?.socialLinks)
-                ? initialData.socialLinks.filter((link: SocialLinkField) => String(link?.url || "").trim())
-                : [];
-
             const mergedData: FooterData = {
                 ...defaultData,
                 ...initialData,
-                socialLinks: storedSocial.length > 0 ? storedSocial : EMPTY_SOCIAL_LINKS,
-                servicesLinks:
+                servicesLinks: ensureMedicalVisaLink(
                     Array.isArray(initialData?.servicesLinks) && initialData.servicesLinks.length > 0
                         ? initialData.servicesLinks
                         : defaultData.servicesLinks,
+                ),
                 resortsLinks: ensureSwapnoBilashResortLink(
                     Array.isArray(initialData?.resortsLinks) && initialData.resortsLinks.length > 0
                         ? initialData.resortsLinks
@@ -139,21 +120,17 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
 
     const handleSave = async (values: FooterData) => {
         setIsSaving(true);
-        const socialLinks = (values.socialLinks || [])
-            .map((link) => ({
-                label: String(link?.label || "").trim(),
-                icon: String(link?.icon || "").trim() || DEFAULT_SOCIAL_ICON,
-                url: sanitizeSocialUrl(link?.url),
-            }))
-            .filter((link) => link.url.length > 0 && link.label.length > 0);
-
         try {
             const response = await fetch('/api/home-page', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     section: 'footer',
-                    data: { ...initialData, ...values, socialLinks },
+                    data: {
+                        ...initialData,
+                        ...values,
+                        socialLinks: initialData?.socialLinks,
+                    },
                 }),
             });
 
@@ -196,54 +173,13 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
                     <TextArea rows={3} />
                 </Form.Item>
 
-                <Divider titlePlacement="left">Social media</Divider>
                 <Alert
                     type="info"
                     showIcon
                     className="mb-4"
-                    title="These profile links appear under the logo."
-                    description="Use full profile URLs such as https://facebook.com/yourpage. Blank rows are skipped. The same links are added to the site’s TravelAgency details for search engines."
+                    title="Phone, email, address, map, and social profiles come from Settings."
+                    description="Edit those from Dashboard, then Settings. This form keeps the footer link columns."
                 />
-                <Form.List name="socialLinks">
-                    {(fields, { add, remove }) => (
-                        <>
-                            {fields.map(({ key, name, ...restField }) => (
-                                <div key={key} className="mb-3 grid grid-cols-1 items-start gap-2 sm:grid-cols-[180px_160px_minmax(0,1fr)_auto]">
-                                    <Form.Item {...restField} name={[name, "icon"]} className="mb-0">
-                                        <IconPicker placeholder="Icon" />
-                                    </Form.Item>
-                                    <Form.Item {...restField} name={[name, "label"]} className="mb-0">
-                                        <Input placeholder="Facebook" />
-                                    </Form.Item>
-                                    <Form.Item {...restField} name={[name, "url"]} className="mb-0">
-                                        <Input placeholder="https://facebook.com/yourpage" />
-                                    </Form.Item>
-                                    <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} aria-label="Remove social link" />
-                                </div>
-                            ))}
-                            <Button
-                                type="dashed"
-                                onClick={() => add({ label: "", icon: DEFAULT_SOCIAL_ICON, url: "" })}
-                                block
-                                icon={<PlusOutlined />}
-                            >
-                                Add social link
-                            </Button>
-                            <div className="mt-3">
-                                {SUGGESTED_SOCIAL_LINKS.map((preset) => (
-                                    <Button
-                                        key={preset.label}
-                                        size="small"
-                                        className="mr-2 mb-2"
-                                        onClick={() => add({ ...preset })}
-                                    >
-                                        {preset.label}
-                                    </Button>
-                                ))}
-                            </div>
-                        </>
-                    )}
-                </Form.List>
 
                 <Row gutter={24} className="mt-2">
                     <Col xs={24} lg={12}>
@@ -328,8 +264,8 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
                         <Alert
                             type="info"
                             showIcon
-                            title="Phone, email, address, and the map come from Settings."
-                            description="Edit those from Admin Dashboard, then Settings. Social profiles are edited in this form."
+                            title="The contact details shown here come from Settings."
+                            description="Edit phone, email, address, and the office map from Dashboard, then Settings."
                         />
                     </Col>
                     <Col xs={24} lg={12}>

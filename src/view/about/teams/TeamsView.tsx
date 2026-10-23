@@ -3,8 +3,8 @@ import LeadersRow from "./components/LeadersRow";
 import TeamList from "./components/TeamList";
 import ClientOnly from "@/src/components/common/ClientOnly";
 import type { TeamsPageData } from "./teams-page-data";
-import { defaultTeamsPageData } from "./teams-page-data";
-import { Users2, Sparkles, Crown, ArrowRight } from "lucide-react";
+import { mergeTeamsPageData } from "./teams-page-data";
+import { Users2, Sparkles, Crown, ArrowRight, Landmark } from "lucide-react";
 
 type Props = {
     data?: Partial<TeamsPageData>;
@@ -23,7 +23,8 @@ async function TeamsAdminSlot({ data }: { data: TeamsPageData }) {
 }
 
 export default async function TeamsView({ data, admin = false }: Props) {
-    const teamsData = { ...defaultTeamsPageData, ...data };
+    const teamsData = mergeTeamsPageData(data);
+    const boardMembers = teamsData.board.filter((member) => member.name);
     const directorCount = teamsData.directors.length;
     const teamCount = teamsData.teams.length;
 
@@ -67,6 +68,14 @@ export default async function TeamsView({ data, admin = false }: Props) {
                     </p>
 
                     <div className="mx-auto mt-5 flex flex-wrap items-center justify-center gap-2 sm:mt-8 sm:gap-3">
+                        {boardMembers.length > 0 ? (
+                            <div className="flex items-center gap-1.5 rounded-full border border-base-200 bg-base-100/80 px-3 py-1.5 text-[11px] font-semibold shadow-sm backdrop-blur-sm sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
+                                <Landmark className="size-3.5 text-primary sm:size-4" />
+                                <span>
+                                    {boardMembers.length} {teamsData.boardStatLabel}
+                                </span>
+                            </div>
+                        ) : null}
                         <div className="flex items-center gap-1.5 rounded-full border border-base-200 bg-base-100/80 px-3 py-1.5 text-[11px] font-semibold shadow-sm backdrop-blur-sm sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
                             <Crown className="size-3.5 text-primary sm:size-4" />
                             <span>
@@ -83,6 +92,20 @@ export default async function TeamsView({ data, admin = false }: Props) {
                 </div>
             </section>
 
+            {boardMembers.length > 0 ? (
+                <section id="board" className="relative border-t border-base-200/60">
+                    <div className="container mx-auto px-3 py-10 sm:px-4 sm:py-16 lg:py-20">
+                        <LeadersRow
+                            directors={boardMembers}
+                            eyebrow={teamsData.boardEyebrow}
+                            title={teamsData.boardTitle}
+                            description={teamsData.boardDescription}
+                            messageLabel={teamsData.leaderMessageLabel}
+                        />
+                    </div>
+                </section>
+            ) : null}
+
             {/* Leadership */}
             <section id="leadership" className="relative border-t border-base-200/60">
                 <div className="container mx-auto px-3 py-10 sm:px-4 sm:py-16 lg:py-20">
@@ -96,8 +119,8 @@ export default async function TeamsView({ data, admin = false }: Props) {
                 </div>
             </section>
 
-            {/* Team */}
-            <section id="team" className="relative bg-base-200/40">
+            {/* Employees */}
+            <section id="employees" className="relative bg-base-200/40">
                 <div className="relative z-10 container mx-auto px-3 py-10 sm:px-4 sm:py-16 lg:py-20">
                     <SectionHeader
                         eyebrow={teamsData.teamSectionEyebrow}

@@ -9,7 +9,7 @@ import { mergeAboutPageData } from "./about-page-data";
 import RichTextEditor from "@/src/components/common/RichTextEditor";
 import ImageUrlUploadField from "@/src/components/common/ImageUrlUploadField";
 import IconPicker from "@/src/components/common/IconPicker";
-import { DEFAULT_SOCIAL_ICON, SUGGESTED_SOCIAL_LINKS, sanitizeSocialUrl } from "@/src/lib/social-links";
+import { DEFAULT_SOCIAL_ICON, sanitizeSocialUrl } from "@/src/lib/social-links";
 
 type Props = {
   isOpen: boolean;
@@ -293,44 +293,19 @@ export default function AboutEditModal({ isOpen, onClose, initialData }: Props) 
               label: "Office",
               children: (
                 <>
-                  <TabIntro>The closing block with the address and the two buttons.</TabIntro>
+                  <TabIntro>The heading and button labels stay on this page. The address, email, and phone come from Dashboard, then Settings.</TabIntro>
                   <Form.Item name="officeTitle" label="Heading" rules={[{ required: true, message: "Enter the heading" }]}>
                     <Input placeholder="Visit Our Office" />
                   </Form.Item>
-                  <Form.Item name="officeAddressHtml" label="Address" rules={[{ required: true, message: "Enter the address" }]}>
-                    <RichTextEditor compact placeholder="Street, area, city" />
-                  </Form.Item>
                   <Row gutter={16}>
                     <Col span={12}>
-                      <Form.Item name="contactButtonText" label="First button label" rules={[{ required: true, message: "Enter the button label" }]}>
+                      <Form.Item name="contactButtonText" label="Email button label" rules={[{ required: true, message: "Enter the button label" }]}>
                         <Input placeholder="Contact Us" />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
-                      <Form.Item
-                        name="contactButtonLink"
-                        label="First button link"
-                        extra="A page such as /contact, or mailto:you@example.com"
-                        rules={[{ required: true, message: "Enter the link" }]}
-                      >
-                        <Input placeholder="/contact" />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row gutter={16}>
-                    <Col span={12}>
-                      <Form.Item name="callButtonText" label="Second button label" rules={[{ required: true, message: "Enter the button label" }]}>
+                      <Form.Item name="callButtonText" label="Call button label" rules={[{ required: true, message: "Enter the button label" }]}>
                         <Input placeholder="Call Support" />
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        name="callButtonLink"
-                        label="Second button link"
-                        extra="Use tel:+8801... for a phone number."
-                        rules={[{ required: true, message: "Enter the link" }]}
-                      >
-                        <Input placeholder="tel:+8801..." />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -342,9 +317,8 @@ export default function AboutEditModal({ isOpen, onClose, initialData }: Props) 
               label: "Social",
               children: (
                 <>
-                  <TabIntro>The last section on the page. A row only shows an icon after it has a profile link.</TabIntro>
+                  <TabIntro>The last section on the page. Profile icons come from Dashboard, then Settings, and only appear when a link is set.</TabIntro>
                   <SectionHeadingFields badgeName="socialBadgeText" titleName="socialTitle" introName="socialIntro" />
-                  <SocialLinkList />
                 </>
               ),
             },
@@ -446,46 +420,6 @@ function PointList({ name, addLabel }: { name: "values" | "strategy"; addLabel: 
           >
             {addLabel}
           </Button>
-        </div>
-      )}
-    </Form.List>
-  );
-}
-
-function SocialLinkList() {
-  return (
-    <Form.List name="socialLinks">
-      {(fields, { add, remove }) => (
-        <div className="space-y-2">
-          {fields.map((field) => (
-            <div key={field.key} className="grid grid-cols-1 items-start gap-2 sm:grid-cols-[150px_140px_minmax(0,1fr)_auto]">
-              <Form.Item name={[field.name, "icon"]} className="mb-0">
-                <IconPicker placeholder="Icon" />
-              </Form.Item>
-              <Form.Item name={[field.name, "label"]} className="mb-0">
-                <Input placeholder="Facebook" />
-              </Form.Item>
-              <Form.Item name={[field.name, "url"]} className="mb-0">
-                <Input placeholder="https://facebook.com/yourpage" />
-              </Form.Item>
-              <Button type="text" danger aria-label="Remove social link" icon={<DeleteOutlined />} onClick={() => remove(field.name)} />
-            </div>
-          ))}
-          <Button
-            type="dashed"
-            block
-            icon={<PlusOutlined />}
-            onClick={() => add({ label: "", icon: DEFAULT_SOCIAL_ICON, url: "" } satisfies AboutSocialLink)}
-          >
-            Add a profile
-          </Button>
-          <div className="pt-1">
-            {SUGGESTED_SOCIAL_LINKS.map((preset) => (
-              <Button key={preset.label} size="small" className="mb-2 mr-2" onClick={() => add({ ...preset })}>
-                {preset.label}
-              </Button>
-            ))}
-          </div>
         </div>
       )}
     </Form.List>
