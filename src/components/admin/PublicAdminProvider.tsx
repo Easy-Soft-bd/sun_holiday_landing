@@ -12,12 +12,16 @@ import {
 
 type AdminUser = {
   email?: string | null;
+  name?: string | null;
   role?: string | null;
+  isSuperAdmin?: boolean;
+  permissions?: string[] | null;
 } | null;
 
 type PublicAdminContextValue = {
   ready: boolean;
   admin: boolean;
+  canEditPages: boolean;
   user: AdminUser;
   refresh: () => Promise<void>;
 };
@@ -25,6 +29,7 @@ type PublicAdminContextValue = {
 const PublicAdminContext = createContext<PublicAdminContextValue>({
   ready: false,
   admin: false,
+  canEditPages: false,
   user: null,
   refresh: async () => undefined,
 });
@@ -72,15 +77,17 @@ export function PublicAdminProvider({ children }: { children: ReactNode }) {
     return () => window.clearTimeout(timeoutId);
   }, [refresh]);
 
-  const value = useMemo(
-    () => ({
+  const value = useMemo(() => {
+    const permissions = user?.permissions ?? [];
+    const canEditPages = Boolean(user?.isSuperAdmin || permissions.includes("pages"));
+    return {
       ready,
       admin: Boolean(user),
+      canEditPages,
       user,
       refresh,
-    }),
-    [ready, user, refresh],
-  );
+    };
+  }, [ready, user, refresh]);
 
   return (
     <PublicAdminContext.Provider value={value}>{children}</PublicAdminContext.Provider>

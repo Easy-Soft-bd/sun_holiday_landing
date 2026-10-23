@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     App,
     Avatar,
@@ -11,6 +11,7 @@ import {
     Grid,
     Layout,
     Menu,
+    Result,
     Space,
     Tag,
     Tooltip,
@@ -40,6 +41,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useGetMeQuery, useLogoutMutation } from "@/src/lib/redux/api/userApi";
+import { canAccess, type Permission } from "@/src/lib/permissions";
 
 const { Header, Sider, Content } = Layout;
 
@@ -58,42 +60,70 @@ const cmsPages: { key: string; label: string; href: string }[] = [
     { key: "cms-blog", label: "Blog", href: "/blog" },
 ];
 
-function buildMenuItems(): SidebarItem[] {
-    return [
-        {
+type Access = { isSuperAdmin: boolean; permissions: string[] };
+
+function allow(access: Access, permission: Permission) {
+    return canAccess(access, permission);
+}
+
+function areaForPath(pathname: string): Permission | "super" | null {
+    if (pathname.startsWith(`${ROOT}/leads`)) return "leads";
+    if (pathname.startsWith(`${ROOT}/tours`)) return "tours";
+    if (pathname.startsWith(`${ROOT}/visa`)) return "visa";
+    if (pathname.startsWith(`${ROOT}/tickets`)) return "tickets";
+    if (pathname.startsWith(`${ROOT}/blog`)) return "blog";
+    if (pathname.startsWith(`${ROOT}/settings`)) return "settings";
+    if (pathname.startsWith(`${ROOT}/icons`)) return "icons";
+    if (pathname.startsWith(`${ROOT}/users`)) return "super";
+    return null;
+}
+
+function buildMenuItems(access: Access | null): SidebarItem[] {
+    const show = (permission: Permission) => Boolean(access && allow(access, permission));
+    const items: SidebarItem[] = [];
+    if (show("leads")) {
+        items.push({
             key: `${ROOT}/leads`,
             icon: <InboxOutlined />,
             label: <Link href={`${ROOT}/leads`}>Lead Management</Link>,
-        },
-        {
+        });
+    }
+    if (show("tours")) {
+        items.push({
             key: `${ROOT}/tours`,
             icon: <EnvironmentOutlined />,
             label: <Link href={`${ROOT}/tours`}>Tours</Link>,
-        },
-        {
+        });
+    }
+    if (show("visa")) {
+        items.push({
             key: `${ROOT}/visa`,
             icon: <GlobalOutlined />,
             label: <Link href={`${ROOT}/visa`}>Visa</Link>,
-        },
-        {
+        });
+    }
+    if (show("tickets")) {
+        items.push({
             key: `${ROOT}/tickets`,
             icon: <SendOutlined />,
             label: <Link href={`${ROOT}/tickets`}>Tickets</Link>,
-        },
-        {
+        });
+    }
+    if (show("blog")) {
+        items.push({
             key: `${ROOT}/blog`,
             icon: <ReadOutlined />,
             label: <Link href={`${ROOT}/blog`}>Blog</Link>,
-        },
-        {
-            key: ROOT,
-            icon: <DashboardOutlined />,
-            label: <Link href={ROOT}>Overview</Link>,
-        },
-        {
-            type: "divider",
-        },
-        {
+        });
+    }
+    items.push({
+        key: ROOT,
+        icon: <DashboardOutlined />,
+        label: <Link href={ROOT}>Overview</Link>,
+    });
+    if (show("pages")) {
+        items.push({ type: "divider" });
+        items.push({
             key: "cms",
             icon: <EditOutlined />,
             label: "Pages (inline edit)",
@@ -106,40 +136,46 @@ function buildMenuItems(): SidebarItem[] {
                     </a>
                 ),
             })),
-        },
-        {
-            type: "divider",
-        },
-        {
+        });
+    }
+    if (show("settings") || show("icons") || access?.isSuperAdmin) {
+        items.push({ type: "divider" });
+    }
+    if (show("settings")) {
+        items.push({
             key: `${ROOT}/settings`,
             icon: <SettingOutlined />,
             label: <Link href={`${ROOT}/settings`}>Settings</Link>,
-        },
-        {
+        });
+    }
+    if (show("icons")) {
+        items.push({
             key: `${ROOT}/icons`,
             icon: <StarOutlined />,
             label: <Link href={`${ROOT}/icons`}>Icon library</Link>,
-        },
-        {
-            key: "coming-soon",
-            icon: <AppstoreOutlined />,
-            label: "Coming soon",
-            children: [
-                {
-                    key: "users",
-                    icon: <UserOutlined />,
-                    label: <Tooltip title="Module not built yet"><span className="text-base-content/60">Users</span></Tooltip>,
-                    disabled: true,
-                },
-                {
-                    key: "analytics",
-                    icon: <BarChartOutlined />,
-                    label: <Tooltip title="Module not built yet"><span className="text-base-content/60">Analytics</span></Tooltip>,
-                    disabled: true,
-                },
-            ],
-        },
-    ];
+        });
+    }
+    if (access?.isSuperAdmin) {
+        items.push({
+            key: `${ROOT}/users`,
+            icon: <UserOutlined />,
+            label: <Link href={`${ROOT}/users`}>Admin users</Link>,
+        });
+    }
+    items.push({
+        key: "coming-soon",
+        icon: <AppstoreOutlined />,
+        label: "Coming soon",
+        children: [
+            {
+                key: "analytics",
+                icon: <BarChartOutlined />,
+                label: <Tooltip title="Module not built yet"><span className="text-base-content/60">Analytics</span></Tooltip>,
+                disabled: true,
+            },
+        ],
+    });
+    return items;
 }
 
 const breadcrumbLabels: Record<string, string> = {
@@ -156,6 +192,7 @@ const breadcrumbLabels: Record<string, string> = {
     edit: "Edit",
     settings: "Settings",
     icons: "Icon library",
+    users: "Admin users",
 };
 
 function buildBreadcrumb(pathname: string) {
@@ -200,6 +237,9 @@ function selectedKeyForPath(pathname: string): string {
     if (pathname.startsWith(`${ROOT}/icons`)) {
         return `${ROOT}/icons`;
     }
+    if (pathname.startsWith(`${ROOT}/users`)) {
+        return `${ROOT}/users`;
+    }
     return ROOT;
 }
 
@@ -215,12 +255,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const { data: meData } = useGetMeQuery({});
     const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+    const access = useMemo<Access | null>(() => {
+        const user = meData?.user;
+        if (!user) return null;
+        return {
+            isSuperAdmin: Boolean(user.isSuperAdmin),
+            permissions: Array.isArray(user.permissions) ? user.permissions : [],
+        };
+    }, [meData]);
+    const area = areaForPath(pathname);
+    const blocked = Boolean(
+        access &&
+        area &&
+        (area === "super" ? !access.isSuperAdmin : !allow(access, area)),
+    );
+
+    useEffect(() => {
+        if (meData && meData.authenticated === false) {
+            router.push("/portal/admin/login");
+        }
+    }, [meData, router]);
 
     const {
         token: { colorBgContainer, colorBorderSecondary },
     } = theme.useToken();
 
-    const menuItems = useMemo(() => buildMenuItems(), []);
+    const menuItems = useMemo(() => buildMenuItems(access), [access]);
     const selectedKey = useMemo(() => selectedKeyForPath(pathname), [pathname]);
     const breadcrumbItems = useMemo(() => buildBreadcrumb(pathname), [pathname]);
 
@@ -372,11 +432,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     </div>
 
                     <Space size="small" className="flex items-center">
-                        <Link href={`${ROOT}/tours/add`} className="hidden sm:inline-flex">
-                            <Button type="primary" icon={<PlusOutlined />} size="middle">
-                                New Tour
-                            </Button>
-                        </Link>
+                        {access && allow(access, "tours") ? (
+                            <Link href={`${ROOT}/tours/add`} className="hidden sm:inline-flex">
+                                <Button type="primary" icon={<PlusOutlined />} size="middle">
+                                    New Tour
+                                </Button>
+                            </Link>
+                        ) : null}
                         <a
                             href="/"
                             target="_blank"
@@ -405,7 +467,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     }}
                     className="px-3 py-4 sm:px-4 sm:py-5 lg:px-5 lg:py-6"
                 >
-                    {children}
+                    {blocked ? (
+                        <Result
+                            status="403"
+                            title="No access"
+                            subTitle="Your account does not include this area."
+                        />
+                    ) : children}
                 </Content>
             </Layout>
         </Layout>

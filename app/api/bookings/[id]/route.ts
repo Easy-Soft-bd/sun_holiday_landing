@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { getStaffUser, requirePermission } from '@/src/lib/auth';
 import Booking, { BookingServiceType, BookingStatus } from '@/src/models/Booking';
 import BookingActivity from '@/src/models/BookingActivity';
 import Tour from '@/src/models/Tour';
@@ -60,11 +60,7 @@ function sanitizeString(value: unknown, max = 500): string {
 }
 
 async function requireAuth() {
-  const auth = await verifyAuth();
-  if (!auth.authenticated) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  return null;
+  return requirePermission('leads');
 }
 
 export async function GET(_: NextRequest, { params }: Params) {
@@ -88,7 +84,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
   try {
     const unauthorized = await requireAuth();
     if (unauthorized) return unauthorized;
-    const auth = await verifyAuth();
+    const staff = await getStaffUser();
     const { id } = await params;
     await sequelize.authenticate();
 
@@ -175,8 +171,8 @@ export async function PUT(request: NextRequest, { params }: Params) {
     await row.update(update);
 
     // Audit log: every meaningful change shows up in the CRM timeline.
-    const actor = auth.user?.email ?? 'system';
-    const actorLabel = auth.user?.email ? auth.user.email.split('@')[0] : 'System';
+    const actor = staff?.email ?? 'system';
+    const actorLabel = staff?.email ? staff.email.split('@')[0] : 'System';
     const auditEntries: Array<{
       type: 'status_change' | 'system';
       body: string;

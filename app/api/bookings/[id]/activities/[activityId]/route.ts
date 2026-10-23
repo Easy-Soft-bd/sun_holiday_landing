@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import BookingActivity from '@/src/models/BookingActivity';
 
 export const dynamic = 'force-dynamic';
@@ -11,10 +11,8 @@ interface Params {
 
 export async function DELETE(_: NextRequest, { params }: Params) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const denied = await requirePermission('leads');
+    if (denied) return denied;
     const { id, activityId } = await params;
     await sequelize.authenticate();
     const row = await BookingActivity.findOne({

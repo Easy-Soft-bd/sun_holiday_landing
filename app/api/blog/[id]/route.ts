@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import BlogPost from '@/src/models/BlogPost';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import {
   ensureBlogPostsReady,
@@ -62,10 +62,8 @@ export async function GET(_: Request, { params }: Params) {
 
 export async function PUT(request: NextRequest, { params }: Params) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
-    }
+    const denied = await requirePermission('blog');
+    if (denied) return denied;
 
     const { id } = await params;
     const body = (await request.json()) as Record<string, unknown>;
@@ -169,10 +167,8 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
 export async function DELETE(_: NextRequest, { params }: Params) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
-    }
+    const denied = await requirePermission('blog');
+    if (denied) return denied;
 
     const { id } = await params;
     await sequelize.authenticate();

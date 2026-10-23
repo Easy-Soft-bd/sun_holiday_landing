@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import Location from '@/src/models/Location';
 
 export async function GET() {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
-    }
+    const denied = await requirePermission('tours');
+    if (denied) return denied;
 
     await sequelize.authenticate();
     const rows = await Location.findAll({
@@ -25,10 +23,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
-    }
+    const denied = await requirePermission('tours');
+    if (denied) return denied;
 
     const body = await request.json() as { name?: string };
     const name = typeof body.name === 'string' ? body.name.trim() : '';

@@ -34,6 +34,8 @@ import {
 import type { ColumnsType } from "antd/es/table";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useGetMeQuery } from "@/src/lib/redux/api/userApi";
+import { canAccess, type Permission } from "@/src/lib/permissions";
 
 const { Title, Text } = Typography;
 
@@ -101,6 +103,16 @@ function fmtDate(d?: string) {
 }
 
 export default function AdminDashboardPage() {
+    const { data: meData } = useGetMeQuery({});
+    const access = useMemo(() => {
+        const user = meData?.user;
+        if (!user) return null;
+        return {
+            isSuperAdmin: Boolean(user.isSuperAdmin),
+            permissions: Array.isArray(user.permissions) ? user.permissions as string[] : [],
+        };
+    }, [meData]);
+    const show = (permission: Permission) => Boolean(access && canAccess(access, permission));
     const [tours, setTours] = useState<TourRow[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -223,24 +235,36 @@ export default function AdminDashboardPage() {
                     </Text>
                 </div>
                 <Space wrap>
-                    <Link href={`${ROOT}/tours/add`}>
-                        <Button type="primary" icon={<PlusOutlined />}>New Tour</Button>
-                    </Link>
-                    <Link href={`${ROOT}/blog/add`}>
-                        <Button type="primary" icon={<PlusOutlined />}>New Post</Button>
-                    </Link>
-                    <Link href={`${ROOT}/tours`}>
-                        <Button icon={<EnvironmentOutlined />}>Manage Tours</Button>
-                    </Link>
-                    <Link href={`${ROOT}/blog`}>
-                        <Button icon={<EditOutlined />}>Manage Blog</Button>
-                    </Link>
-                    <Link href={`${ROOT}/leads`}>
-                        <Button icon={<InboxOutlined />}>Leads</Button>
-                    </Link>
-                    <Link href={`${ROOT}/settings`}>
-                        <Button icon={<SettingOutlined />}>Settings</Button>
-                    </Link>
+                    {show("tours") ? (
+                        <Link href={`${ROOT}/tours/add`}>
+                            <Button type="primary" icon={<PlusOutlined />}>New Tour</Button>
+                        </Link>
+                    ) : null}
+                    {show("blog") ? (
+                        <Link href={`${ROOT}/blog/add`}>
+                            <Button type="primary" icon={<PlusOutlined />}>New Post</Button>
+                        </Link>
+                    ) : null}
+                    {show("tours") ? (
+                        <Link href={`${ROOT}/tours`}>
+                            <Button icon={<EnvironmentOutlined />}>Manage Tours</Button>
+                        </Link>
+                    ) : null}
+                    {show("blog") ? (
+                        <Link href={`${ROOT}/blog`}>
+                            <Button icon={<EditOutlined />}>Manage Blog</Button>
+                        </Link>
+                    ) : null}
+                    {show("leads") ? (
+                        <Link href={`${ROOT}/leads`}>
+                            <Button icon={<InboxOutlined />}>Leads</Button>
+                        </Link>
+                    ) : null}
+                    {show("settings") ? (
+                        <Link href={`${ROOT}/settings`}>
+                            <Button icon={<SettingOutlined />}>Settings</Button>
+                        </Link>
+                    ) : null}
                 </Space>
             </div>
 
@@ -379,7 +403,7 @@ export default function AdminDashboardPage() {
                 </Col>
             </Row>
 
-            <Card
+            {show("pages") ? <Card
                 variant="borderless"
                 className="shadow-sm"
                 title={
@@ -432,7 +456,7 @@ export default function AdminDashboardPage() {
                         </Col>
                     ))}
                 </Row>
-            </Card>
+            </Card> : null}
 
             <Card variant="borderless" className="shadow-sm" title="Tips">
                 <ul className="ml-5 list-disc space-y-1 text-sm text-base-content/70">

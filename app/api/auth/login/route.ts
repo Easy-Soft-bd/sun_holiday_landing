@@ -50,6 +50,14 @@ export async function POST(request: Request) {
       );
     }
 
+    const active = user.isActive as unknown;
+    if (active === false || active === 0 || active === '0') {
+      return NextResponse.json(
+        { message: 'This account is deactivated' },
+        { status: 403 }
+      );
+    }
+
     // Check if the user has an admin-like role
     const adminRoles = [UserRole.ADMIN, UserRole.MANAGER, UserRole.EDITOR];
     if (!adminRoles.includes(user.role)) {

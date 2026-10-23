@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import BlogPost from '@/src/models/BlogPost';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { ensureBlogPostsReady, getCachedBlogPosts, mapBlogRow } from '@/src/lib/data/blog';
@@ -20,10 +20,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
-    }
+    const denied = await requirePermission('blog');
+    if (denied) return denied;
 
     const body = (await request.json()) as Record<string, unknown>;
     const title = typeof body.title === 'string' ? body.title.trim() : '';

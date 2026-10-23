@@ -41,6 +41,22 @@ async function syncModels() {
     await ensureJsonColumn(sequelize, 'page_home', 'award_certificate_page');
     await ensureJsonColumn(sequelize, 'page_home', 'medical_visa_page');
     await ensureJsonColumn(sequelize, 'page_home', 'education_page');
+    await ensureJsonColumn(sequelize, 'users', 'permissions');
+    try {
+      await sequelize.query(
+        'ALTER TABLE `users` ADD COLUMN `isActive` TINYINT(1) NOT NULL DEFAULT 1',
+      );
+      console.log('Added column users.isActive');
+    } catch (err: unknown) {
+      const e = err as { parent?: { errno?: number; sqlMessage?: string }; message?: string };
+      const errno = e?.parent?.errno;
+      const sqlMsg = String(e?.parent?.sqlMessage ?? e?.message ?? '');
+      if (errno === 1060 || sqlMsg.includes('Duplicate column name')) {
+        // already exists
+      } else {
+        throw err;
+      }
+    }
     await ensureJsonColumn(sequelize, 'general_settings', 'socialLinks');
     await ensureJsonColumn(sequelize, 'custom_icons', 'content');
 

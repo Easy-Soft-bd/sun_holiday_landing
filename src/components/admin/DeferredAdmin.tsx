@@ -44,12 +44,12 @@ export default function DeferredAdmin({
   data: unknown;
   className?: string;
 }) {
-  const { admin, ready } = usePublicAdmin();
+  const { canEditPages, ready } = usePublicAdmin();
   const [Control, setControl] = useState<ComponentType<AdminControlProps> | null>(null);
   const [Providers, setProviders] = useState<ComponentType<ProvidersProps> | null>(null);
 
   useEffect(() => {
-    if (!ready || !admin) {
+    if (!ready || !canEditPages) {
       setControl(null);
       setProviders(null);
       return;
@@ -68,7 +68,7 @@ export default function DeferredAdmin({
     return () => {
       cancelled = true;
     };
-  }, [admin, name, ready]);
+  }, [canEditPages, name, ready]);
 
   if (!Control || !Providers) {
     return null;

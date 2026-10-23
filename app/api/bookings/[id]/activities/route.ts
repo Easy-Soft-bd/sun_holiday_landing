@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { getStaffUser, requirePermission } from '@/src/lib/auth';
 import Booking from '@/src/models/Booking';
 import BookingActivity, { BookingActivityType } from '@/src/models/BookingActivity';
 
@@ -24,11 +24,9 @@ function sanitizeString(value: unknown, max = 4000): string {
 }
 
 async function requireAuth() {
-  const auth = await verifyAuth();
-  if (!auth.authenticated) {
-    return { auth, response: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) };
-  }
-  return { auth, response: null };
+  const response = await requirePermission('leads');
+  const user = await getStaffUser();
+  return { auth: { user }, response };
 }
 
 export async function GET(_: NextRequest, { params }: Params) {

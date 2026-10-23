@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Op } from 'sequelize';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { getStaffUser, requirePermission } from '@/src/lib/auth';
+import { canAccess } from '@/src/lib/permissions';
 import Booking from '@/src/models/Booking';
 import BookingActivity from '@/src/models/BookingActivity';
 import Tour from '@/src/models/Tour';
@@ -124,10 +125,8 @@ async function resolveTourSnapshot(input: {
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const denied = await requirePermission('leads');
+    if (denied) return denied;
 
     await ensureTable();
 
@@ -180,7 +179,8 @@ export async function POST(request: NextRequest) {
   try {
     await ensureTable();
 
-    const auth = await verifyAuth();
+    const staff = await getStaffUser();
+    const leadsAdmin = Boolean(staff && canAccess(staff, 'leads'));
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
 
     const name = sanitizeString(body.name, 160);
@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
     const ctx = getRequestContext(request);
 
     // Public submissions are rate limited & spam-checked; admin posts skip these checks.
-    if (!auth.authenticated) {
+    if (!leadsAdmin) {
       const rateKey = ctx.ipAddress || (email ? `email:${email}` : `phone:${phone}`);
       const limit = isRateLimited(rateKey);
       if (limit.limited) {
@@ -270,12 +270,13 @@ export async function POST(request: NextRequest) {
     });
 
     // Seed the CRM timeline with the initial submission entry.
-    const actorLabel = auth.user?.email ? auth.user.email.split('@')[0] : 'Website';
+    const actorEmail = leadsAdmin ? staff?.email ?? null : null;
+    const actorLabel = actorEmail ? actorEmail.split('@')[0] : 'Website';
     const serviceSummary = resolvedServiceTitle ? ` · ${resolvedServiceTitle}` : '';
     await BookingActivity.create({
       bookingId: created.id,
       type: 'system',
-      body: auth.user?.email
+      body: actorEmail
         ? `Booking created from admin (${source})${serviceSummary}.`
         : `Booking submitted via ${source} [${serviceType}]${serviceSummary} (${ctx.ipAddress ?? 'unknown IP'}).`,
       meta: {
@@ -288,7 +289,7 @@ export async function POST(request: NextRequest) {
         tourId: tourSnap.tourId,
         tourTitle: tourSnap.tourTitle,
       },
-      authorEmail: auth.user?.email ?? null,
+      authorEmail: actorEmail,
       authorLabel: actorLabel,
     });
 

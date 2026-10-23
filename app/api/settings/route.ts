@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import GeneralSettings from '@/src/models/GeneralSettings';
-import { isAdmin } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import { TAG_GENERAL_SETTINGS } from '@/src/lib/revalidate-tags';
 import { normalizeSocialLinks } from '@/src/lib/social-links';
 import { normalizeSettingsPlain, parseMultiValue } from '@/src/lib/settings-normalize';
@@ -25,10 +25,8 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   try {
-    const isUserAdmin = await isAdmin();
-    if (!isUserAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const denied = await requirePermission('settings');
+    if (denied) return denied;
 
     const body = (await request.json()) as Record<string, unknown>;
     const payload: Record<string, unknown> = { ...body };

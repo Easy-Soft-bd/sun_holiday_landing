@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import TicketRoute from '@/src/models/TicketRoute';
 import { ensureTicketRoutesReady, getCachedTicketRoutes, mapTicketRouteRow } from '@/src/lib/data/ticket-routes';
 import { readNullableText, readPrice, readSortOrder, readTicketStatus, readTrimmed } from '@/src/lib/ticket/input';
@@ -17,10 +17,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
-    }
+    const denied = await requirePermission('tickets');
+    if (denied) return denied;
 
     const body = (await request.json()) as Record<string, unknown>;
     const from = readTrimmed(body.from);

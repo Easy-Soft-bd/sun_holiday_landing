@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Op } from 'sequelize';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { hasPermission, requirePermission } from '@/src/lib/auth';
 import Lead, { LeadStatus } from '@/src/models/Lead';
 import { getRequestContext } from '@/src/lib/request-meta';
 import { isDuplicateLead, isRateLimited, looksLikeSpam } from '@/src/lib/spam-guard';
@@ -34,10 +34,8 @@ async function ensureTable() {
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const denied = await requirePermission('leads');
+    if (denied) return denied;
     await ensureTable();
 
     const { searchParams } = new URL(request.url);
@@ -77,7 +75,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     await ensureTable();
-    const auth = await verifyAuth();
+    const leadsAdmin = await hasPermission('leads');
 
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
 
@@ -98,7 +96,7 @@ export async function POST(request: NextRequest) {
 
     const ctx = getRequestContext(request);
 
-    if (!auth.authenticated) {
+    if (!leadsAdmin) {
       const rateKey = ctx.ipAddress || `email:${email}`;
       const limit = isRateLimited(rateKey);
       if (limit.limited) {

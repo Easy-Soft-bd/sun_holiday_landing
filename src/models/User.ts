@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../lib/db';
 import bcrypt from 'bcryptjs';
+import { normalizePermissions, type Permission } from '../lib/permissions';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -15,6 +16,8 @@ class User extends Model {
   declare password: string;
   declare name: string | null;
   declare role: UserRole;
+  declare permissions: Permission[];
+  declare isActive: boolean;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
@@ -57,6 +60,23 @@ User.init(
       type: DataTypes.ENUM(...Object.values(UserRole)),
       allowNull: false,
       defaultValue: UserRole.USER,
+    },
+    permissions: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      get() {
+        const rawValue = this.getDataValue('permissions');
+        const parsed = typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
+        return normalizePermissions(parsed);
+      },
+      set(value: unknown) {
+        this.setDataValue('permissions', normalizePermissions(value));
+      },
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     },
   },
   {

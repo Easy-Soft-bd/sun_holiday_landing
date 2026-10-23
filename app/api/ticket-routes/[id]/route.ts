@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import TicketRoute from '@/src/models/TicketRoute';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import { ensureTicketRoutesReady, getCachedTicketRouteById, mapTicketRouteRow } from '@/src/lib/data/ticket-routes';
 import { readNullableText, readPrice, readSortOrder, readTicketStatus, readTrimmed } from '@/src/lib/ticket/input';
 import { revalidateTicketRouteCaches } from '@/src/lib/ticket/revalidate';
@@ -25,10 +25,8 @@ export async function GET(_: Request, { params }: Params) {
 
 export async function PATCH(request: NextRequest, { params }: Params) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
-    }
+    const denied = await requirePermission('tickets');
+    if (denied) return denied;
 
     const { id } = await params;
     const body = (await request.json()) as Record<string, unknown>;
@@ -70,10 +68,8 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 
 export async function DELETE(_: NextRequest, { params }: Params) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
-    }
+    const denied = await requirePermission('tickets');
+    if (denied) return denied;
 
     const { id } = await params;
     await ensureTicketRoutesReady();

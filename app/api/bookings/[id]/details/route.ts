@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Op } from 'sequelize';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import Booking from '@/src/models/Booking';
 import BookingActivity from '@/src/models/BookingActivity';
 import Lead from '@/src/models/Lead';
@@ -38,10 +38,8 @@ function riskLevel(scores: { ipCount: number; emailCount: number; phoneCount: nu
 
 export async function GET(_: NextRequest, { params }: Params) {
   try {
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const denied = await requirePermission('leads');
+    if (denied) return denied;
     const { id } = await params;
     await sequelize.authenticate();
 

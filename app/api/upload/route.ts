@@ -3,20 +3,15 @@ import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { existsSync } from 'fs';
 import { revalidateTag } from 'next/cache';
-import { verifyAuth } from '@/src/lib/auth';
+import { requireUploadPermission } from '@/src/lib/auth';
 import { buildProcessedFilename, processFaviconImage, processUploadedImage } from '@/src/lib/image-process';
 import { TAG_BLOG_LIST, TAG_GENERAL_SETTINGS, TAG_HOME_PAGE, TAG_SUNVIA_ECO_RESORT, TAG_TICKET_ROUTES, TAG_VISA_LIST } from '@/src/lib/revalidate-tags';
 
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Please log in.' },
-        { status: 401 }
-      );
-    }
+    const denied = await requireUploadPermission();
+    if (denied) return denied;
 
     const formData = await request.formData();
     const file = formData.get('file') as File;

@@ -5,7 +5,7 @@ export { getCachedSunviaEcoResortPageData } from '@/src/lib/data/sunvia-eco-reso
 export { getCachedHomeFeaturedTours } from '@/src/lib/data/tours';
 
 export const getCachedAdminStatus = cache(async () => {
-  // This stays request-scoped because admin state depends on cookies().
+  // Page edit buttons follow the Pages permission. Super Admin is included.
   return await isAdmin();
 });
 

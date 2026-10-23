@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { UniqueConstraintError } from 'sequelize';
 import CustomIcon from '@/src/models/CustomIcon';
-import { isAdmin } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import { TAG_CUSTOM_ICONS } from '@/src/lib/revalidate-tags';
 import { parseJsonBody } from '@/src/lib/api-request';
 import { buildCustomIconPayload, serializeCustomIcon } from '@/src/lib/icons/custom-icon-payload';
@@ -27,9 +27,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    if (!(await isAdmin())) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const denied = await requirePermission('icons');
+    if (denied) return denied;
 
     const { data: body, error } = await parseJsonBody(request);
 

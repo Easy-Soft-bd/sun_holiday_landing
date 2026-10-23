@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import Lead, { LeadStatus } from '@/src/models/Lead';
 
 interface Params {
@@ -14,11 +14,7 @@ function sanitizeString(value: unknown, max = 500): string {
 }
 
 async function requireAuth() {
-  const auth = await verifyAuth();
-  if (!auth.authenticated) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  return null;
+  return requirePermission('leads');
 }
 
 export async function GET(_: NextRequest, { params }: Params) {

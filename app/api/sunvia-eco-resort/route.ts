@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import SunviaEcoResortPage from "@/src/models/SunviaEcoResortPage";
-import { isAdmin } from "@/src/lib/auth";
+import { requirePermission } from "@/src/lib/auth";
 import { TAG_SUNVIA_ECO_RESORT } from "@/src/lib/revalidate-tags";
 import {
   isResortSectionKey,
@@ -10,10 +10,8 @@ import {
 
 export async function POST(request: Request) {
   try {
-    const isUserAdmin = await isAdmin();
-    if (!isUserAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await requirePermission("pages");
+    if (denied) return denied;
 
     const body = await request.json();
     const { section, data } = body ?? {};

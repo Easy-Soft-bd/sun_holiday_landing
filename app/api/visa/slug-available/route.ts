@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import VisaCountry from '@/src/models/VisaCountry';
 import { allocateUniqueVisaSlug } from '@/src/lib/visa/slug';
 import { slugifyText } from '@/src/lib/tours/slugify-text';
@@ -10,10 +10,8 @@ import { slugifyText } from '@/src/lib/tours/slugify-text';
  * Admin-only. Normalizes slug and reports availability; suggests the next free slug if taken.
  */
 export async function GET(request: NextRequest) {
-  const auth = await verifyAuth();
-  if (!auth.authenticated) {
-    return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
-  }
+  const denied = await requirePermission('visa');
+  if (denied) return denied;
 
   const { searchParams } = new URL(request.url);
   const raw = searchParams.get('slug') ?? '';

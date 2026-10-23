@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sequelize from '@/src/lib/db';
-import { verifyAuth } from '@/src/lib/auth';
+import { requirePermission } from '@/src/lib/auth';
 import Tour from '@/src/models/Tour';
 import { getCachedTours } from '@/src/lib/data/tours';
 import { allocateUniqueTourSlug } from '@/src/lib/tours/slug';
@@ -24,13 +24,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const auth = await verifyAuth();
-    if (!auth.authenticated) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Please log in.' },
-        { status: 401 }
-      );
-    }
+    const denied = await requirePermission('tours');
+    if (denied) return denied;
 
     const body = await request.json() as Record<string, unknown>;
     const { slug: slugFromBody, locationId, location: locationField, ...rest } = body;
