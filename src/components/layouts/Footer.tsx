@@ -9,7 +9,7 @@ import { parseMultiValue, resolveMapsEmbedForIframe, uniqueEmails, uniquePhones 
 import { DEFAULT_SITE_NAME } from "@/src/lib/brand";
 import { getSiteUrl } from "@/src/lib/site";
 import { ensureSwapnoBilashResortLink } from "@/src/lib/resort-links";
-import { ensureMedicalVisaLink } from "@/src/lib/service-links";
+import { ensureEducationLink, ensureMedicalVisaLink } from "@/src/lib/service-links";
 
 /** Footer CMS entries predate the settings editor and may not carry a label. */
 interface CmsSocialLink {
@@ -65,6 +65,7 @@ const defaultData: FooterData = {
     servicesLinks: [
         { label: "Visa Processing", url: "/visa" },
         { label: "Medical Visa", url: "/medical-visa" },
+        { label: "Sun Global Education", url: "/sun-global-education" },
         { label: "Ticket", url: "/tickets" },
         { label: "Tour", url: "/tours" },
         { label: "News & Blog", url: "/blog" },
@@ -139,7 +140,7 @@ function mergeFooterData(data?: FooterData): FooterData {
     if (!Array.isArray(merged.servicesLinks) || merged.servicesLinks.length === 0) {
         merged.servicesLinks = defaultData.servicesLinks;
     }
-    merged.servicesLinks = ensureMedicalVisaLink(merged.servicesLinks ?? []);
+    merged.servicesLinks = ensureEducationLink(ensureMedicalVisaLink(merged.servicesLinks ?? []));
     if (!Array.isArray(merged.resortsLinks) || merged.resortsLinks.length === 0) {
         merged.resortsLinks = defaultData.resortsLinks;
     }

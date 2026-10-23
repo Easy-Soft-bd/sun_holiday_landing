@@ -48,6 +48,9 @@ export async function POST(request: Request) {
     if (section === 'medical_visa_page') {
       revalidatePath('/medical-visa');
     }
+    if (section === 'education_page') {
+      revalidatePath('/sun-global-education');
+    }
 
     return NextResponse.json({ success: true, data: homePage });
   } catch (error) {

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Upload, Alert } from "antd";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 import { ensureSwapnoBilashResortLink } from "@/src/lib/resort-links";
-import { ensureMedicalVisaLink } from "@/src/lib/service-links";
+import { ensureEducationLink, ensureMedicalVisaLink } from "@/src/lib/service-links";
 
 const { TextArea } = Input;
 
@@ -40,6 +40,7 @@ const defaultData: FooterData = {
     servicesLinks: [
         { label: "Visa Processing", url: "/visa" },
         { label: "Medical Visa", url: "/medical-visa" },
+        { label: "Sun Global Education", url: "/sun-global-education" },
         { label: "Ticket", url: "/tickets" },
         { label: "Tour", url: "/tours" },
         { label: "News & Blog", url: "/blog" },
@@ -96,10 +97,12 @@ export default function FooterEditModal({ isOpen, onClose, initialData }: Footer
             const mergedData: FooterData = {
                 ...defaultData,
                 ...initialData,
-                servicesLinks: ensureMedicalVisaLink(
-                    Array.isArray(initialData?.servicesLinks) && initialData.servicesLinks.length > 0
-                        ? initialData.servicesLinks
-                        : defaultData.servicesLinks,
+                servicesLinks: ensureEducationLink(
+                    ensureMedicalVisaLink(
+                        Array.isArray(initialData?.servicesLinks) && initialData.servicesLinks.length > 0
+                            ? initialData.servicesLinks
+                            : defaultData.servicesLinks,
+                    ),
                 ),
                 resortsLinks: ensureSwapnoBilashResortLink(
                     Array.isArray(initialData?.resortsLinks) && initialData.resortsLinks.length > 0

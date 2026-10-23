@@ -35,6 +35,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             submenu: [
                 { name: "Visa", href: "/visa" },
                 { name: "Medical Visa", href: "/medical-visa" },
+                { name: "Sun Global Education", href: "/sun-global-education" },
                 { name: "Ticket", href: "/tickets" },
                 { name: "Tour", href: "/tours" },
             ]
