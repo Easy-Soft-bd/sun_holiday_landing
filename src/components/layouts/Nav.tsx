@@ -34,10 +34,10 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             icon: Briefcase,
             submenu: [
                 { name: "Visa", href: "/visa" },
-                { name: "Medical Visa", href: "/medical-visa" },
-                { name: "Sun Global Education", href: "/sun-global-education" },
                 { name: "Ticket", href: "/tickets" },
                 { name: "Tour", href: "/tours" },
+                { name: "Medical Visa", href: "/medical-visa" },
+                { name: "Sun Global Education", href: "/sun-global-education" },
             ]
         },
         {
@@ -191,7 +191,7 @@ const Nav = ({ branding, admin = false }: NavProps) => {
             >
                 <div className="flex flex-col h-full">
                     <div className="flex items-center justify-between p-6 border-b border-base-200">
-                        <Logo width={35} height={35} siteName={branding?.siteName} logoUrl={branding?.siteLogo} />
+                        <Logo height={64} showText={false} siteName={branding?.siteName} logoUrl={branding?.siteLogo} />
                         <button
                             type="button"
                             onClick={toggleDrawer}
