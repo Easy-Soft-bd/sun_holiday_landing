@@ -1,7 +1,8 @@
 "use client";
 
 import { UploadOutlined } from "@ant-design/icons";
-import { App, Upload } from "antd";
+import { App } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import type { FormInstance } from "antd";
 import StringListField from "../StringListField";
 import type { TourFormValues } from "../types";
@@ -19,7 +20,7 @@ export default function GallerySection({ form }: GallerySectionProps) {
       <p className="mb-4 text-sm leading-relaxed text-slate-600">
         Upload images or add URLs below. The first gallery image is also used in compact grids if needed.
       </p>
-      <Upload
+      <LoadingUpload
         multiple
         listType="picture-card"
         beforeUpload={async (file) => {
@@ -39,7 +40,7 @@ export default function GallerySection({ form }: GallerySectionProps) {
           <UploadOutlined />
           <div style={{ marginTop: 8 }}>Upload Gallery Images</div>
         </div>
-      </Upload>
+      </LoadingUpload>
 
       <div className="mt-4">
         <StringListField

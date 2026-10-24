@@ -11,8 +11,8 @@ import {
   Space,
   Spin,
   Typography,
-  Upload,
 } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import { UploadOutlined } from "@ant-design/icons";
 import dayjs, { type Dayjs } from "dayjs";
 import { useRouter } from "next/navigation";
@@ -441,7 +441,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
                   No cover yet
                 </div>
               )}
-              <Upload
+              <LoadingUpload
                 maxCount={1}
                 showUploadList={false}
                 beforeUpload={async (file) => {
@@ -458,7 +458,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
                 <Button icon={<UploadOutlined />} className="mb-3">
                   Upload image
                 </Button>
-              </Upload>
+              </LoadingUpload>
               <Form.Item
                 name="image"
                 className="!mb-0"

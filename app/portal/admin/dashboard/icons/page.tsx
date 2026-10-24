@@ -48,6 +48,7 @@ export default function IconLibraryPage() {
   const [deleteIcon] = useDeleteCustomIconMutation();
 
   const [editing, setEditing] = useState<SerializedCustomIcon | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const icons = data?.data ?? [];
@@ -109,12 +110,15 @@ export default function IconLibraryPage() {
   };
 
   const handleDelete = async (icon: SerializedCustomIcon) => {
+    setDeletingId(icon.id);
     try {
       await deleteIcon(icon.id).unwrap();
       refreshCustomIcons();
       message.success(`Deleted "${icon.label}"`);
     } catch {
       message.error('Failed to delete icon');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -174,9 +178,10 @@ export default function IconLibraryPage() {
             description="Anywhere it is used will fall back to a default icon."
             onConfirm={() => handleDelete(record)}
             okText="Delete"
+            okButtonProps={{ loading: deletingId === record.id }}
             cancelText="Cancel"
           >
-            <Button type="text" danger icon={<DeleteOutlined />} />
+            <Button type="text" danger icon={<DeleteOutlined />} loading={deletingId === record.id} />
           </Popconfirm>
         </Space>
       ),

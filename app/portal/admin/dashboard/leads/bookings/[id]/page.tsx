@@ -348,6 +348,8 @@ export default function BookingDetailPage() {
     const [activityType, setActivityType] = useState<BookingActivityType>("note");
     const [activityBody, setActivityBody] = useState("");
     const [submittingActivity, setSubmittingActivity] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [deletingActivityId, setDeletingActivityId] = useState<number | null>(null);
 
     const refresh = useCallback(async () => {
         if (!bookingId) return;
@@ -460,6 +462,7 @@ export default function BookingDetailPage() {
 
     const handleDeleteActivity = async (activityId: number) => {
         if (!booking) return;
+        setDeletingActivityId(activityId);
         try {
             const res = await fetch(
                 `/api/bookings/${booking.id}/activities/${activityId}`,
@@ -475,11 +478,14 @@ export default function BookingDetailPage() {
             message.success("Activity removed");
         } catch (e) {
             if (e instanceof Error) message.error(e.message);
+        } finally {
+            setDeletingActivityId(null);
         }
     };
 
     const handleDelete = async () => {
         if (!booking) return;
+        setDeleting(true);
         try {
             const res = await fetch(`/api/bookings/${booking.id}`, { method: "DELETE" });
             const json = await res.json();
@@ -488,6 +494,8 @@ export default function BookingDetailPage() {
             router.push("/portal/admin/dashboard/leads");
         } catch (e) {
             if (e instanceof Error) message.error(e.message);
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -620,11 +628,11 @@ export default function BookingDetailPage() {
                                 title="Delete this booking?"
                                 description="This action cannot be undone."
                                 okText="Delete"
-                                okButtonProps={{ danger: true }}
+                                okButtonProps={{ danger: true, loading: deleting }}
                                 cancelText="Cancel"
                                 onConfirm={() => void handleDelete()}
                             >
-                                <Button danger icon={<DeleteOutlined />}>
+                                <Button danger icon={<DeleteOutlined />} loading={deleting}>
                                     Delete
                                 </Button>
                             </Popconfirm>
@@ -1006,7 +1014,7 @@ export default function BookingDetailPage() {
                                                         title="Remove this activity?"
                                                         okText="Remove"
                                                         cancelText="Cancel"
-                                                        okButtonProps={{ danger: true }}
+                                                        okButtonProps={{ danger: true, loading: deletingActivityId === a.id }}
                                                         onConfirm={() =>
                                                             void handleDeleteActivity(a.id)
                                                         }
@@ -1015,6 +1023,7 @@ export default function BookingDetailPage() {
                                                             type="text"
                                                             size="small"
                                                             icon={<DeleteOutlined />}
+                                                            loading={deletingActivityId === a.id}
                                                             danger
                                                         />
                                                     </Popconfirm>

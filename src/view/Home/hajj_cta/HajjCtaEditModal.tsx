@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Select, Upload } from "antd";
+import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Select } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 import IconPicker from "@/src/components/common/IconPicker";
 
@@ -184,7 +185,7 @@ export default function HajjCtaEditModal({ isOpen, onClose, initialData }: HajjC
                                         </Button>
                                     )}
                                 </Space.Compact>
-                                <Upload
+                                <LoadingUpload
                                     name="file"
                                     action="/api/upload"
                                     data={{ oldPath: imageUrl }}
@@ -205,7 +206,7 @@ export default function HajjCtaEditModal({ isOpen, onClose, initialData }: HajjC
                                     }}
                                 >
                                     <Button icon={<UploadOutlined />}>Upload New Image</Button>
-                                </Upload>
+                                </LoadingUpload>
                                 {imageUrl && (
                                     <div className="relative w-full h-32 rounded-lg overflow-hidden border border-base-300">
                                         <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />

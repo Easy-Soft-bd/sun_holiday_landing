@@ -1,7 +1,8 @@
 "use client";
 
 import { UploadOutlined } from "@ant-design/icons";
-import { App, Form, Input, Space, Upload } from "antd";
+import { App, Form, Input, Space } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import type { FormInstance } from "antd";
 import RichTextEditor from "../RichTextEditor";
 import { uploadImage } from "../upload-image";
@@ -18,7 +19,7 @@ export default function MediaDescriptionSection({ form }: MediaDescriptionSectio
     <>
       <Form.Item label="Main Image" required help="Upload an image or provide a URL">
         <Space orientation="vertical" className="w-full">
-          <Upload
+          <LoadingUpload
             maxCount={1}
             listType="picture-card"
             beforeUpload={async (file) => {
@@ -37,7 +38,7 @@ export default function MediaDescriptionSection({ form }: MediaDescriptionSectio
               <UploadOutlined />
               <div style={{ marginTop: 8 }}>Upload</div>
             </div>
-          </Upload>
+          </LoadingUpload>
           <Form.Item
             name="image"
             rules={[{ required: true, message: "Please upload or enter image URL" }]}

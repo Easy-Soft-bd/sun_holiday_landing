@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Upload, Alert } from "antd";
+import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Alert } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 import { ensureSwapnoBilashResortLink } from "@/src/lib/resort-links";
 import { ensureEducationLink, ensureMedicalVisaLink } from "@/src/lib/service-links";
@@ -340,7 +341,7 @@ function CertificationImageItem({ form, fieldName, setIsSaving, restField }: { f
                         </Button>
                     )}
                 </Space.Compact>
-                <Upload
+                <LoadingUpload
                     name="file"
                     action="/api/upload"
                     data={{ oldPath: imageUrl }}
@@ -363,7 +364,7 @@ function CertificationImageItem({ form, fieldName, setIsSaving, restField }: { f
                     }}
                 >
                     <Button icon={<UploadOutlined />} size="small">Upload Logo</Button>
-                </Upload>
+                </LoadingUpload>
                 {imageUrl && (
                     <div className="relative w-full h-12 rounded bg-white flex items-center justify-center border border-base-300">
                         <img src={imageUrl} alt="Preview" className="max-h-full max-w-full object-contain" />

@@ -34,6 +34,7 @@ export default function VisaManagementPage() {
   const [searchText, setSearchText] = useState("");
   const [countries, setCountries] = useState<VisaRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchCountries = async () => {
     setLoading(true);
@@ -70,6 +71,7 @@ export default function VisaManagementPage() {
   }, []);
 
   const handleDelete = async (id: string) => {
+    setDeletingId(id);
     try {
       const response = await fetch(`/api/visa/${id}`, { method: "DELETE" });
       if (response.ok) {
@@ -81,6 +83,8 @@ export default function VisaManagementPage() {
     } catch (error) {
       console.error("Error deleting visa country:", error);
       message.error("An error occurred while deleting the country");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -163,9 +167,10 @@ export default function VisaManagementPage() {
             description="The public visa page for this country will be removed."
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
+            okButtonProps={{ loading: deletingId === record.id }}
             cancelText="No"
           >
-            <Button type="text" danger icon={<DeleteOutlined />} />
+            <Button type="text" danger icon={<DeleteOutlined />} loading={deletingId === record.id} />
           </Popconfirm>
         </Space>
       ),

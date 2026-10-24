@@ -11,8 +11,8 @@ import {
   Space,
   Spin,
   Typography,
-  Upload,
 } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import { UploadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -373,7 +373,7 @@ export default function VisaCountryForm({ countryId }: VisaCountryFormProps) {
                   Upload a flag, or use an emoji until you have one.
                 </Text>
               </div>
-              <Upload
+              <LoadingUpload
                 maxCount={1}
                 showUploadList={false}
                 accept="image/jpeg,image/png,image/webp,image/gif"
@@ -391,7 +391,7 @@ export default function VisaCountryForm({ countryId }: VisaCountryFormProps) {
                 <Button icon={<UploadOutlined />} className="mb-3">
                   Upload flag
                 </Button>
-              </Upload>
+              </LoadingUpload>
               <Form.Item name="flagImage" label="Flag image URL">
                 <Input placeholder="Or paste a flag image URL" size="large" className="!rounded-lg" />
               </Form.Item>
@@ -408,7 +408,7 @@ export default function VisaCountryForm({ countryId }: VisaCountryFormProps) {
                   No cover yet
                 </div>
               )}
-              <Upload
+              <LoadingUpload
                 maxCount={1}
                 showUploadList={false}
                 accept="image/jpeg,image/png,image/webp,image/gif"
@@ -426,7 +426,7 @@ export default function VisaCountryForm({ countryId }: VisaCountryFormProps) {
                 <Button icon={<UploadOutlined />} className="mb-3">
                   Upload cover
                 </Button>
-              </Upload>
+              </LoadingUpload>
               <Form.Item
                 name="coverImage"
                 className="!mb-0"

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { App, Button, Card, Form, Input, InputNumber, Select, Upload } from "antd";
+import { App, Button, Card, Form, Input, InputNumber, Select } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import { UploadOutlined } from "@ant-design/icons";
 import { uploadImage } from "@/app/portal/admin/dashboard/tours/add/components/upload-image";
 
@@ -131,7 +132,7 @@ export default function TicketRouteForm({ routeId }: TicketRouteFormProps) {
               No image yet
             </div>
           )}
-          <Upload
+          <LoadingUpload
             maxCount={1}
             showUploadList={false}
             accept="image/jpeg,image/png,image/webp,image/gif"
@@ -149,7 +150,7 @@ export default function TicketRouteForm({ routeId }: TicketRouteFormProps) {
             <Button icon={<UploadOutlined />} className="mb-3">
               Upload image
             </Button>
-          </Upload>
+          </LoadingUpload>
           <Form.Item name="image" className="!mb-0" label="Image URL">
             <Input size="large" placeholder="Or paste an image URL" />
           </Form.Item>

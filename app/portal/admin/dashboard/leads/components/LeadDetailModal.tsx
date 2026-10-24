@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { App, Descriptions, Form, Input, Modal, Select, Tag } from "antd";
 import { LEAD_STATUS_OPTIONS, LeadRecord, LeadStatus, inquiryMeta, leadEmail } from "../types";
 
@@ -28,6 +28,7 @@ function formatDate(value: string | null | undefined) {
 export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props) {
     const { message } = App.useApp();
     const [form] = Form.useForm<FormValues>();
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         if (!open || !lead) return;
@@ -39,6 +40,7 @@ export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props)
 
     const handleOk = async () => {
         if (!lead) return;
+        setSaving(true);
         try {
             const values = await form.validateFields();
             const res = await fetch(`/api/leads/${lead.id}`, {
@@ -56,6 +58,8 @@ export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props)
             onClose();
         } catch (err) {
             if (err instanceof Error) message.error(err.message);
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -70,6 +74,8 @@ export default function LeadDetailModal({ open, lead, onClose, onSaved }: Props)
             open={open}
             onOk={handleOk}
             onCancel={onClose}
+            confirmLoading={saving}
+            cancelButtonProps={{ disabled: saving }}
             okText="Save changes"
             destroyOnHidden
             width={680}

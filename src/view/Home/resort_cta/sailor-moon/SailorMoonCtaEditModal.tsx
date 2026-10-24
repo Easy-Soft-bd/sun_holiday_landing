@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Select, Upload } from "antd";
+import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Select } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 import IconPicker from "@/src/components/common/IconPicker";
 
@@ -211,7 +212,7 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                                     <Button type="default" href={bgImageUrl} target="_blank" icon={<LinkOutlined />}>View</Button>
                                 )}
                             </Space.Compact>
-                            <Upload
+                            <LoadingUpload
                                 name="file"
                                 action="/api/upload"
                                 data={{ oldPath: bgImageUrl }}
@@ -224,7 +225,7 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                                 }}
                             >
                                 <Button icon={<UploadOutlined />} style={{ marginTop: 8 }}>Upload Background</Button>
-                            </Upload>
+                            </LoadingUpload>
                         </Form.Item>
 
                         {/* Promo Image */}
@@ -237,7 +238,7 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                                     <Button type="default" href={promoImageUrl} target="_blank" icon={<LinkOutlined />}>View</Button>
                                 )}
                             </Space.Compact>
-                            <Upload
+                            <LoadingUpload
                                 name="file"
                                 action="/api/upload"
                                 data={{ oldPath: promoImageUrl }}
@@ -250,7 +251,7 @@ export default function SailorMoonCtaEditModal({ isOpen, onClose, initialData }:
                                 }}
                             >
                                 <Button icon={<UploadOutlined />} style={{ marginTop: 8 }}>Upload Promo Image</Button>
-                            </Upload>
+                            </LoadingUpload>
 
                             <Form.Item label="Promo Title" name="promoImageTitle" style={{ marginTop: 16 }}>
                                 <Input placeholder="Ocean View Premier Room" />

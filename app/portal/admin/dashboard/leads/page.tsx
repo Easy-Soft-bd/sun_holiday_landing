@@ -194,6 +194,7 @@ function BookingsPanel() {
     const [tourFilter, setTourFilter] = useState<number | "all" | "none">("all");
     const [modalOpen, setModalOpen] = useState(false);
     const [editing, setEditing] = useState<BookingRecord | null>(null);
+    const [deletingId, setDeletingId] = useState<number | null>(null);
 
     const tourOptions = useMemo(() => {
         const map = new Map<number, string>();
@@ -243,6 +244,7 @@ function BookingsPanel() {
     }, [items, search, statusFilter, serviceFilter, tourFilter]);
 
     const handleDelete = async (id: number) => {
+        setDeletingId(id);
         try {
             const res = await fetch(`/api/bookings/${id}`, { method: "DELETE" });
             const data = await res.json();
@@ -251,6 +253,8 @@ function BookingsPanel() {
             message.success("Booking deleted");
         } catch (e) {
             if (e instanceof Error) message.error(e.message);
+        } finally {
+            setDeletingId(null);
         }
     };
 
@@ -424,11 +428,11 @@ function BookingsPanel() {
                         title="Delete this booking?"
                         description="This action cannot be undone."
                         okText="Delete"
-                        okButtonProps={{ danger: true }}
+                        okButtonProps={{ danger: true, loading: deletingId === record.id }}
                         cancelText="Cancel"
                         onConfirm={() => handleDelete(record.id)}
                     >
-                        <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+                        <Button type="text" size="small" danger icon={<DeleteOutlined />} loading={deletingId === record.id} />
                     </Popconfirm>
                 </Space>
             ),
@@ -579,6 +583,7 @@ function LeadsPanel() {
     const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
     const [sourceFilter, setSourceFilter] = useState<string | "all">("all");
     const [viewing, setViewing] = useState<LeadRecord | null>(null);
+    const [busyId, setBusyId] = useState<number | null>(null);
 
     const sources = useMemo(() => {
         const set = new Set<string>();
@@ -611,6 +616,7 @@ function LeadsPanel() {
     }, [items, search, statusFilter, sourceFilter]);
 
     const handleDelete = async (id: number) => {
+        setBusyId(id);
         try {
             const res = await fetch(`/api/leads/${id}`, { method: "DELETE" });
             const data = await res.json();
@@ -619,10 +625,13 @@ function LeadsPanel() {
             message.success("Lead deleted");
         } catch (e) {
             if (e instanceof Error) message.error(e.message);
+        } finally {
+            setBusyId(null);
         }
     };
 
     const handleMarkSpam = async (id: number) => {
+        setBusyId(id);
         try {
             const res = await fetch(`/api/leads/${id}`, {
                 method: "PUT",
@@ -635,6 +644,8 @@ function LeadsPanel() {
             message.success("Marked as spam");
         } catch (e) {
             if (e instanceof Error) message.error(e.message);
+        } finally {
+            setBusyId(null);
         }
     };
 
@@ -754,9 +765,10 @@ function LeadsPanel() {
                                 title="Mark this lead as spam?"
                                 onConfirm={() => handleMarkSpam(record.id)}
                                 okText="Yes"
+                                okButtonProps={{ loading: busyId === record.id }}
                                 cancelText="No"
                             >
-                                <Button type="text" size="small" icon={<StopOutlined />} />
+                                <Button type="text" size="small" icon={<StopOutlined />} loading={busyId === record.id} />
                             </Popconfirm>
                         </Tooltip>
                     ) : null}
@@ -764,11 +776,11 @@ function LeadsPanel() {
                         title="Delete this lead?"
                         description="This action cannot be undone."
                         okText="Delete"
-                        okButtonProps={{ danger: true }}
+                        okButtonProps={{ danger: true, loading: busyId === record.id }}
                         cancelText="Cancel"
                         onConfirm={() => handleDelete(record.id)}
                     >
-                        <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+                        <Button type="text" size="small" danger icon={<DeleteOutlined />} loading={busyId === record.id} />
                     </Popconfirm>
                 </Space>
             ),

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, App, Upload, Space } from "antd";
+import { Modal, Form, Input, Button, Divider, Row, Col, App, Space } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import { SaveOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
@@ -281,7 +282,7 @@ export default function HeroEditModal({ isOpen, onClose, initialData }: HeroEdit
                                         </Button>
                                     )}
                                 </Space.Compact>
-                                <Upload
+                                <LoadingUpload
                                     name="file"
                                     action="/api/upload"
                                     data={{ oldPath: backgroundImage }}
@@ -303,7 +304,7 @@ export default function HeroEditModal({ isOpen, onClose, initialData }: HeroEdit
                                     }}
                                 >
                                     <Button icon={<UploadOutlined />}>Upload Background Image</Button>
-                                </Upload>
+                                </LoadingUpload>
                                 {backgroundImage && (
                                     <div className="relative w-full h-32 rounded-lg overflow-hidden border border-base-300">
                                         <img 

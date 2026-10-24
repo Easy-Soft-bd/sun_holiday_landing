@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { App, Button, Form, Input, Modal, Select, Space, Upload } from "antd";
+import { App, Button, Form, Input, Modal, Select, Space } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import type { NamePath } from "antd/es/form/interface";
 import { DeleteOutlined, LinkOutlined, PlusOutlined, SaveOutlined, UploadOutlined } from "@ant-design/icons";
 import type { ResortSectionKey, SunviaEcoResortPageData } from "@/src/lib/data/sunvia-eco-resort";
@@ -95,7 +96,7 @@ function UploadField({
             </Button>
           ) : null}
         </Space.Compact>
-        <Upload
+        <LoadingUpload
           name="file"
           action="/api/upload"
           data={{ oldPath: imageUrl }}
@@ -113,7 +114,7 @@ function UploadField({
           }}
         >
           <Button icon={<UploadOutlined />}>Upload Image</Button>
-        </Upload>
+        </LoadingUpload>
         {imageUrl ? (
           <div className="relative h-36 w-full overflow-hidden rounded-lg border border-base-300">
             {/* eslint-disable-next-line @next/next/no-img-element */}

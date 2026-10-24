@@ -34,6 +34,7 @@ export default function TourManagementPage() {
   const [searchText, setSearchText] = useState('');
   const [tours, setTours] = useState<TourDataType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchTours = async () => {
     setLoading(true);
@@ -70,6 +71,7 @@ export default function TourManagementPage() {
   }, []);
 
   const handleDelete = async (id: string) => {
+    setDeletingId(id);
     try {
       const response = await fetch(`/api/tours/${id}`, {
         method: 'DELETE',
@@ -83,6 +85,8 @@ export default function TourManagementPage() {
     } catch (error) {
       console.error('Error deleting tour:', error);
       message.error('An error occurred while deleting tour');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -206,9 +210,10 @@ export default function TourManagementPage() {
             description="Are you sure to delete this tour?"
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
+            okButtonProps={{ loading: deletingId === record.id }}
             cancelText="No"
           >
-            <Button type="text" danger icon={<DeleteOutlined />} />
+            <Button type="text" danger icon={<DeleteOutlined />} loading={deletingId === record.id} />
           </Popconfirm>
         </Space>
       ),

@@ -36,6 +36,7 @@ export default function BlogManagementPage() {
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [posts, setPosts] = useState<BlogRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -72,6 +73,7 @@ export default function BlogManagementPage() {
   }, []);
 
   const handleDelete = async (id: string) => {
+    setDeletingId(id);
     try {
       const response = await fetch(`/api/blog/${id}`, {
         method: 'DELETE',
@@ -85,6 +87,8 @@ export default function BlogManagementPage() {
     } catch (error) {
       console.error('Error deleting post:', error);
       message.error('An error occurred while deleting post');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -171,9 +175,10 @@ export default function BlogManagementPage() {
             description="Are you sure you want to delete this blog post?"
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
+            okButtonProps={{ loading: deletingId === record.id }}
             cancelText="No"
           >
-            <Button type="text" danger icon={<DeleteOutlined />} />
+            <Button type="text" danger icon={<DeleteOutlined />} loading={deletingId === record.id} />
           </Popconfirm>
         </Space>
       ),

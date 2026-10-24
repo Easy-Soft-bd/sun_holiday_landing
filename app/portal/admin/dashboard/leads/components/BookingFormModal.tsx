@@ -42,6 +42,7 @@ function bookingTourId(record: BookingRecord | null | undefined): number | null 
 
 export default function BookingFormModal({ open, initial, onClose, onSaved }: Props) {
     const { message } = App.useApp();
+    const [saving, setSaving] = useState(false);
     const [form] = Form.useForm<FormValues>();
     const isEdit = Boolean(initial?.id);
 
@@ -126,6 +127,7 @@ export default function BookingFormModal({ open, initial, onClose, onSaved }: Pr
     }, [tours, initial]);
 
     const handleOk = async () => {
+        setSaving(true);
         try {
             const values = await form.validateFields();
             const serviceType = values.serviceType ?? "general";
@@ -164,6 +166,8 @@ export default function BookingFormModal({ open, initial, onClose, onSaved }: Pr
             if (err instanceof Error) {
                 message.error(err.message);
             }
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -173,7 +177,9 @@ export default function BookingFormModal({ open, initial, onClose, onSaved }: Pr
             open={open}
             onOk={handleOk}
             onCancel={onClose}
+            confirmLoading={saving}
             okText={isEdit ? "Save" : "Create"}
+            cancelButtonProps={{ disabled: saving }}
             destroyOnHidden
             maskClosable={false}
             width={720}

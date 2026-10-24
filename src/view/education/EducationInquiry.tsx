@@ -158,7 +158,8 @@ export default function EducationInquiry({ eyebrow, title, intro, buttonLabel }:
                 aria-hidden
               />
               {error ? <p className="text-sm text-error">{error}</p> : null}
-              <button type="submit" className="btn btn-primary text-white" disabled={sending}>
+              <button type="submit" className="btn btn-primary gap-2 text-white" disabled={sending}>
+                {sending ? <span className="loading loading-spinner loading-sm" aria-hidden /> : null}
                 {sending ? "Sending..." : buttonLabel}
               </button>
             </form>

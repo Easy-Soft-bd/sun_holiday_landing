@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Select, Upload } from "antd";
+import { Modal, Form, Input, Button, Divider, Row, Col, Space, App, Select } from "antd";
+import LoadingUpload from "@/src/components/common/LoadingUpload";
 import { SaveOutlined, PlusOutlined, DeleteOutlined, UploadOutlined, LinkOutlined } from "@ant-design/icons";
 import IconPicker from "@/src/components/common/IconPicker";
 
@@ -279,7 +280,7 @@ function CategoryImageUpload({ form, fieldName, setIsSaving }: { form: any, fiel
                         </Button>
                     )}
                 </Space.Compact>
-                <Upload
+                <LoadingUpload
                     name="file"
                     action="/api/upload"
                     data={{ oldPath: imageUrl }}
@@ -302,7 +303,7 @@ function CategoryImageUpload({ form, fieldName, setIsSaving }: { form: any, fiel
                     }}
                 >
                     <Button icon={<UploadOutlined />} size="small">Upload Image</Button>
-                </Upload>
+                </LoadingUpload>
                 {imageUrl && (
                     <div className="relative w-full h-20 rounded-lg overflow-hidden border border-base-300">
                         <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />

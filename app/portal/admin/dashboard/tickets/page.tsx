@@ -37,6 +37,7 @@ export default function TicketRoutesPage() {
   const [searchText, setSearchText] = useState("");
   const [routes, setRoutes] = useState<TicketRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchRoutes = async () => {
     setLoading(true);
@@ -70,6 +71,7 @@ export default function TicketRoutesPage() {
   }, []);
 
   const handleDelete = async (id: string) => {
+    setDeletingId(id);
     try {
       const response = await fetch(`/api/ticket-routes/${id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Delete failed");
@@ -78,6 +80,8 @@ export default function TicketRoutesPage() {
     } catch (error) {
       console.error("Error deleting ticket route:", error);
       message.error("Could not delete this route");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -136,9 +140,10 @@ export default function TicketRoutesPage() {
             description="It will disappear from the Ticket page."
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
+            okButtonProps={{ loading: deletingId === record.id }}
             cancelText="No"
           >
-            <Button type="text" danger icon={<DeleteOutlined />} />
+            <Button type="text" danger icon={<DeleteOutlined />} loading={deletingId === record.id} />
           </Popconfirm>
         </Space>
       ),

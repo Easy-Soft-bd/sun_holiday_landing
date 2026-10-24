@@ -30,6 +30,7 @@ export default function AdminUsersPage() {
     const [rows, setRows] = useState<AdminRow[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [removingId, setRemovingId] = useState<number | null>(null);
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<AdminRow | null>(null);
     const [form] = Form.useForm<FormValues>();
@@ -100,14 +101,19 @@ export default function AdminUsersPage() {
     }
 
     async function remove(row: AdminRow) {
-        const res = await fetch(`/api/admin-users/${row.id}`, { method: "DELETE" });
-        const body = await res.json().catch(() => ({}));
-        if (!res.ok) {
-            message.error(body.error || "Could not delete this admin");
-            return;
+        setRemovingId(row.id);
+        try {
+            const res = await fetch(`/api/admin-users/${row.id}`, { method: "DELETE" });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                message.error(body.error || "Could not delete this admin");
+                return;
+            }
+            message.success("Admin removed");
+            await load();
+        } finally {
+            setRemovingId(null);
         }
-        message.success("Admin removed");
-        await load();
     }
 
     const columns: ColumnsType<AdminRow> = [
@@ -144,8 +150,13 @@ export default function AdminUsersPage() {
                         Edit
                     </Button>
                     {row.isSuperAdmin ? null : (
-                        <Popconfirm title="Remove this admin?" okText="Remove" onConfirm={() => remove(row)}>
-                            <Button size="small" danger>
+                        <Popconfirm
+                            title="Remove this admin?"
+                            okText="Remove"
+                            okButtonProps={{ loading: removingId === row.id }}
+                            onConfirm={() => remove(row)}
+                        >
+                            <Button size="small" danger loading={removingId === row.id}>
                                 Remove
                             </Button>
                         </Popconfirm>

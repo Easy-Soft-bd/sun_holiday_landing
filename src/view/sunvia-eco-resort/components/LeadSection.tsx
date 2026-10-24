@@ -159,8 +159,9 @@ export default function LeadSection({ data, admin = false }: LeadSectionProps) {
             <button
               type="submit"
               disabled={status === "saving"}
-              className="btn btn-primary mt-6 w-full rounded-full border-0"
+              className="btn btn-primary mt-6 w-full gap-2 rounded-full border-0"
             >
+              {status === "saving" ? <span className="loading loading-spinner loading-sm" aria-hidden /> : null}
               {status === "saving" ? "Sending..." : data.submitText}
             </button>
           </form>
